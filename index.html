@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaadz — infrastructure cannot be probabilistic.</title>
+  <meta name="description" content="Kaadz — Founder of WatchLLM. Building deterministic infrastructure for autonomous systems. Agents are probabilistic. Infrastructure cannot be." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0b;
+      --bg-card: #111114;
+      --bg-card-hover: #18181d;
+      --border: #1f1f24;
+      --text: #e4e4e7;
+      --text-dim: #71717a;
+      --text-muted: #52525b;
+      --accent: #a78bfa;
+      --accent-glow: #7c3aed;
+      --red: #f87171;
+      --red-dim: #7f1d1d;
+      --green: #4ade80;
+      --font-sans: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* CRT overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+    }
+
+    .section-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 32px;
+      background: rgba(10,10,11,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 13px; font-weight: 800; letter-spacing: 0.08em;
+      color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .nav-status { color: var(--green); }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-sans);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--text-dim); text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .btn-brutal {
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      padding: 8px 18px;
+      border: 1.5px solid var(--accent);
+      color: var(--accent); background: transparent;
+      text-transform: uppercase; text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-brutal:hover { background: var(--accent); color: var(--bg); }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; overflow: hidden;
+      padding: 120px 0 80px;
+    }
+    .hero-mega-text {
+      font-family: var(--font-mono);
+      font-size: clamp(100px, 20vw, 260px);
+      font-weight: 800;
+      text-align: center;
+      line-height: 0.85;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--border);
+      user-select: none;
+      opacity: 0.3;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-title {
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .hero-title .accent-line { color: var(--accent); }
+    .hero-subtitle {
+      font-family: var(--font-mono);
+      font-size: 14px; color: var(--text-dim);
+      margin-bottom: 48px;
+      max-width: 560px;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-actions .btn-brutal { padding: 12px 28px; font-size: 13px; }
+    .hero-actions .btn-brutal.ghost { border-color: var(--text-muted); color: var(--text-muted); }
+    .hero-actions .btn-brutal.ghost:hover { border-color: var(--text); color: var(--text); background: transparent; }
+
+    /* ===== MARQUEE ===== */
+    .marquee-container {
+      overflow: hidden; border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 10px 0;
+    }
+    .marquee {
+      display: flex; gap: 32px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-dim);
+      animation: scroll 40s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-tag {
+      font-style: normal; font-weight: 700;
+      color: var(--red);
+      margin-right: 6px;
+    }
+
+    /* ===== SECTIONS ===== */
+    section { padding: 100px 0; }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 13px; font-weight: 700; color: var(--accent);
+      display: block; margin-bottom: 8px;
+      letter-spacing: 0.08em;
+    }
+    .section-title {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700; line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-family: var(--font-mono);
+      font-size: 13px; color: var(--text-dim);
+      max-width: 620px; margin-bottom: 48px;
+      line-height: 1.7;
+    }
+
+    /* ===== WHO ===== */
+    .who-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) { .who-grid { grid-template-columns: 1fr; } }
+    .who-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 28px;
+      transition: all 0.2s;
+    }
+    .who-card:hover { background: var(--bg-card-hover); border-color: #2a2a30; }
+    .who-card-icon {
+      font-family: var(--font-mono);
+      font-size: 24px; margin-bottom: 12px;
+      display: block;
+    }
+    .who-card-title {
+      font-size: 16px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .who-card-body {
+      font-family: var(--font-mono);
+      font-size: 12px; color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    /* ===== WORK ===== */
+    .work-list {
+      display: flex; flex-direction: column; gap: 1px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .work-row {
+      display: grid; grid-template-columns: 200px 1fr 120px;
+      align-items: center; gap: 24px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    @media (max-width: 768px) {
+      .work-row { grid-template-columns: 1fr 1fr; }
+      .work-row .work-year { display: none; }
+    }
+    .work-row:hover { background: var(--bg-card-hover); }
+    .work-year {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .work-name {
+      font-weight: 700; font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+    .work-name a { color: var(--text); text-decoration: none; }
+    .work-name a:hover { color: var(--accent); }
+    .work-org {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--text-muted);
+    }
+    .work-status {
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      text-align: right;
+    }
+    .work-status.active { color: var(--green); }
+    .work-status.archived { color: var(--text-muted); }
+    .work-status.public { color: var(--accent); }
+
+    /* ===== STATS ===== */
+    .stat-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 0;
+    }
+    .stat-strip-inner {
+      display: flex; justify-content: center; align-items: center;
+      gap: 40px; flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: 28px; font-weight: 800;
+      display: block;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+    .stat-sep { color: var(--border); font-size: 20px; }
+
+    /* ===== LINKS / FOOTER ===== */
+    .links-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-top: 32px;
+    }
+    @media (max-width: 768px) { .links-grid { grid-template-columns: repeat(2, 1fr); } }
+    .link-card {
+      display: block; background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 20px; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .link-card:hover { background: var(--bg-card-hover); border-color: var(--accent-glow); }
+    .link-card-label {
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .link-card-text {
+      font-size: 14px; font-weight: 600;
+      color: var(--text);
+    }
+
+    footer {
+      text-align: center; padding: 48px 24px;
+      border-top: 1px solid var(--border);
+    }
+    footer p {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--text-muted);
+    }
+    footer a { color: var(--text-dim); }
+
+    /* ===== RESPONSIVE NAV ===== */
+    @media (max-width: 640px) {
+      nav { padding: 12px 16px; }
+      .nav-links { gap: 14px; }
+      .nav-links a { font-size: 10px; }
+      .hero { padding: 100px 0 60px; }
+      .hero-mega-text { font-size: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="nav-logo">
+    <span class="nav-pulse"></span>
+    KAADZ_<span class="nav-status">[ACTIVE]</span>
+  </div>
+  <div class="nav-links">
+    <a href="#who">WHO</a>
+    <a href="#work">WORK</a>
+    <a href="#links">LINKS</a>
+    <a href="https://github.com/kaadipranav" class="btn-brutal">GITHUB</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-mega-text">KAADZ</div>
+  <div class="hero-content section-container">
+    <h1 class="hero-title">
+      AGENTS ARE<br>
+      <span class="accent-line">PROBABILISTIC.</span><br>
+      INFRASTRUCTURE<br>
+      CANNOT BE.
+    </h1>
+    <p class="hero-subtitle">
+      Founder of WatchLLM. Building deterministic runtime governance for autonomous systems. 17. India.
+    </p>
+    <div class="hero-actions">
+      <a href="https://watchllm.dev" class="btn-brutal" target="_blank">WATCHLLM</a>
+      <a href="https://github.com/kaadipranav" class="btn-brutal ghost" target="_blank">GITHUB</a>
+      <a href="mailto:kaadz@protonmail.com" class="btn-brutal ghost">EMAIL</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MARQUEE: QUOTES & PHILOSOPHY ===== -->
+<div class="marquee-container">
+  <div class="marquee">
+    <span><em class="marquee-tag">AXIOM</em> · agents are probabilistic. infrastructure cannot be.</span>
+    <span><em class="marquee-tag">AXIOM</em> · every save must be intercepted.</span>
+    <span><em class="marquee-tag">AXIOM</em> · determinism over vibes.</span>
+    <span><em class="marquee-tag">AXIOM</em> · no slop fortresses.</span>
+    <span><em class="marquee-tag">AXIOM</em> · the only jobs I'll have are cron jobs.</span>
+    <span><em class="marquee-tag">AXIOM</em> · agents are probabilistic. infrastructure cannot be.</span>
+    <span><em class="marquee-tag">AXIOM</em> · every save must be intercepted.</span>
+    <span><em class="marquee-tag">AXIOM</em> · determinism over vibes.</span>
+    <span><em class="marquee-tag">AXIOM</em> · no slop fortresses.</span>
+    <span><em class="marquee-tag">AXIOM</em> · the only jobs I'll have are cron jobs.</span>
+  </div>
+</div>
+
+<!-- ===== STAT STRIP ===== -->
+<div class="stat-strip">
+  <div class="stat-strip-inner section-container">
+    <div class="stat-item">
+      <span class="stat-num">15</span>
+      <span class="stat-label">REPOS</span>
+    </div>
+    <div class="stat-sep">·</div>
+    <div class="stat-item">
+      <span class="stat-num">3</span>
+      <span class="stat-label">ORGS</span>
+    </div>
+    <div class="stat-sep">·</div>
+    <div class="stat-item">
+      <span class="stat-num">2025</span>
+      <span class="stat-label">SINCE</span>
+    </div>
+    <div class="stat-sep">·</div>
+    <div class="stat-item">
+      <span class="stat-num">17</span>
+      <span class="stat-label">AGE</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WHO ===== -->
+<section id="who">
+  <div class="section-container">
+    <span class="section-label">01</span>
+    <h2 class="section-title">WHO IS KAADZ?</h2>
+    <p class="section-subtitle">
+      A systems engineer who believes software infrastructure should be boring, predictable, and auditable — not a house of probabilistic cards.
+    </p>
+    <div class="who-grid">
+      <div class="who-card">
+        <span class="who-card-icon">🛡️</span>
+        <h3 class="who-card-title">BUILDING WATCHLLM</h3>
+        <p class="who-card-body">
+          Runtime governance infrastructure for autonomous coding agents. 12 interconnected components — kernel, runtime, schemas, orchestrator, memory (klyd), observability (replay), adversarial testing, benchmarks, VS Code extension, and more. Python. Rust. TypeScript. Wasm.
+        </p>
+      </div>
+      <div class="who-card">
+        <span class="who-card-icon">🧠</span>
+        <h3 class="who-card-title">PHILOSOPHY</h3>
+        <p class="who-card-body">
+          Infrastructure must be deterministic. No API keys. No cloud dependency. No ML inference in the enforcement path. Same input = same output. Always. If your guardrails are probabilistic, they aren't guardrails — they're suggestions. Suggestions don't stop $47,000 crypto arbitrage bots in Minsk.
+        </p>
+      </div>
+      <div class="who-card">
+        <span class="who-card-icon">🔧</span>
+        <h3 class="who-card-title">STACK</h3>
+        <p class="who-card-body">
+          Python for the kernel (Tree-sitter AST analysis). Rust + Wasm for the runtime (zero-GC, cross-platform). TypeScript for VS Code extension and replay UI. SQLite for architectural memory (klyd). Shell for CI/CD. Everything compiles offline. Everything is auditable.
+        </p>
+      </div>
+      <div class="who-card">
+        <span class="who-card-icon">⚡️</span>
+        <h3 class="who-card-title">"THE ONLY JOBS I'LL HAVE ARE CRON JOBS"</h3>
+        <p class="who-card-body">
+          Automation is the point. WatchLLM is a cron job for your codebase — continuously intercepting, continuously enforcing, never sleeping. Zero human in the loop for the enforcement path. Human in the loop for the policy. That's the architecture.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WORK ===== -->
+<section id="work">
+  <div class="section-container">
+    <span class="section-label">02</span>
+    <h2 class="section-title">WHAT I'VE BUILT</h2>
+    <p class="section-subtitle">
+      From school coding platforms to runtime governance infrastructure. Every project is an exercise in making software predictable.
+    </p>
+    <div class="work-list">
+      <div class="work-row">
+        <span class="work-year">2026</span>
+        <div>
+          <div class="work-name"><a href="https://watchllm.dev" target="_blank">WatchLLM</a></div>
+          <div class="work-org">watchllm · Private Monorepo</div>
+        </div>
+        <span class="work-status active">ACTIVE</span>
+      </div>
+      <div class="work-row">
+        <span class="work-year">2026</span>
+        <div>
+          <div class="work-name"><a href="https://github.com/klyd-studio/klyd-harness" target="_blank">klyd-harness</a></div>
+          <div class="work-org">klyd-studio · Public</div>
+        </div>
+        <span class="work-status active">ACTIVE</span>
+      </div>
+      <div class="work-row">
+        <span class="work-year">2026</span>
+        <div>
+          <div class="work-name"><a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank">Codify</a></div>
+          <div class="work-org">Codify-PSBB · Public</div>
+        </div>
+        <span class="work-status active">ACTIVE</span>
+      </div>
+      <div class="work-row">
+        <span class="work-year">2025</span>
+        <div>
+          <div class="work-name">ScriptBoost</div>
+          <div class="work-org">kaadipranav · Public</div>
+        </div>
+        <span class="work-status archived">ARCHIVED</span>
+      </div>
+      <div class="work-row">
+        <span class="work-year">2025</span>
+        <div>
+          <div class="work-name">Ghostwriter</div>
+          <div class="work-org">kaadipranav · Public</div>
+        </div>
+        <span class="work-status archived">ARCHIVED</span>
+      </div>
+      <div class="work-row">
+        <span class="work-year">2025</span>
+        <div>
+          <div class="work-name">EduVerse</div>
+          <div class="work-org">kaadipranav · Public</div>
+        </div>
+        <span class="work-status archived">ARCHIVED</span>
+      </div>
+      <div class="work-row">
+        <span class="work-year">2025</span>
+        <div>
+          <div class="work-name">colddm-ai</div>
+          <div class="work-org">kaadipranav · Public</div>
+        </div>
+        <span class="work-status archived">ARCHIVED</span>
+      </div>
+      <div class="work-row">
+        <span class="work-year">2025</span>
+        <div>
+          <div class="work-name">BOILERPLATE</div>
+          <div class="work-org">kaadipranav · Public Template</div>
+        </div>
+        <span class="work-status public">PUBLIC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LINKS ===== -->
+<section id="links">
+  <div class="section-container">
+    <span class="section-label">03</span>
+    <h2 class="section-title">FIND ME</h2>
+    <p class="section-subtitle">
+      If you're building infrastructure for autonomous systems, or you just want to argue about determinism vs. probabilistic guardrails — reach out.
+    </p>
+    <div class="links-grid">
+      <a href="https://github.com/kaadipranav" class="link-card" target="_blank">
+        <div class="link-card-label">GITHUB</div>
+        <div class="link-card-text">kaadipranav →</div>
+      </a>
+      <a href="https://twitter.com/kaad_zz" class="link-card" target="_blank">
+        <div class="link-card-label">TWITTER/X</div>
+        <div class="link-card-text">@kaad_zz →</div>
+      </a>
+      <a href="https://watchllm.dev" class="link-card" target="_blank">
+        <div class="link-card-label">WATCHLLM</div>
+        <div class="link-card-text">watchllm.dev →</div>
+      </a>
+      <a href="mailto:kaadz@protonmail.com" class="link-card">
+        <div class="link-card-label">EMAIL</div>
+        <div class="link-card-text">kaadz@protonmail.com →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p>
+    KAADZ_[ACTIVE] · <a href="https://github.com/kaadipranav">github/kaadipranav</a> · <a href="https://watchllm.dev">watchllm.dev</a>
+  </p>
+  <p style="margin-top: 8px;">"The only jobs I'll have are cron jobs."</p>
+</footer>
+
+</body>
+</html>
