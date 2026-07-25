@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KAADZ — INFRASTRUCTURE CANNOT BE PROBABILISTIC.</title>
-  <meta name="description" content="Kaadz — Founder of WatchLLM. Building deterministic runtime governance for autonomous systems. 17. India. Agents are probabilistic. Infrastructure cannot be." />
-  <meta property="og:title" content="KAADZ — Infrastructure Cannot Be Probabilistic." />
-  <meta property="og:description" content="Founder of WatchLLM. 17. India. Runtime governance for autonomous coding agents." />
+  <title>KAADZ — Deterministic Runtime Governance</title>
+  <meta name="description" content="Kaadz — Founder of WatchLLM. Engineering deterministic runtime governance and interceptors for autonomous systems. Agents are probabilistic. Infrastructure is not." />
+  <meta property="og:title" content="KAADZ — Deterministic Runtime Governance" />
+  <meta property="og:description" content="Founder of WatchLLM. Runtime governance for autonomous coding agents." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -22,9 +22,9 @@
       --yellow:  #FFE600;
       --green:   #00FF88;
       --red:     #FF0022;
-      --gray:    #1A1A1A;
-      --gray-lt: #2A2A2A;
-      --dim:     #666;
+      --gray:    #121214;
+      --gray-lt: #222226;
+      --dim:     #777780;
       --font-display: 'Bebas Neue', 'Impact', sans-serif;
       --font-body:    'Space Grotesk', sans-serif;
       --font-mono:    'JetBrains Mono', monospace;
@@ -44,13 +44,13 @@
       content: '';
       position: fixed; inset: 0; z-index: 9999;
       pointer-events: none;
-      opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 150px 150px;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 140px 140px;
     }
 
     /* ───── SCROLLBAR ───── */
-    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: var(--blue); }
 
@@ -60,12 +60,13 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 40px;
       height: 56px;
-      background: var(--black);
+      background: rgba(8, 8, 8, 0.95);
+      backdrop-filter: blur(12px);
       border-bottom: 2px solid var(--blue);
     }
     .nav-logo {
       font-family: var(--font-display);
-      font-size: 22px; letter-spacing: 0.06em;
+      font-size: 24px; letter-spacing: 0.08em;
       color: var(--white);
       display: flex; align-items: center; gap: 10px;
     }
@@ -73,9 +74,9 @@
       width: 8px; height: 8px;
       background: var(--green);
       box-shadow: 0 0 10px var(--green);
-      animation: blink 1.4s step-end infinite;
+      animation: blink 1.5s step-end infinite;
     }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
     .nav-right { display: flex; gap: 0; align-items: center; }
     .nav-link {
       font-family: var(--font-mono);
@@ -84,10 +85,10 @@
       color: var(--dim); text-decoration: none;
       padding: 0 20px; height: 56px;
       display: flex; align-items: center;
-      border-left: 1px solid #1a1a1a;
+      border-left: 1px solid var(--gray-lt);
       transition: color 0.15s, background 0.15s;
     }
-    .nav-link:hover { color: var(--white); background: #111; }
+    .nav-link:hover { color: var(--white); background: #111114; }
     .nav-link.cta {
       background: var(--blue); color: var(--white);
       border-left: none;
@@ -96,16 +97,16 @@
 
     /* ───── HERO ───── */
     .hero {
-      min-height: 100vh;
+      min-height: calc(100vh - 56px);
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.1fr 0.9fr;
       border-bottom: 2px solid var(--blue);
       margin-top: 56px;
       position: relative;
       overflow: hidden;
     }
     .hero-left {
-      padding: 80px 60px;
+      padding: 70px 60px;
       display: flex; flex-direction: column; justify-content: space-between;
       border-right: 2px solid var(--blue);
       position: relative;
@@ -116,7 +117,7 @@
       letter-spacing: 0.18em; text-transform: uppercase;
       color: var(--blue);
       display: flex; align-items: center; gap: 10px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
     .hero-tag::before {
       content: '';
@@ -129,8 +130,8 @@
     }
     h1.hero-headline {
       font-family: var(--font-display);
-      font-size: clamp(72px, 10vw, 148px);
-      line-height: 0.9;
+      font-size: clamp(68px, 9vw, 136px);
+      line-height: 0.88;
       letter-spacing: 0.01em;
       color: var(--white);
       text-transform: uppercase;
@@ -145,13 +146,14 @@
       font-family: var(--font-mono);
       font-size: 13px;
       color: var(--dim);
-      line-height: 1.6;
-      max-width: 400px;
-      margin-top: 40px;
+      line-height: 1.7;
+      max-width: 460px;
+      margin-top: 36px;
     }
     .hero-tagline strong { color: var(--white); }
     .hero-bottom {
       display: flex; flex-direction: column; gap: 24px;
+      margin-top: 40px;
     }
     .hero-stats-row {
       display: flex; gap: 0;
@@ -197,13 +199,8 @@
       border-color: var(--gray-lt);
     }
     .btn-block.secondary:hover { border-color: var(--white); }
-    .btn-block.accent {
-      background: var(--orange); color: var(--white);
-      border-color: var(--orange);
-    }
-    .btn-block.accent:hover { background: transparent; color: var(--orange); }
 
-    /* Hero Right */
+    /* Hero Right Poster Panel */
     .hero-right {
       background: var(--blue);
       display: flex; flex-direction: column;
@@ -217,25 +214,25 @@
     }
     .hero-poster-label {
       font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 0.2em;
-      color: rgba(255,255,255,0.5);
+      font-size: 10px; letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.6);
       text-transform: uppercase;
       margin-bottom: 20px;
     }
     .hero-poster-big {
       font-family: var(--font-display);
-      font-size: clamp(60px, 8vw, 120px);
+      font-size: clamp(64px, 8vw, 120px);
       line-height: 0.88;
       color: var(--white);
       text-transform: uppercase;
     }
     .hero-poster-sub {
       font-family: var(--font-display);
-      font-size: clamp(28px, 3.5vw, 52px);
-      line-height: 0.9;
-      color: rgba(255,255,255,0.4);
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 0.95;
+      color: rgba(255,255,255,0.45);
       text-transform: uppercase;
-      margin-top: 8px;
+      margin-top: 12px;
     }
     .hero-right-bottom {
       background: var(--black);
@@ -246,23 +243,24 @@
     .hero-right-bottom-text {
       font-family: var(--font-mono);
       font-size: 10px; color: var(--dim);
-      letter-spacing: 0.1em; text-transform: uppercase;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      line-height: 1.6;
     }
     .hero-right-bottom-text strong { color: var(--green); }
     .hero-grid-bg {
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 44px 44px;
     }
     .hero-circle {
       position: absolute;
-      right: -80px; top: 50%;
+      right: -60px; top: 50%;
       transform: translateY(-50%);
-      width: 320px; height: 320px;
+      width: 340px; height: 340px;
       border-radius: 50%;
-      border: 60px solid rgba(255,255,255,0.08);
+      border: 50px solid rgba(255,255,255,0.08);
       pointer-events: none;
     }
 
@@ -275,21 +273,21 @@
     }
     .marquee-track {
       display: flex; gap: 0;
-      animation: march 28s linear infinite;
+      animation: march 26s linear infinite;
       white-space: nowrap;
       flex-shrink: 0;
     }
     .marquee-item {
       font-family: var(--font-display);
-      font-size: 20px;
-      letter-spacing: 0.05em;
+      font-size: 21px;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--black);
-      padding: 10px 40px;
-      border-right: 2px solid rgba(0,0,0,0.2);
-      display: flex; align-items: center; gap: 16px;
+      padding: 11px 36px;
+      border-right: 2px solid rgba(0,0,0,0.18);
+      display: flex; align-items: center; gap: 14px;
     }
-    .marquee-star { font-size: 18px; }
+    .marquee-star { font-size: 16px; opacity: 0.7; }
     @keyframes march {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
@@ -324,13 +322,13 @@
       border-bottom: 2px solid var(--gray-lt);
     }
     .who-left {
-      padding: 100px 60px;
+      padding: 90px 60px;
       border-right: 2px solid var(--gray-lt);
       display: flex; flex-direction: column; justify-content: space-between;
     }
     .who-heading {
       font-family: var(--font-display);
-      font-size: clamp(64px, 9vw, 130px);
+      font-size: clamp(58px, 8.5vw, 120px);
       line-height: 0.88;
       text-transform: uppercase;
     }
@@ -342,25 +340,26 @@
     .who-body {
       font-family: var(--font-mono);
       font-size: 13px; line-height: 1.8;
-      color: #aaa;
-      max-width: 420px;
-      margin-top: 40px;
+      color: #9999a0;
+      max-width: 440px;
+      margin-top: 36px;
     }
     .who-body strong { color: var(--white); }
     .who-axiom {
       margin-top: 48px;
       border: 2px solid var(--blue);
       padding: 24px 28px;
+      background: rgba(21, 64, 255, 0.04);
     }
     .who-axiom-label {
       font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 0.2em;
+      font-size: 9px; letter-spacing: 0.22em;
       color: var(--blue); text-transform: uppercase;
       margin-bottom: 10px;
     }
     .who-axiom-text {
       font-family: var(--font-display);
-      font-size: 28px; line-height: 1;
+      font-size: 26px; line-height: 1.05;
       text-transform: uppercase;
       color: var(--white);
     }
@@ -377,18 +376,18 @@
       overflow: hidden;
     }
     .who-card:last-child { border-bottom: none; }
-    .who-card:hover { background: #0d0d0d; }
+    .who-card:hover { background: #0c0c0e; }
     .who-card-num {
       font-family: var(--font-display);
-      font-size: 80px; line-height: 1;
+      font-size: 84px; line-height: 1;
       color: var(--gray-lt);
-      position: absolute; right: 40px; top: 30px;
+      position: absolute; right: 40px; top: 24px;
       transition: color 0.2s;
     }
-    .who-card:hover .who-card-num { color: #333; }
+    .who-card:hover .who-card-num { color: #2a2a32; }
     .who-card-title {
       font-family: var(--font-display);
-      font-size: 34px; text-transform: uppercase;
+      font-size: 32px; text-transform: uppercase;
       color: var(--white);
       position: relative; z-index: 1;
     }
@@ -397,7 +396,7 @@
       font-size: 12px; line-height: 1.75;
       color: var(--dim);
       position: relative; z-index: 1;
-      max-width: 360px;
+      max-width: 380px;
     }
     .who-card-tag {
       font-family: var(--font-mono);
@@ -411,8 +410,6 @@
     }
     .who-card-tag.active { border-color: var(--green); color: var(--green); }
     .who-card-tag.system { border-color: var(--blue); color: var(--blue); }
-    .who-card-tag.stack  { border-color: var(--orange); color: var(--orange); }
-    .who-card-tag.axiom  { border-color: var(--yellow); color: var(--yellow); }
 
     /* ───── WORK SECTION ───── */
     #work {
@@ -436,21 +433,22 @@
       font-family: var(--font-mono);
       font-size: 13px; line-height: 1.7;
       color: var(--black);
-      max-width: 380px;
+      max-width: 400px;
+      font-weight: 500;
     }
     .work-table {
       width: 100%;
+      border-collapse: collapse;
     }
     .work-row {
       display: grid;
-      grid-template-columns: 70px 80px 1fr auto auto;
+      grid-template-columns: 70px 80px 1.2fr 1.5fr auto;
       align-items: center;
       gap: 0;
       border-bottom: 1px solid var(--gray-lt);
       transition: background 0.12s;
-      position: relative;
     }
-    .work-row:hover { background: #0e0e0e; }
+    .work-row:hover { background: #0c0c0e; }
     .work-row:hover .work-num { color: var(--blue); }
     .work-cell {
       padding: 24px 20px;
@@ -460,19 +458,19 @@
     .work-num {
       font-family: var(--font-display);
       font-size: 22px;
-      color: #333;
+      color: #33333b;
       transition: color 0.2s;
       text-align: center;
     }
     .work-year {
       font-family: var(--font-mono);
-      font-size: 10px; color: var(--dim);
+      font-size: 11px; color: var(--dim);
       letter-spacing: 0.1em;
     }
     .work-name-cell { padding: 24px 32px; border-right: 1px solid var(--gray-lt); }
     .work-name {
       font-family: var(--font-display);
-      font-size: 30px; text-transform: uppercase;
+      font-size: 28px; text-transform: uppercase;
       color: var(--white);
       text-decoration: none;
       transition: color 0.15s;
@@ -490,7 +488,7 @@
       font-size: 11px; color: var(--dim);
       line-height: 1.6;
     }
-    .work-status-cell { padding: 24px 28px; min-width: 120px; }
+    .work-status-cell { padding: 24px 28px; min-width: 120px; text-align: center; }
     .badge {
       font-family: var(--font-mono);
       font-size: 9px; font-weight: 700;
@@ -507,7 +505,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       border-bottom: 2px solid var(--gray-lt);
-      min-height: 60vh;
     }
     .phil-left {
       background: var(--blue);
@@ -516,7 +513,7 @@
     }
     .phil-big {
       font-family: var(--font-display);
-      font-size: clamp(52px, 7vw, 100px);
+      font-size: clamp(52px, 7vw, 96px);
       line-height: 0.88;
       text-transform: uppercase;
       color: var(--white);
@@ -529,18 +526,18 @@
     .phil-data-row {
       display: flex; justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      padding-bottom: 14px;
     }
     .phil-data-key {
       font-family: var(--font-mono);
       font-size: 10px; letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.6);
     }
     .phil-data-val {
       font-family: var(--font-mono);
-      font-size: 12px; font-weight: 700;
+      font-size: 11px; font-weight: 700;
       color: var(--white);
     }
     .phil-right {
@@ -555,7 +552,7 @@
     }
     .phil-quote-text {
       font-family: var(--font-display);
-      font-size: 36px; line-height: 1;
+      font-size: 32px; line-height: 1.05;
       text-transform: uppercase;
       color: var(--white);
     }
@@ -566,7 +563,7 @@
       margin-top: 12px;
     }
     .phil-rules {
-      display: flex; flex-direction: column; gap: 12px;
+      display: flex; flex-direction: column; gap: 16px;
       margin-top: 16px;
     }
     .phil-rule {
@@ -580,7 +577,7 @@
     .phil-rule-text {
       font-family: var(--font-mono);
       font-size: 12px; line-height: 1.7;
-      color: #aaa;
+      color: #9999a0;
     }
     .phil-rule-text strong { color: var(--white); }
 
@@ -602,7 +599,7 @@
       font-family: var(--font-mono);
       font-size: 11px; color: var(--dim);
       text-align: right; line-height: 1.8;
-      max-width: 300px;
+      max-width: 360px;
     }
     .stack-grid {
       display: grid;
@@ -615,10 +612,10 @@
       transition: background 0.15s;
     }
     .stack-item:last-child { border-right: none; }
-    .stack-item:hover { background: #0d0d0d; }
+    .stack-item:hover { background: #0c0c0e; }
     .stack-lang {
       font-family: var(--font-display);
-      font-size: 42px; text-transform: uppercase;
+      font-size: 40px; text-transform: uppercase;
       color: var(--white);
       line-height: 1;
     }
@@ -637,25 +634,24 @@
     .stack-bar {
       height: 3px;
       background: var(--blue);
-      transition: width 1s ease;
     }
 
     /* ───── CONNECT SECTION ───── */
     #connect {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.1fr 0.9fr;
       border-bottom: 2px solid var(--gray-lt);
     }
     .connect-left {
-      padding: 100px 60px;
+      padding: 90px 60px;
       border-right: 2px solid var(--gray-lt);
     }
     .connect-cta {
       font-family: var(--font-display);
-      font-size: clamp(52px, 7vw, 96px);
+      font-size: clamp(48px, 6.5vw, 88px);
       line-height: 0.88; text-transform: uppercase;
     }
-    .connect-cta .red { color: var(--red); }
+    .connect-cta .blue { color: var(--blue); }
     .connect-cta .out {
       -webkit-text-stroke: 2px var(--white);
       color: transparent;
@@ -664,7 +660,7 @@
       font-family: var(--font-mono);
       font-size: 12px; color: var(--dim);
       line-height: 1.8; margin-top: 32px;
-      max-width: 380px;
+      max-width: 420px;
     }
     .connect-body strong { color: var(--white); }
     .connect-actions {
@@ -690,16 +686,16 @@
       font-size: 9px; letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--blue);
-      min-width: 80px;
+      min-width: 90px;
     }
-    .connect-link:hover .connect-link-platform { color: rgba(255,255,255,0.6); }
+    .connect-link:hover .connect-link-platform { color: rgba(255,255,255,0.7); }
     .connect-link-name {
       font-family: var(--font-body);
-      font-size: 15px; font-weight: 600;
+      font-size: 14px; font-weight: 600;
       color: var(--white);
     }
     .connect-link-arrow {
-      font-size: 18px; color: var(--dim);
+      font-size: 16px; color: var(--dim);
       transition: transform 0.15s;
     }
     .connect-link:hover .connect-link-arrow { transform: translateX(4px); color: var(--white); }
@@ -718,12 +714,12 @@
       font-family: var(--font-mono);
       font-size: 10px; letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(0,0,0,0.5);
+      color: rgba(0,0,0,0.6);
       margin-bottom: 16px;
     }
     .connect-right-top-big {
       font-family: var(--font-display);
-      font-size: clamp(48px, 6vw, 88px);
+      font-size: clamp(44px, 5.5vw, 80px);
       line-height: 0.88; text-transform: uppercase;
       color: var(--black);
     }
@@ -755,14 +751,14 @@
     }
     .footer-logo {
       font-family: var(--font-display);
-      font-size: 80px; line-height: 0.88;
+      font-size: 72px; line-height: 0.88;
       text-transform: uppercase;
       color: var(--white);
     }
     .footer-sub {
       font-family: var(--font-mono);
       font-size: 10px; color: var(--dim);
-      letter-spacing: 0.12em; text-transform: uppercase;
+      letter-spacing: 0.14em; text-transform: uppercase;
       margin-top: 8px;
     }
     .footer-copyright {
@@ -776,12 +772,12 @@
     }
     .footer-motto {
       font-family: var(--font-display);
-      font-size: clamp(28px, 3.5vw, 48px);
-      line-height: 1;
+      font-size: clamp(26px, 3.2vw, 44px);
+      line-height: 1.05;
       text-transform: uppercase;
       color: var(--white);
     }
-    .footer-motto .orange { color: var(--orange); }
+    .footer-motto .blue { color: var(--blue); }
     .footer-meta {
       display: flex; flex-direction: column; gap: 8px;
     }
@@ -796,14 +792,13 @@
 
     /* ───── ANIMATIONS ───── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .fade-up { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+    .fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
     .delay-1 { animation-delay: 0.1s; }
     .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.35s; }
-    .delay-4 { animation-delay: 0.5s; }
+    .delay-3 { animation-delay: 0.3s; }
 
     /* ───── RESPONSIVE ───── */
     @media (max-width: 1024px) {
@@ -832,11 +827,11 @@
     }
 
     @media (max-width: 640px) {
-      h1.hero-headline { font-size: 60px; }
-      .who-heading { font-size: 56px; }
+      h1.hero-headline { font-size: 54px; }
+      .who-heading { font-size: 48px; }
       .work-row { grid-template-columns: 1fr auto; }
       .work-cell:first-child, .work-cell:nth-child(2) { display: none; }
-      .stack-header { flex-direction: column; gap: 16px; }
+      .stack-header { flex-direction: column; gap: 16px; align-items: flex-start; }
       .stack-grid { grid-template-columns: repeat(2, 1fr); }
       .stack-header-left { font-size: 36px; }
       .stack-item:nth-child(3) { border-right: 1px solid var(--gray-lt); }
@@ -844,53 +839,6 @@
       .stack-item:nth-child(5) { border-right: none; }
     }
 
-    /* ───── GLITCH ANIMATION ───── */
-    .glitch {
-      position: relative;
-    }
-    .glitch::before, .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0; top: 0;
-      font-family: inherit; font-size: inherit;
-      line-height: inherit; text-transform: inherit;
-      font-weight: inherit; letter-spacing: inherit;
-    }
-    .glitch::before {
-      color: var(--blue);
-      animation: glitch-1 3.5s infinite;
-      clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
-    }
-    .glitch::after {
-      color: var(--orange);
-      animation: glitch-2 3.5s infinite;
-      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
-    }
-    @keyframes glitch-1 {
-      0%,96%,100% { transform: translate(0); opacity: 0; }
-      97% { transform: translate(-3px, 1px); opacity: 1; }
-      98% { transform: translate(3px, -1px); opacity: 1; }
-      99% { transform: translate(-2px, 2px); opacity: 1; }
-    }
-    @keyframes glitch-2 {
-      0%,94%,100% { transform: translate(0); opacity: 0; }
-      95% { transform: translate(3px, -2px); opacity: 1; }
-      96% { transform: translate(-3px, 1px); opacity: 1; }
-      97% { transform: translate(2px, -1px); opacity: 1; }
-    }
-
-    /* ───── BARCODE DECORATION ───── */
-    .barcode {
-      display: flex; gap: 2px; align-items: flex-end;
-      height: 32px;
-    }
-    .barcode span {
-      background: currentColor;
-      width: 2px;
-      animation: barcode-flicker 0.1s step-end infinite;
-    }
-
-    /* Selection style */
     ::selection { background: var(--blue); color: var(--white); }
   </style>
 </head>
@@ -903,9 +851,9 @@
     KAADZ
   </div>
   <div class="nav-right">
-    <a href="#who"        class="nav-link">WHO</a>
-    <a href="#work"       class="nav-link">WORK</a>
-    <a href="#philosophy" class="nav-link">PHIL</a>
+    <a href="#who"        class="nav-link">SYSTEMS</a>
+    <a href="#work"       class="nav-link">PROJECTS</a>
+    <a href="#philosophy" class="nav-link">PHILOSOPHY</a>
     <a href="#stack"      class="nav-link">STACK</a>
     <a href="#connect"    class="nav-link cta">CONTACT →</a>
   </div>
@@ -917,30 +865,23 @@
   <!-- LEFT -->
   <div class="hero-left">
     <div>
-      <div class="hero-tag">KAADIPRANAV · INDIA · 17 · 2026</div>
+      <div class="hero-tag">KAADIPRANAV // WATCHLLM // SYSTEMS & RUNTIMES</div>
       <div class="hero-main-text">
-        <h1 class="hero-headline glitch fade-up" data-text="INFRA
-CANNOT
-BE
-PROB.">
+        <h1 class="hero-headline fade-up">
           <span class="blue">INFRA</span><br>
           CANNOT<br>
           <span class="outline">BE</span><br>
           <span class="orange">PROB.</span>
         </h1>
         <p class="hero-tagline fade-up delay-2">
-          <strong>Founder of WatchLLM.</strong> Building deterministic runtime governance for autonomous coding agents. Agents are probabilistic. Infrastructure cannot be.<br><br>
-          <strong>15 repos. 3 orgs. Rust + Python + TypeScript.</strong>
+          <strong>Founder of WatchLLM.</strong> Building deterministic runtime governance and interceptors for autonomous agentic systems. High-performance, air-gapped security paths.<br><br>
+          <strong>15 Repositories · 3 Organizations · Python, Rust, TypeScript.</strong>
         </p>
       </div>
     </div>
 
     <div class="hero-bottom fade-up delay-3">
       <div class="hero-stats-row">
-        <div class="hero-stat">
-          <div class="hero-stat-num">17</div>
-          <div class="hero-stat-label">Age</div>
-        </div>
         <div class="hero-stat">
           <div class="hero-stat-num">15</div>
           <div class="hero-stat-label">Repos</div>
@@ -950,14 +891,17 @@ PROB.">
           <div class="hero-stat-label">Orgs</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-num">∞</div>
-          <div class="hero-stat-label">Cron Jobs</div>
+          <div class="hero-stat-num">12</div>
+          <div class="hero-stat-label">Modules</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">0</div>
+          <div class="hero-stat-label">Cloud Deps</div>
         </div>
       </div>
       <div class="hero-btns">
         <a href="https://watchllm.dev" target="_blank" class="btn-block primary">WATCHLLM.DEV →</a>
         <a href="https://github.com/kaadipranav" target="_blank" class="btn-block secondary">GITHUB</a>
-        <a href="mailto:kaadz@protonmail.com" class="btn-block secondary">EMAIL</a>
       </div>
     </div>
   </div>
@@ -967,18 +911,18 @@ PROB.">
     <div class="hero-grid-bg"></div>
     <div class="hero-circle"></div>
     <div class="hero-right-top">
-      <div class="hero-poster-label">// SYSTEM IDENTIFIER //</div>
+      <div class="hero-poster-label">// RUNTIME ARCHITECTURE //</div>
       <div class="hero-poster-big">WATCH<br>LLM</div>
       <div class="hero-poster-sub">RUNTIME<br>GOVERNANCE</div>
     </div>
     <div class="hero-right-bottom">
       <div class="hero-right-bottom-text">
-        STATUS: <strong>ACTIVE</strong><br>
-        ENFORCEMENT: <strong>DETERMINISTIC</strong>
+        SYSTEM: <strong>GOVERNANCE KERNEL</strong><br>
+        TYPE: <strong>DETERMINISTIC INTERCEPTOR</strong>
       </div>
       <div class="hero-right-bottom-text" style="text-align:right;">
-        NODE: <strong class="sys-row-val online">ONLINE</strong><br>
-        INFERENCE: <strong style="color:var(--red)">NONE</strong>
+        STATUS: <strong class="sys-row-val online">ONLINE</strong><br>
+        LATENCY: <strong style="color:var(--yellow)">&lt;1MS AST</strong>
       </div>
     </div>
   </div>
@@ -988,42 +932,41 @@ PROB.">
 <!-- ══════════ MARQUEE ══════════ -->
 <div class="marquee-wrap">
   <div class="marquee-track">
-    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> INFRASTRUCTURE CANNOT BE</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISM OVER VIBES</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> NO SLOP FORTRESSES</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> EVERY SAVE MUST BE INTERCEPTED</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> THE ONLY JOBS I'LL HAVE ARE CRON JOBS</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> INFRASTRUCTURE CANNOT BE</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISM OVER VIBES</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> NO SLOP FORTRESSES</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> EVERY SAVE MUST BE INTERCEPTED</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> THE ONLY JOBS I'LL HAVE ARE CRON JOBS</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> ZERO-GC WASM RUNTIME</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISTIC GOVERNANCE</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> AST TREE-SITTER INTERCEPT</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> ARCHITECTURAL MEMORY LEDGER</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> AUDITABLE ENFORCEMENT</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> ZERO-GC WASM RUNTIME</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISTIC GOVERNANCE</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> AST TREE-SITTER INTERCEPT</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> ARCHITECTURAL MEMORY LEDGER</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> AUDITABLE ENFORCEMENT</div>
   </div>
 </div>
 
-<!-- ══════════ WHO ══════════ -->
+<!-- ══════════ WHO / SYSTEMS ══════════ -->
 <section id="who">
 
   <!-- LEFT -->
   <div class="who-left">
     <div>
-      <div class="s-label">01 // WHO</div>
+      <div class="s-label">01 // ARCHITECTURE</div>
       <div class="who-heading">
-        <span class="out">WHO</span><br>
-        IS<br>
-        <span class="blue">KAADZ</span><br>
-        ?
+        <span class="out">SYSTEMS</span><br>
+        & RUNTIME<br>
+        <span class="blue">DESIGN</span>
       </div>
       <p class="who-body">
-        A <strong>17-year-old systems engineer</strong> from India who believes software infrastructure should be boring, predictable, and auditable — not a house of probabilistic cards.<br><br>
-        Building <strong>WatchLLM</strong>: runtime governance infrastructure for autonomous coding agents. 12 interconnected components — kernel, runtime, schemas, orchestrator, memory, observability, adversarial testing, benchmarks, and a VS Code extension.
+        Engineering software infrastructure focused on predictability, auditability, and static security paths.<br><br>
+        Building <strong>WatchLLM</strong>: a runtime governance stack for autonomous coding agents. Composed of 12 modular components including static AST analysis, zero-GC execution sandboxes, memory harnesses, and real-time observability telemetry.
       </p>
     </div>
     <div class="who-axiom">
-      <div class="who-axiom-label">// Core Axiom //</div>
-      <div class="who-axiom-text">"THE ONLY JOBS I'LL HAVE ARE CRON JOBS."</div>
+      <div class="who-axiom-label">// CORE DESIGN PRINCIPLE //</div>
+      <div class="who-axiom-text">"INTERCEPT EVERY SAVE. GOVERN EVERY EXECUTION."</div>
     </div>
   </div>
 
@@ -1032,23 +975,22 @@ PROB.">
     <div class="who-card">
       <div class="who-card-num">01</div>
       <div>
-        <div class="who-card-title">BUILDING WATCHLLM</div>
+        <div class="who-card-title">WATCHLLM MONOREPO</div>
         <div class="who-card-body">
-          Runtime governance infrastructure for autonomous coding agents. 12 interconnected components — kernel, runtime, schemas, orchestrator, memory (klyd), observability (replay), adversarial testing, benchmarks, VS Code extension.<br><br>
+          Governance infrastructure for autonomous agents. Modular stack featuring Tree-sitter AST parsing, WASM runtime sandbox, decision schema validation, and replay telemetry.<br><br>
           Python · Rust · TypeScript · Wasm
         </div>
-        <div class="who-card-tag active">● ACTIVE</div>
+        <div class="who-card-tag active">● ACTIVE DEVELOPMENT</div>
       </div>
     </div>
     <div class="who-card">
       <div class="who-card-num">02</div>
       <div>
-        <div class="who-card-title">PHILOSOPHY</div>
+        <div class="who-card-title">DETERMINISTIC EVALUATION</div>
         <div class="who-card-body">
-          Infrastructure must be deterministic. No API keys. No cloud dependency. No ML inference in the enforcement path. Same input = same output. Always.<br><br>
-          If your guardrails are probabilistic, they aren't guardrails — they're suggestions. Suggestions don't stop $47,000 crypto arbitrage bots in Minsk.
+          The enforcement layer operates entirely offline without LLM inference overhead or external network dependencies. Identical code states produce guaranteed identical policy evaluations.
         </div>
-        <div class="who-card-tag system">// SYSTEM DESIGN</div>
+        <div class="who-card-tag system">// SYSTEM SPECIFICATION</div>
       </div>
     </div>
   </div>
@@ -1060,11 +1002,11 @@ PROB.">
 
   <div class="work-header">
     <div class="work-header-left">
-      <div class="s-label">02 // WHAT I'VE BUILT</div>
+      <div class="s-label">02 // PROJECTS</div>
       <div class="s-heading">WORK</div>
     </div>
     <div class="work-header-right">
-      <p>From school coding platforms to runtime governance infrastructure. Every project is an exercise in making software predictable. No spaghetti. No vibes-driven architecture.</p>
+      <p>From developer tooling to low-overhead runtime governance. High-performance abstractions built for security, auditability, and clean architecture.</p>
     </div>
   </div>
 
@@ -1075,10 +1017,10 @@ PROB.">
         <td class="work-cell work-year">2026</td>
         <td class="work-name-cell">
           <a href="https://watchllm.dev" target="_blank" class="work-name">WatchLLM</a>
-          <div class="work-org">watchllm · Private Monorepo</div>
+          <div class="work-org">watchllm · Monorepo</div>
         </td>
         <td class="work-desc-cell work-cell">
-          <div class="work-desc">Runtime governance for autonomous coding agents.<br>Kernel · Runtime · VS Code Extension · Replay UI</div>
+          <div class="work-desc">Runtime governance for autonomous coding agents.<br>Kernel · AST Interceptor · Replay Telemetry · VS Code Extension</div>
         </td>
         <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
       </tr>
@@ -1087,10 +1029,10 @@ PROB.">
         <td class="work-cell work-year">2026</td>
         <td class="work-name-cell">
           <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="work-name">klyd-harness</a>
-          <div class="work-org">klyd-studio · Public</div>
+          <div class="work-org">klyd-studio · Open Source</div>
         </td>
         <td class="work-desc-cell work-cell">
-          <div class="work-desc">Architectural memory layer. SQLite-backed decision<br>ledger for autonomous agent context persistence.</div>
+          <div class="work-desc">Architectural memory layer. SQLite-backed decision<br>ledger for agentic context persistence.</div>
         </td>
         <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
       </tr>
@@ -1099,10 +1041,10 @@ PROB.">
         <td class="work-cell work-year">2026</td>
         <td class="work-name-cell">
           <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="work-name">Codify</a>
-          <div class="work-org">Codify-PSBB · Public</div>
+          <div class="work-org">Codify-PSBB · Open Source</div>
         </td>
         <td class="work-desc-cell work-cell">
-          <div class="work-desc">School-grade coding platform. Competitive programming<br>and learning management for PSBB students.</div>
+          <div class="work-desc">Competitive programming & learning platform.<br>Core engine and problem evaluator.</div>
         </td>
         <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
       </tr>
@@ -1114,7 +1056,7 @@ PROB.">
           <div class="work-org">kaadipranav · Public</div>
         </td>
         <td class="work-desc-cell work-cell">
-          <div class="work-desc">Automated scripting utilities.<br>Early infrastructure experiment.</div>
+          <div class="work-desc">Automated scripting and execution utilities.</div>
         </td>
         <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
       </tr>
@@ -1126,7 +1068,7 @@ PROB.">
           <div class="work-org">kaadipranav · Public</div>
         </td>
         <td class="work-desc-cell work-cell">
-          <div class="work-desc">AI-assisted content generation tool.<br>Deprecated in favor of deterministic tooling.</div>
+          <div class="work-desc">Content parsing tool prototype.</div>
         </td>
         <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
       </tr>
@@ -1138,7 +1080,7 @@ PROB.">
           <div class="work-org">kaadipranav · Public</div>
         </td>
         <td class="work-desc-cell work-cell">
-          <div class="work-desc">Educational platform prototype.<br>Precursor to Codify.</div>
+          <div class="work-desc">Educational platform architecture experiment.</div>
         </td>
         <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
       </tr>
@@ -1147,10 +1089,10 @@ PROB.">
         <td class="work-cell work-year">2025</td>
         <td class="work-name-cell">
           <span class="work-name" style="cursor:default">BOILERPLATE</span>
-          <div class="work-org">kaadipranav · Public Template</div>
+          <div class="work-org">kaadipranav · Template</div>
         </td>
         <td class="work-desc-cell work-cell">
-          <div class="work-desc">Reusable project template.<br>Opinionated starter for deterministic projects.</div>
+          <div class="work-desc">Modular starter template for systems software.</div>
         </td>
         <td class="work-status-cell work-cell"><span class="badge public">PUBLIC</span></td>
       </tr>
@@ -1165,7 +1107,7 @@ PROB.">
   <!-- LEFT: BLUE PANEL -->
   <div class="phil-left">
     <div>
-      <div class="s-label" style="color:rgba(255,255,255,0.4);">03 // PHILOSOPHY</div>
+      <div class="s-label" style="color:rgba(255,255,255,0.5);">03 // PRINCIPLES</div>
       <div class="phil-big">
         DETER<br>
         MINISM<br>
@@ -1179,56 +1121,56 @@ PROB.">
         <span class="phil-data-val">ZERO ML INFERENCE</span>
       </div>
       <div class="phil-data-row">
-        <span class="phil-data-key">CLOUD DEPENDENCY</span>
-        <span class="phil-data-val">NONE</span>
+        <span class="phil-data-key">RUNTIME LATENCY</span>
+        <span class="phil-data-val">SUB-MILLISECOND</span>
       </div>
       <div class="phil-data-row">
-        <span class="phil-data-key">SAME INPUT → OUTPUT</span>
-        <span class="phil-data-val">ALWAYS</span>
+        <span class="phil-data-key">EXECUTION MODEL</span>
+        <span class="phil-data-val">AIR-GAPPED WASM</span>
       </div>
       <div class="phil-data-row">
-        <span class="phil-data-key">GUARDRAIL TYPE</span>
+        <span class="phil-data-key">EVALUATION</span>
         <span class="phil-data-val">DETERMINISTIC</span>
       </div>
       <div class="phil-data-row" style="border-bottom:none;padding-bottom:0;">
-        <span class="phil-data-key">API KEYS IN RUNTIME</span>
-        <span class="phil-data-val" style="color:var(--orange);">FORBIDDEN</span>
+        <span class="phil-data-key">CLOUD DEPENDENCY</span>
+        <span class="phil-data-val" style="color:var(--yellow);">NONE</span>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT: QUOTES -->
+  <!-- RIGHT: PRINCIPLES -->
   <div class="phil-right">
     <div class="s-label">AXIOMS</div>
 
     <div class="phil-quote">
-      <div class="phil-quote-text">"EVERY SAVE MUST BE INTERCEPTED."</div>
-      <div class="phil-quote-attr">— WatchLLM Design Principle</div>
+      <div class="phil-quote-text">"A GUARDRAIL THAT IS PROBABILISTIC IS MERELY A SUGGESTION."</div>
+      <div class="phil-quote-attr">— WatchLLM Architectural Guideline</div>
     </div>
 
     <div class="phil-rules">
       <div class="phil-rule">
         <div class="phil-rule-idx">01</div>
         <div class="phil-rule-text">
-          <strong>No probabilistic guardrails.</strong> If your enforcement depends on an LLM saying "no", it can also say "yes". That's not safety — that's theatre.
+          <strong>Deterministic Guardrails.</strong> Enforcement should never rely on non-deterministic model outputs. Security rules require absolute binary clarity.
         </div>
       </div>
       <div class="phil-rule">
         <div class="phil-rule-idx">02</div>
         <div class="phil-rule-text">
-          <strong>Everything compiles offline.</strong> No cloud. No API. No vibes. The kernel works on an air-gapped laptop the same as a GitHub Actions runner.
+          <strong>Air-Gapped Analysis.</strong> Static AST inspection and policy checks compile and run locally without requiring remote network roundtrips.
         </div>
       </div>
       <div class="phil-rule">
         <div class="phil-rule-idx">03</div>
         <div class="phil-rule-text">
-          <strong>Automation is the point.</strong> WatchLLM is a cron job for your codebase — continuously intercepting, continuously enforcing, never sleeping. Zero human in the enforcement path.
+          <strong>Auditable Telemetry.</strong> Execution traces and architectural state changes are saved to immutable SQLite ledgers for full replayability.
         </div>
       </div>
       <div class="phil-rule">
         <div class="phil-rule-idx">04</div>
         <div class="phil-rule-text">
-          <strong>Suggestions don't stop $47k bots in Minsk.</strong> Deterministic rules do.
+          <strong>Explicit Policy Rules.</strong> Replace probabilistic guesswork with precise structural checks at the compiler AST boundary.
         </div>
       </div>
     </div>
@@ -1239,36 +1181,36 @@ PROB.">
 <!-- ══════════ STACK ══════════ -->
 <section id="stack">
   <div class="stack-header">
-    <div class="stack-header-left">THE<br>STACK</div>
-    <div class="s-label" style="writing-mode:vertical-rl;transform:rotate(180deg);height:auto;margin:0;font-size:10px;">04 // TECH</div>
+    <div class="stack-header-left">TECH<br>STACK</div>
+    <div class="s-label" style="writing-mode:vertical-rl;transform:rotate(180deg);height:auto;margin:0;font-size:10px;">04 // TECHNOLOGIES</div>
     <div class="stack-header-right">
-      Everything compiles offline. Everything is auditable. Tree-sitter for AST analysis. Zero-GC Wasm runtime. SQLite for memory. Shell for CI/CD. No cloud. No vibes.
+      High-performance toolchains. Tree-sitter for AST analysis, zero-GC WASM runtime for sandboxed policy enforcement, SQLite for structured decision ledgers.
     </div>
   </div>
   <div class="stack-grid">
     <div class="stack-item">
       <div class="stack-lang blue">PYTHON</div>
-      <div class="stack-use">Kernel / Tree-sitter AST analysis / WatchLLM core enforcement engine</div>
+      <div class="stack-use">Tree-sitter AST analysis / Governance kernel logic / Core enforcement engine</div>
       <div class="stack-bar-wrap"><div class="stack-bar" style="width:90%; background:var(--blue);"></div></div>
     </div>
     <div class="stack-item">
       <div class="stack-lang orange">RUST</div>
-      <div class="stack-use">Runtime / Zero-GC / Cross-platform Wasm target / Maximum performance</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:75%; background:var(--orange);"></div></div>
+      <div class="stack-use">Zero-GC execution / Cross-platform WASM target / High-concurrency sandbox</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:80%; background:var(--orange);"></div></div>
     </div>
     <div class="stack-item">
       <div class="stack-lang" style="color:#4DBBFF;">TS</div>
-      <div class="stack-use">VS Code extension / Replay UI / Observability dashboard / Tooling</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:80%; background:#4DBBFF;"></div></div>
+      <div class="stack-use">VS Code extension / Replay UI dashboard / Developer tooling</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:85%; background:#4DBBFF;"></div></div>
     </div>
     <div class="stack-item">
       <div class="stack-lang yellow">WASM</div>
-      <div class="stack-use">Runtime compilation target / Runs anywhere / Zero dependency / Auditable</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:65%; background:var(--yellow);"></div></div>
+      <div class="stack-use">Sandboxed policy runtime / Cross-platform / Zero external dependency</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:75%; background:var(--yellow);"></div></div>
     </div>
     <div class="stack-item">
       <div class="stack-lang">SQL<span style="color:var(--dim)">ite</span></div>
-      <div class="stack-use">Architectural memory (klyd) / Decision ledger / Context persistence</div>
+      <div class="stack-use">Architectural memory ledger / Decision audit trails / State persistence</div>
       <div class="stack-bar-wrap"><div class="stack-bar" style="width:70%;"></div></div>
     </div>
   </div>
@@ -1279,17 +1221,16 @@ PROB.">
 
   <!-- LEFT -->
   <div class="connect-left">
-    <div class="s-label">05 // FIND ME</div>
+    <div class="s-label">05 // CONTACT</div>
     <div class="connect-cta">
-      REACH<br>
-      <span class="out">OUT</span><br>
-      OR<br>
-      <span class="red">DIE</span><br>
-      CURIOUS.
+      LET'S<br>
+      <span class="blue">BUILD</span><br>
+      HARD<br>
+      <span class="out">SYSTEMS</span>.
     </div>
     <p class="connect-body">
-      Building infrastructure for autonomous systems? Want to argue about determinism vs. probabilistic guardrails? Think I'm wrong about something? Let's talk.<br><br>
-      <strong>Response time: &lt; 24h on email. Faster on X.</strong>
+      Building autonomous agent infrastructure, runtime governance, or low-latency interceptors? Interested in deterministic systems research?<br><br>
+      <strong>Reach out via email or Twitter/X.</strong>
     </p>
     <div class="connect-actions">
       <a href="https://github.com/kaadipranav" target="_blank" class="connect-link">
@@ -1326,35 +1267,31 @@ PROB.">
   <!-- RIGHT -->
   <div class="connect-right">
     <div class="connect-right-top">
-      <div class="connect-right-top-label">// Founder — WatchLLM //</div>
+      <div class="connect-right-top-label">// WatchLLM //</div>
       <div class="connect-right-top-big">
         INFRA<br>STRUCTURE<br>IS THE<br>PRODUCT.
       </div>
     </div>
     <div class="connect-right-bottom">
       <div class="sys-row">
-        <span>SUBJECT</span>
+        <span>DEVELOPER</span>
         <span class="sys-row-val">KAADIPRANAV</span>
       </div>
       <div class="sys-row">
         <span>LOCATION</span>
-        <span class="sys-row-val">INDIA, CHENNAI</span>
+        <span class="sys-row-val">INDIA</span>
       </div>
       <div class="sys-row">
         <span>STATUS</span>
-        <span class="sys-row-val online">● BUILDING</span>
+        <span class="sys-row-val online">● ACTIVE DEVELOPMENT</span>
       </div>
       <div class="sys-row">
-        <span>PRIMARY VENTURE</span>
+        <span>PRIMARY FOCUS</span>
         <span class="sys-row-val">WATCHLLM</span>
       </div>
-      <div class="sys-row">
-        <span>OPEN TO</span>
-        <span class="sys-row-val">COLLAB / CONVO</span>
-      </div>
       <div class="sys-row" style="border-bottom:none;">
-        <span>PROBABILISTIC SYSTEMS</span>
-        <span class="sys-row-val" style="color:var(--red);">REJECTED</span>
+        <span>DISCIPLINE</span>
+        <span class="sys-row-val">DETERMINISTIC RUNTIMES</span>
       </div>
     </div>
   </div>
@@ -1366,13 +1303,13 @@ PROB.">
   <div class="footer-left">
     <div>
       <div class="footer-logo">KAADZ</div>
-      <div class="footer-sub">KAADIPRANAV · FOUNDER · INDIA</div>
+      <div class="footer-sub">KAADIPRANAV · FOUNDER & SYSTEMS ENGINEER</div>
     </div>
-    <div class="footer-copyright">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>BUILT WITHOUT PROBABILISTIC GUARDRAILS.</div>
+    <div class="footer-copyright">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>DETERMINISTIC RUNTIME GOVERNANCE.</div>
   </div>
   <div class="footer-right">
     <div class="footer-motto">
-      "THE ONLY<br>JOBS I'LL<br>HAVE ARE<br><span class="orange">CRON JOBS."</span>
+      "DETERMINISTIC<br>RUNTIMES FOR<br><span class="blue">PROBABILISTIC</span><br>AGENTS."
     </div>
     <div class="footer-meta">
       <div class="footer-meta-row">
@@ -1396,7 +1333,7 @@ PROB.">
 </footer>
 
 <script>
-  // Intersection Observer for fade-up animations on sections
+  // Intersection Observer for scroll animations
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -1409,20 +1346,10 @@ PROB.">
 
   document.querySelectorAll('.who-card, .work-row, .phil-rule, .stack-item, .connect-link').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
+    el.style.transform = 'translateY(18px)';
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     io.observe(el);
   });
-
-  // Live clock in footer (just for fun)
-  function updateTime() {
-    const now = new Date();
-    const t = now.toLocaleTimeString('en-IN', { hour12: false, timeZone: 'Asia/Kolkata' });
-    const el = document.getElementById('live-time');
-    if (el) el.textContent = t + ' IST';
-  }
-  updateTime();
-  setInterval(updateTime, 1000);
 </script>
 
 </body>
