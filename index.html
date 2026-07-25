@@ -3,568 +3,1427 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kaadz — infrastructure cannot be probabilistic.</title>
-  <meta name="description" content="Kaadz — Founder of WatchLLM. Building deterministic infrastructure for autonomous systems. Agents are probabilistic. Infrastructure cannot be." />
+  <title>KAADZ — INFRASTRUCTURE CANNOT BE PROBABILISTIC.</title>
+  <meta name="description" content="Kaadz — Founder of WatchLLM. Building deterministic runtime governance for autonomous systems. 17. India. Agents are probabilistic. Infrastructure cannot be." />
+  <meta property="og:title" content="KAADZ — Infrastructure Cannot Be Probabilistic." />
+  <meta property="og:description" content="Founder of WatchLLM. 17. India. Runtime governance for autonomous coding agents." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0b;
-      --bg-card: #111114;
-      --bg-card-hover: #18181d;
-      --border: #1f1f24;
-      --text: #e4e4e7;
-      --text-dim: #71717a;
-      --text-muted: #52525b;
-      --accent: #a78bfa;
-      --accent-glow: #7c3aed;
-      --red: #f87171;
-      --red-dim: #7f1d1d;
-      --green: #4ade80;
-      --font-sans: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --black:   #080808;
+      --white:   #f0f0f0;
+      --blue:    #1540FF;
+      --blue-lt: #4D6EFF;
+      --orange:  #FF4D00;
+      --yellow:  #FFE600;
+      --green:   #00FF88;
+      --red:     #FF0022;
+      --gray:    #1A1A1A;
+      --gray-lt: #2A2A2A;
+      --dim:     #666;
+      --font-display: 'Bebas Neue', 'Impact', sans-serif;
+      --font-body:    'Space Grotesk', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
     }
 
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font-sans);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      font-family: var(--font-body);
+      background: var(--black);
+      color: var(--white);
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    /* CRT overlay */
-    body::after {
+    /* ───── NOISE OVERLAY ───── */
+    body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0; z-index: 9999;
       pointer-events: none;
-      z-index: 9999;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.03) 2px,
-        rgba(0, 0, 0, 0.03) 4px
-      );
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 150px 150px;
     }
 
-    .section-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+    /* ───── SCROLLBAR ───── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--blue); }
 
-    /* ===== NAV ===== */
+    /* ───── NAV ───── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 16px 32px;
-      background: rgba(10,10,11,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 56px;
+      background: var(--black);
+      border-bottom: 2px solid var(--blue);
     }
     .nav-logo {
-      font-family: var(--font-mono);
-      font-size: 13px; font-weight: 800; letter-spacing: 0.08em;
-      color: var(--text);
-      display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-display);
+      font-size: 22px; letter-spacing: 0.06em;
+      color: var(--white);
+      display: flex; align-items: center; gap: 10px;
     }
-    .nav-pulse {
-      width: 8px; height: 8px; border-radius: 50%;
+    .nav-dot {
+      width: 8px; height: 8px;
       background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse 2s infinite;
+      box-shadow: 0 0 10px var(--green);
+      animation: blink 1.4s step-end infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .nav-status { color: var(--green); }
-    .nav-links { display: flex; gap: 28px; align-items: center; }
-    .nav-links a {
-      font-family: var(--font-sans);
-      font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
-      color: var(--text-dim); text-decoration: none;
-      text-transform: uppercase;
-      transition: color 0.15s;
-    }
-    .nav-links a:hover { color: var(--text); }
-    .btn-brutal {
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .nav-right { display: flex; gap: 0; align-items: center; }
+    .nav-link {
       font-family: var(--font-mono);
-      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-      padding: 8px 18px;
-      border: 1.5px solid var(--accent);
-      color: var(--accent); background: transparent;
-      text-transform: uppercase; text-decoration: none;
-      transition: all 0.15s;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--dim); text-decoration: none;
+      padding: 0 20px; height: 56px;
+      display: flex; align-items: center;
+      border-left: 1px solid #1a1a1a;
+      transition: color 0.15s, background 0.15s;
     }
-    .btn-brutal:hover { background: var(--accent); color: var(--bg); }
+    .nav-link:hover { color: var(--white); background: #111; }
+    .nav-link.cta {
+      background: var(--blue); color: var(--white);
+      border-left: none;
+    }
+    .nav-link.cta:hover { background: var(--blue-lt); }
 
-    /* ===== HERO ===== */
+    /* ───── HERO ───── */
     .hero {
       min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      position: relative; overflow: hidden;
-      padding: 120px 0 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid var(--blue);
+      margin-top: 56px;
+      position: relative;
+      overflow: hidden;
     }
-    .hero-mega-text {
+    .hero-left {
+      padding: 80px 60px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      border-right: 2px solid var(--blue);
+      position: relative;
+    }
+    .hero-tag {
       font-family: var(--font-mono);
-      font-size: clamp(100px, 20vw, 260px);
-      font-weight: 800;
-      text-align: center;
-      line-height: 0.85;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue);
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 40px;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block; width: 32px; height: 2px;
+      background: var(--blue);
+    }
+    .hero-main-text {
+      flex: 1;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    h1.hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(72px, 10vw, 148px);
+      line-height: 0.9;
+      letter-spacing: 0.01em;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+    .hero-headline .blue   { color: var(--blue); }
+    .hero-headline .orange { color: var(--orange); }
+    .hero-headline .outline {
+      -webkit-text-stroke: 2px var(--white);
       color: transparent;
-      -webkit-text-stroke: 1px var(--border);
-      user-select: none;
-      opacity: 0.3;
+    }
+    .hero-tagline {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--dim);
+      line-height: 1.6;
+      max-width: 400px;
+      margin-top: 40px;
+    }
+    .hero-tagline strong { color: var(--white); }
+    .hero-bottom {
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .hero-stats-row {
+      display: flex; gap: 0;
+      border: 1px solid var(--gray-lt);
+    }
+    .hero-stat {
+      flex: 1;
+      padding: 14px 20px;
+      border-right: 1px solid var(--gray-lt);
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-size: 36px;
+      color: var(--yellow);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-family: var(--font-mono);
+      font-size: 9px; letter-spacing: 0.15em;
+      color: var(--dim); text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .hero-btns { display: flex; gap: 0; }
+    .btn-block {
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-decoration: none;
+      padding: 16px 28px;
+      border: 2px solid;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .btn-block.primary {
+      background: var(--blue); color: var(--white);
+      border-color: var(--blue);
+    }
+    .btn-block.primary:hover { background: transparent; color: var(--blue); }
+    .btn-block.secondary {
+      background: transparent; color: var(--white);
+      border-color: var(--gray-lt);
+    }
+    .btn-block.secondary:hover { border-color: var(--white); }
+    .btn-block.accent {
+      background: var(--orange); color: var(--white);
+      border-color: var(--orange);
+    }
+    .btn-block.accent:hover { background: transparent; color: var(--orange); }
+
+    /* Hero Right */
+    .hero-right {
+      background: var(--blue);
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+    .hero-right-top {
+      flex: 1;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 60px 50px;
+      position: relative; z-index: 1;
+    }
+    .hero-poster-label {
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-poster-big {
+      font-family: var(--font-display);
+      font-size: clamp(60px, 8vw, 120px);
+      line-height: 0.88;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+    .hero-poster-sub {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 52px);
+      line-height: 0.9;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .hero-right-bottom {
+      background: var(--black);
+      border-top: 2px solid var(--blue);
+      padding: 24px 50px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .hero-right-bottom-text {
+      font-family: var(--font-mono);
+      font-size: 10px; color: var(--dim);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .hero-right-bottom-text strong { color: var(--green); }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-circle {
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
+      right: -80px; top: 50%;
+      transform: translateY(-50%);
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 60px solid rgba(255,255,255,0.08);
       pointer-events: none;
     }
-    .hero-content { position: relative; z-index: 1; }
-    .hero-title {
-      font-size: clamp(36px, 7vw, 72px);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-    }
-    .hero-title .accent-line { color: var(--accent); }
-    .hero-subtitle {
-      font-family: var(--font-mono);
-      font-size: 14px; color: var(--text-dim);
-      margin-bottom: 48px;
-      max-width: 560px;
-    }
-    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-    .hero-actions .btn-brutal { padding: 12px 28px; font-size: 13px; }
-    .hero-actions .btn-brutal.ghost { border-color: var(--text-muted); color: var(--text-muted); }
-    .hero-actions .btn-brutal.ghost:hover { border-color: var(--text); color: var(--text); background: transparent; }
 
-    /* ===== MARQUEE ===== */
-    .marquee-container {
-      overflow: hidden; border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 10px 0;
+    /* ───── MARQUEE ───── */
+    .marquee-wrap {
+      display: flex;
+      overflow: hidden;
+      background: var(--orange);
+      border-bottom: 2px solid var(--black);
     }
-    .marquee {
-      display: flex; gap: 32px;
-      font-family: var(--font-mono); font-size: 11px;
-      color: var(--text-dim);
-      animation: scroll 40s linear infinite;
+    .marquee-track {
+      display: flex; gap: 0;
+      animation: march 28s linear infinite;
       white-space: nowrap;
+      flex-shrink: 0;
     }
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    .marquee-item {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--black);
+      padding: 10px 40px;
+      border-right: 2px solid rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 16px;
     }
-    .marquee-tag {
-      font-style: normal; font-weight: 700;
-      color: var(--red);
-      margin-right: 6px;
-    }
-
-    /* ===== SECTIONS ===== */
-    section { padding: 100px 0; }
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 13px; font-weight: 700; color: var(--accent);
-      display: block; margin-bottom: 8px;
-      letter-spacing: 0.08em;
-    }
-    .section-title {
-      font-size: clamp(28px, 5vw, 48px);
-      font-weight: 700; line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-    .section-subtitle {
-      font-family: var(--font-mono);
-      font-size: 13px; color: var(--text-dim);
-      max-width: 620px; margin-bottom: 48px;
-      line-height: 1.7;
+    .marquee-star { font-size: 18px; }
+    @keyframes march {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
-    /* ===== WHO ===== */
-    .who-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 24px;
+    /* ───── SECTION COMMONS ───── */
+    .s-label {
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue);
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px;
     }
-    @media (max-width: 768px) { .who-grid { grid-template-columns: 1fr; } }
+    .s-label::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: var(--gray-lt);
+    }
+    .s-heading {
+      font-family: var(--font-display);
+      font-size: clamp(56px, 8vw, 110px);
+      line-height: 0.88;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    /* ───── WHO SECTION ───── */
+    #who {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid var(--gray-lt);
+    }
+    .who-left {
+      padding: 100px 60px;
+      border-right: 2px solid var(--gray-lt);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .who-heading {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 9vw, 130px);
+      line-height: 0.88;
+      text-transform: uppercase;
+    }
+    .who-heading .out {
+      -webkit-text-stroke: 2px var(--white);
+      color: transparent;
+    }
+    .who-heading .blue { color: var(--blue); }
+    .who-body {
+      font-family: var(--font-mono);
+      font-size: 13px; line-height: 1.8;
+      color: #aaa;
+      max-width: 420px;
+      margin-top: 40px;
+    }
+    .who-body strong { color: var(--white); }
+    .who-axiom {
+      margin-top: 48px;
+      border: 2px solid var(--blue);
+      padding: 24px 28px;
+    }
+    .who-axiom-label {
+      font-family: var(--font-mono);
+      font-size: 9px; letter-spacing: 0.2em;
+      color: var(--blue); text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .who-axiom-text {
+      font-family: var(--font-display);
+      font-size: 28px; line-height: 1;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .who-right {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+    }
     .who-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 28px;
-      transition: all 0.2s;
+      padding: 48px 50px;
+      border-bottom: 2px solid var(--gray-lt);
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
     }
-    .who-card:hover { background: var(--bg-card-hover); border-color: #2a2a30; }
-    .who-card-icon {
-      font-family: var(--font-mono);
-      font-size: 24px; margin-bottom: 12px;
-      display: block;
+    .who-card:last-child { border-bottom: none; }
+    .who-card:hover { background: #0d0d0d; }
+    .who-card-num {
+      font-family: var(--font-display);
+      font-size: 80px; line-height: 1;
+      color: var(--gray-lt);
+      position: absolute; right: 40px; top: 30px;
+      transition: color 0.2s;
     }
+    .who-card:hover .who-card-num { color: #333; }
     .who-card-title {
-      font-size: 16px; font-weight: 700;
-      margin-bottom: 8px;
+      font-family: var(--font-display);
+      font-size: 34px; text-transform: uppercase;
+      color: var(--white);
+      position: relative; z-index: 1;
     }
     .who-card-body {
       font-family: var(--font-mono);
-      font-size: 12px; color: var(--text-dim);
-      line-height: 1.7;
+      font-size: 12px; line-height: 1.75;
+      color: var(--dim);
+      position: relative; z-index: 1;
+      max-width: 360px;
     }
+    .who-card-tag {
+      font-family: var(--font-mono);
+      font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border: 1px solid;
+      display: inline-block;
+      margin-top: 16px;
+      position: relative; z-index: 1;
+    }
+    .who-card-tag.active { border-color: var(--green); color: var(--green); }
+    .who-card-tag.system { border-color: var(--blue); color: var(--blue); }
+    .who-card-tag.stack  { border-color: var(--orange); color: var(--orange); }
+    .who-card-tag.axiom  { border-color: var(--yellow); color: var(--yellow); }
 
-    /* ===== WORK ===== */
-    .work-list {
-      display: flex; flex-direction: column; gap: 1px;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+    /* ───── WORK SECTION ───── */
+    #work {
+      border-bottom: 2px solid var(--gray-lt);
+    }
+    .work-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid var(--gray-lt);
+    }
+    .work-header-left {
+      padding: 80px 60px;
+      border-right: 2px solid var(--gray-lt);
+    }
+    .work-header-right {
+      background: var(--yellow);
+      display: flex; align-items: flex-end;
+      padding: 48px 50px;
+    }
+    .work-header-right p {
+      font-family: var(--font-mono);
+      font-size: 13px; line-height: 1.7;
+      color: var(--black);
+      max-width: 380px;
+    }
+    .work-table {
+      width: 100%;
     }
     .work-row {
-      display: grid; grid-template-columns: 200px 1fr 120px;
-      align-items: center; gap: 24px;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
+      display: grid;
+      grid-template-columns: 70px 80px 1fr auto auto;
+      align-items: center;
+      gap: 0;
+      border-bottom: 1px solid var(--gray-lt);
+      transition: background 0.12s;
+      position: relative;
     }
-    @media (max-width: 768px) {
-      .work-row { grid-template-columns: 1fr 1fr; }
-      .work-row .work-year { display: none; }
+    .work-row:hover { background: #0e0e0e; }
+    .work-row:hover .work-num { color: var(--blue); }
+    .work-cell {
+      padding: 24px 20px;
+      border-right: 1px solid var(--gray-lt);
     }
-    .work-row:hover { background: var(--bg-card-hover); }
+    .work-cell:last-child { border-right: none; }
+    .work-num {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: #333;
+      transition: color 0.2s;
+      text-align: center;
+    }
     .work-year {
       font-family: var(--font-mono);
-      font-size: 11px; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.1em;
+      font-size: 10px; color: var(--dim);
+      letter-spacing: 0.1em;
     }
+    .work-name-cell { padding: 24px 32px; border-right: 1px solid var(--gray-lt); }
     .work-name {
-      font-weight: 700; font-size: 18px;
-      letter-spacing: -0.01em;
+      font-family: var(--font-display);
+      font-size: 30px; text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.15s;
     }
-    .work-name a { color: var(--text); text-decoration: none; }
-    .work-name a:hover { color: var(--accent); }
+    .work-name:hover { color: var(--blue); }
     .work-org {
       font-family: var(--font-mono);
-      font-size: 11px; color: var(--text-muted);
-    }
-    .work-status {
-      font-family: var(--font-mono);
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      text-align: right;
-    }
-    .work-status.active { color: var(--green); }
-    .work-status.archived { color: var(--text-muted); }
-    .work-status.public { color: var(--accent); }
-
-    /* ===== STATS ===== */
-    .stat-strip {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 28px 0;
-    }
-    .stat-strip-inner {
-      display: flex; justify-content: center; align-items: center;
-      gap: 40px; flex-wrap: wrap;
-    }
-    .stat-item { text-align: center; }
-    .stat-num {
-      font-family: var(--font-mono);
-      font-size: 28px; font-weight: 800;
-      display: block;
-      color: var(--accent);
-    }
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: 10px; text-transform: uppercase;
+      font-size: 10px; color: var(--dim);
       letter-spacing: 0.1em;
-      color: var(--text-muted);
+      margin-top: 4px;
     }
-    .stat-sep { color: var(--border); font-size: 20px; }
-
-    /* ===== LINKS / FOOTER ===== */
-    .links-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 16px; margin-top: 32px;
-    }
-    @media (max-width: 768px) { .links-grid { grid-template-columns: repeat(2, 1fr); } }
-    .link-card {
-      display: block; background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 20px; text-decoration: none;
-      transition: all 0.2s;
-    }
-    .link-card:hover { background: var(--bg-card-hover); border-color: var(--accent-glow); }
-    .link-card-label {
+    .work-desc-cell { padding: 24px 32px; border-right: 1px solid var(--gray-lt); }
+    .work-desc {
       font-family: var(--font-mono);
-      font-size: 11px; font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 6px;
+      font-size: 11px; color: var(--dim);
+      line-height: 1.6;
     }
-    .link-card-text {
-      font-size: 14px; font-weight: 600;
-      color: var(--text);
+    .work-status-cell { padding: 24px 28px; min-width: 120px; }
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 5px 10px;
+      display: inline-block;
+    }
+    .badge.active   { background: var(--green);  color: var(--black); }
+    .badge.archived { background: var(--gray-lt); color: var(--dim);   }
+    .badge.public   { background: var(--blue);    color: var(--white); }
+
+    /* ───── PHILOSOPHY SECTION ───── */
+    #philosophy {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid var(--gray-lt);
+      min-height: 60vh;
+    }
+    .phil-left {
+      background: var(--blue);
+      padding: 80px 60px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .phil-big {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 7vw, 100px);
+      line-height: 0.88;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .phil-big .dark { color: rgba(0,0,0,0.3); }
+    .phil-data {
+      display: flex; flex-direction: column; gap: 16px;
+      margin-top: 48px;
+    }
+    .phil-data-row {
+      display: flex; justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding-bottom: 16px;
+    }
+    .phil-data-key {
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .phil-data-val {
+      font-family: var(--font-mono);
+      font-size: 12px; font-weight: 700;
+      color: var(--white);
+    }
+    .phil-right {
+      padding: 80px 60px;
+      border-left: 2px solid var(--gray-lt);
+      display: flex; flex-direction: column; justify-content: center;
+      gap: 40px;
+    }
+    .phil-quote {
+      border-left: 4px solid var(--orange);
+      padding-left: 24px;
+    }
+    .phil-quote-text {
+      font-family: var(--font-display);
+      font-size: 36px; line-height: 1;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .phil-quote-attr {
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.15em;
+      color: var(--dim); text-transform: uppercase;
+      margin-top: 12px;
+    }
+    .phil-rules {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-top: 16px;
+    }
+    .phil-rule {
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .phil-rule-idx {
+      font-family: var(--font-display);
+      font-size: 28px; color: var(--gray-lt);
+      line-height: 1; flex-shrink: 0;
+    }
+    .phil-rule-text {
+      font-family: var(--font-mono);
+      font-size: 12px; line-height: 1.7;
+      color: #aaa;
+    }
+    .phil-rule-text strong { color: var(--white); }
+
+    /* ───── STACK STRIP ───── */
+    #stack {
+      border-bottom: 2px solid var(--gray-lt);
+    }
+    .stack-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 40px 60px;
+      border-bottom: 1px solid var(--gray-lt);
+    }
+    .stack-header-left {
+      font-family: var(--font-display);
+      font-size: 56px; text-transform: uppercase;
+      color: var(--white);
+    }
+    .stack-header-right {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--dim);
+      text-align: right; line-height: 1.8;
+      max-width: 300px;
+    }
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .stack-item {
+      padding: 36px 32px;
+      border-right: 1px solid var(--gray-lt);
+      display: flex; flex-direction: column; gap: 12px;
+      transition: background 0.15s;
+    }
+    .stack-item:last-child { border-right: none; }
+    .stack-item:hover { background: #0d0d0d; }
+    .stack-lang {
+      font-family: var(--font-display);
+      font-size: 42px; text-transform: uppercase;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stack-lang.blue   { color: var(--blue); }
+    .stack-lang.orange { color: var(--orange); }
+    .stack-lang.yellow { color: var(--yellow); }
+    .stack-use {
+      font-family: var(--font-mono);
+      font-size: 10px; color: var(--dim);
+      line-height: 1.6;
+      letter-spacing: 0.05em;
+    }
+    .stack-bar-wrap {
+      height: 3px; background: var(--gray-lt); margin-top: 8px;
+    }
+    .stack-bar {
+      height: 3px;
+      background: var(--blue);
+      transition: width 1s ease;
     }
 
+    /* ───── CONNECT SECTION ───── */
+    #connect {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid var(--gray-lt);
+    }
+    .connect-left {
+      padding: 100px 60px;
+      border-right: 2px solid var(--gray-lt);
+    }
+    .connect-cta {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 7vw, 96px);
+      line-height: 0.88; text-transform: uppercase;
+    }
+    .connect-cta .red { color: var(--red); }
+    .connect-cta .out {
+      -webkit-text-stroke: 2px var(--white);
+      color: transparent;
+    }
+    .connect-body {
+      font-family: var(--font-mono);
+      font-size: 12px; color: var(--dim);
+      line-height: 1.8; margin-top: 32px;
+      max-width: 380px;
+    }
+    .connect-body strong { color: var(--white); }
+    .connect-actions {
+      display: flex; flex-direction: column; gap: 0;
+      margin-top: 40px;
+      border: 1px solid var(--gray-lt);
+    }
+    .connect-link {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--gray-lt);
+      text-decoration: none;
+      transition: background 0.12s;
+      color: var(--white);
+    }
+    .connect-link:last-child { border-bottom: none; }
+    .connect-link:hover { background: var(--blue); }
+    .connect-link-left {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .connect-link-platform {
+      font-family: var(--font-mono);
+      font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue);
+      min-width: 80px;
+    }
+    .connect-link:hover .connect-link-platform { color: rgba(255,255,255,0.6); }
+    .connect-link-name {
+      font-family: var(--font-body);
+      font-size: 15px; font-weight: 600;
+      color: var(--white);
+    }
+    .connect-link-arrow {
+      font-size: 18px; color: var(--dim);
+      transition: transform 0.15s;
+    }
+    .connect-link:hover .connect-link-arrow { transform: translateX(4px); color: var(--white); }
+
+    .connect-right {
+      background: var(--black);
+      display: flex; flex-direction: column;
+    }
+    .connect-right-top {
+      flex: 1;
+      background: var(--orange);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 60px 50px;
+    }
+    .connect-right-top-label {
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.5);
+      margin-bottom: 16px;
+    }
+    .connect-right-top-big {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 6vw, 88px);
+      line-height: 0.88; text-transform: uppercase;
+      color: var(--black);
+    }
+    .connect-right-bottom {
+      padding: 40px 50px;
+      border-top: 2px solid var(--gray-lt);
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .sys-row {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 11px;
+      border-bottom: 1px solid var(--gray-lt);
+      padding-bottom: 12px;
+      color: var(--dim);
+    }
+    .sys-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .sys-row-val { color: var(--white); }
+    .sys-row-val.online { color: var(--green); }
+
+    /* ───── FOOTER ───── */
     footer {
-      text-align: center; padding: 48px 24px;
-      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
     }
-    footer p {
+    .footer-left {
+      padding: 60px;
+      border-right: 2px solid var(--gray-lt);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 80px; line-height: 0.88;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .footer-sub {
       font-family: var(--font-mono);
-      font-size: 11px; color: var(--text-muted);
+      font-size: 10px; color: var(--dim);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-top: 8px;
     }
-    footer a { color: var(--text-dim); }
+    .footer-copyright {
+      font-family: var(--font-mono);
+      font-size: 10px; color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+    .footer-right {
+      padding: 60px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .footer-motto {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .footer-motto .orange { color: var(--orange); }
+    .footer-meta {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .footer-meta-row {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--dim);
+      border-top: 1px solid var(--gray-lt);
+      padding-top: 8px;
+    }
+    .footer-meta-row span:last-child { color: var(--white); }
 
-    /* ===== RESPONSIVE NAV ===== */
-    @media (max-width: 640px) {
-      nav { padding: 12px 16px; }
-      .nav-links { gap: 14px; }
-      .nav-links a { font-size: 10px; }
-      .hero { padding: 100px 0 60px; }
-      .hero-mega-text { font-size: 60px; }
+    /* ───── ANIMATIONS ───── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+    .fade-up { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.35s; }
+    .delay-4 { animation-delay: 0.5s; }
+
+    /* ───── RESPONSIVE ───── */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 60px 32px; }
+      #who { grid-template-columns: 1fr; }
+      .who-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
+      .who-right { grid-template-rows: auto auto; }
+      .work-header { grid-template-columns: 1fr; }
+      .work-header-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
+      .work-row { grid-template-columns: 60px 1fr auto; }
+      .work-desc-cell { display: none; }
+      #philosophy { grid-template-columns: 1fr; }
+      .phil-right { border-left: none; border-top: 2px solid var(--gray-lt); }
+      .stack-grid { grid-template-columns: repeat(3, 1fr); }
+      .stack-item:nth-child(3) { border-right: none; }
+      .stack-item:nth-child(4) { border-top: 1px solid var(--gray-lt); }
+      .stack-item:nth-child(5) { border-top: 1px solid var(--gray-lt); border-right: none; }
+      #connect { grid-template-columns: 1fr; }
+      .connect-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
+      footer { grid-template-columns: 1fr; }
+      .footer-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
+      nav { padding: 0 20px; }
+      .nav-link { padding: 0 12px; font-size: 10px; }
+    }
+
+    @media (max-width: 640px) {
+      h1.hero-headline { font-size: 60px; }
+      .who-heading { font-size: 56px; }
+      .work-row { grid-template-columns: 1fr auto; }
+      .work-cell:first-child, .work-cell:nth-child(2) { display: none; }
+      .stack-header { flex-direction: column; gap: 16px; }
+      .stack-grid { grid-template-columns: repeat(2, 1fr); }
+      .stack-header-left { font-size: 36px; }
+      .stack-item:nth-child(3) { border-right: 1px solid var(--gray-lt); }
+      .stack-item:nth-child(4) { border-top: none; }
+      .stack-item:nth-child(5) { border-right: none; }
+    }
+
+    /* ───── GLITCH ANIMATION ───── */
+    .glitch {
+      position: relative;
+    }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0; top: 0;
+      font-family: inherit; font-size: inherit;
+      line-height: inherit; text-transform: inherit;
+      font-weight: inherit; letter-spacing: inherit;
+    }
+    .glitch::before {
+      color: var(--blue);
+      animation: glitch-1 3.5s infinite;
+      clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    }
+    .glitch::after {
+      color: var(--orange);
+      animation: glitch-2 3.5s infinite;
+      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    }
+    @keyframes glitch-1 {
+      0%,96%,100% { transform: translate(0); opacity: 0; }
+      97% { transform: translate(-3px, 1px); opacity: 1; }
+      98% { transform: translate(3px, -1px); opacity: 1; }
+      99% { transform: translate(-2px, 2px); opacity: 1; }
+    }
+    @keyframes glitch-2 {
+      0%,94%,100% { transform: translate(0); opacity: 0; }
+      95% { transform: translate(3px, -2px); opacity: 1; }
+      96% { transform: translate(-3px, 1px); opacity: 1; }
+      97% { transform: translate(2px, -1px); opacity: 1; }
+    }
+
+    /* ───── BARCODE DECORATION ───── */
+    .barcode {
+      display: flex; gap: 2px; align-items: flex-end;
+      height: 32px;
+    }
+    .barcode span {
+      background: currentColor;
+      width: 2px;
+      animation: barcode-flicker 0.1s step-end infinite;
+    }
+
+    /* Selection style */
+    ::selection { background: var(--blue); color: var(--white); }
   </style>
 </head>
 <body>
 
-<!-- ===== NAV ===== -->
+<!-- ══════════ NAV ══════════ -->
 <nav>
   <div class="nav-logo">
-    <span class="nav-pulse"></span>
-    KAADZ_<span class="nav-status">[ACTIVE]</span>
+    <div class="nav-dot"></div>
+    KAADZ
   </div>
-  <div class="nav-links">
-    <a href="#who">WHO</a>
-    <a href="#work">WORK</a>
-    <a href="#links">LINKS</a>
-    <a href="https://github.com/kaadipranav" class="btn-brutal">GITHUB</a>
+  <div class="nav-right">
+    <a href="#who"        class="nav-link">WHO</a>
+    <a href="#work"       class="nav-link">WORK</a>
+    <a href="#philosophy" class="nav-link">PHIL</a>
+    <a href="#stack"      class="nav-link">STACK</a>
+    <a href="#connect"    class="nav-link cta">CONTACT →</a>
   </div>
 </nav>
 
-<!-- ===== HERO ===== -->
+<!-- ══════════ HERO ══════════ -->
 <header class="hero">
-  <div class="hero-mega-text">KAADZ</div>
-  <div class="hero-content section-container">
-    <h1 class="hero-title">
-      AGENTS ARE<br>
-      <span class="accent-line">PROBABILISTIC.</span><br>
-      INFRASTRUCTURE<br>
-      CANNOT BE.
-    </h1>
-    <p class="hero-subtitle">
-      Founder of WatchLLM. Building deterministic runtime governance for autonomous systems. 17. India.
-    </p>
-    <div class="hero-actions">
-      <a href="https://watchllm.dev" class="btn-brutal" target="_blank">WATCHLLM</a>
-      <a href="https://github.com/kaadipranav" class="btn-brutal ghost" target="_blank">GITHUB</a>
-      <a href="mailto:kaadz@protonmail.com" class="btn-brutal ghost">EMAIL</a>
+
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div>
+      <div class="hero-tag">KAADIPRANAV · INDIA · 17 · 2026</div>
+      <div class="hero-main-text">
+        <h1 class="hero-headline glitch fade-up" data-text="INFRA
+CANNOT
+BE
+PROB.">
+          <span class="blue">INFRA</span><br>
+          CANNOT<br>
+          <span class="outline">BE</span><br>
+          <span class="orange">PROB.</span>
+        </h1>
+        <p class="hero-tagline fade-up delay-2">
+          <strong>Founder of WatchLLM.</strong> Building deterministic runtime governance for autonomous coding agents. Agents are probabilistic. Infrastructure cannot be.<br><br>
+          <strong>15 repos. 3 orgs. Rust + Python + TypeScript.</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-bottom fade-up delay-3">
+      <div class="hero-stats-row">
+        <div class="hero-stat">
+          <div class="hero-stat-num">17</div>
+          <div class="hero-stat-label">Age</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">15</div>
+          <div class="hero-stat-label">Repos</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">3</div>
+          <div class="hero-stat-label">Orgs</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">∞</div>
+          <div class="hero-stat-label">Cron Jobs</div>
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a href="https://watchllm.dev" target="_blank" class="btn-block primary">WATCHLLM.DEV →</a>
+        <a href="https://github.com/kaadipranav" target="_blank" class="btn-block secondary">GITHUB</a>
+        <a href="mailto:kaadz@protonmail.com" class="btn-block secondary">EMAIL</a>
+      </div>
     </div>
   </div>
+
+  <!-- RIGHT -->
+  <div class="hero-right">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-right-top">
+      <div class="hero-poster-label">// SYSTEM IDENTIFIER //</div>
+      <div class="hero-poster-big">WATCH<br>LLM</div>
+      <div class="hero-poster-sub">RUNTIME<br>GOVERNANCE</div>
+    </div>
+    <div class="hero-right-bottom">
+      <div class="hero-right-bottom-text">
+        STATUS: <strong>ACTIVE</strong><br>
+        ENFORCEMENT: <strong>DETERMINISTIC</strong>
+      </div>
+      <div class="hero-right-bottom-text" style="text-align:right;">
+        NODE: <strong class="sys-row-val online">ONLINE</strong><br>
+        INFERENCE: <strong style="color:var(--red)">NONE</strong>
+      </div>
+    </div>
+  </div>
+
 </header>
 
-<!-- ===== MARQUEE: QUOTES & PHILOSOPHY ===== -->
-<div class="marquee-container">
-  <div class="marquee">
-    <span><em class="marquee-tag">AXIOM</em> · agents are probabilistic. infrastructure cannot be.</span>
-    <span><em class="marquee-tag">AXIOM</em> · every save must be intercepted.</span>
-    <span><em class="marquee-tag">AXIOM</em> · determinism over vibes.</span>
-    <span><em class="marquee-tag">AXIOM</em> · no slop fortresses.</span>
-    <span><em class="marquee-tag">AXIOM</em> · the only jobs I'll have are cron jobs.</span>
-    <span><em class="marquee-tag">AXIOM</em> · agents are probabilistic. infrastructure cannot be.</span>
-    <span><em class="marquee-tag">AXIOM</em> · every save must be intercepted.</span>
-    <span><em class="marquee-tag">AXIOM</em> · determinism over vibes.</span>
-    <span><em class="marquee-tag">AXIOM</em> · no slop fortresses.</span>
-    <span><em class="marquee-tag">AXIOM</em> · the only jobs I'll have are cron jobs.</span>
+<!-- ══════════ MARQUEE ══════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> INFRASTRUCTURE CANNOT BE</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISM OVER VIBES</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> NO SLOP FORTRESSES</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> EVERY SAVE MUST BE INTERCEPTED</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> THE ONLY JOBS I'LL HAVE ARE CRON JOBS</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> INFRASTRUCTURE CANNOT BE</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISM OVER VIBES</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> NO SLOP FORTRESSES</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> EVERY SAVE MUST BE INTERCEPTED</div>
+    <div class="marquee-item"><span class="marquee-star">✦</span> THE ONLY JOBS I'LL HAVE ARE CRON JOBS</div>
   </div>
 </div>
 
-<!-- ===== STAT STRIP ===== -->
-<div class="stat-strip">
-  <div class="stat-strip-inner section-container">
-    <div class="stat-item">
-      <span class="stat-num">15</span>
-      <span class="stat-label">REPOS</span>
-    </div>
-    <div class="stat-sep">·</div>
-    <div class="stat-item">
-      <span class="stat-num">3</span>
-      <span class="stat-label">ORGS</span>
-    </div>
-    <div class="stat-sep">·</div>
-    <div class="stat-item">
-      <span class="stat-num">2025</span>
-      <span class="stat-label">SINCE</span>
-    </div>
-    <div class="stat-sep">·</div>
-    <div class="stat-item">
-      <span class="stat-num">17</span>
-      <span class="stat-label">AGE</span>
-    </div>
-  </div>
-</div>
-
-<!-- ===== WHO ===== -->
+<!-- ══════════ WHO ══════════ -->
 <section id="who">
-  <div class="section-container">
-    <span class="section-label">01</span>
-    <h2 class="section-title">WHO IS KAADZ?</h2>
-    <p class="section-subtitle">
-      A systems engineer who believes software infrastructure should be boring, predictable, and auditable — not a house of probabilistic cards.
-    </p>
-    <div class="who-grid">
-      <div class="who-card">
-        <span class="who-card-icon">🛡️</span>
-        <h3 class="who-card-title">BUILDING WATCHLLM</h3>
-        <p class="who-card-body">
-          Runtime governance infrastructure for autonomous coding agents. 12 interconnected components — kernel, runtime, schemas, orchestrator, memory (klyd), observability (replay), adversarial testing, benchmarks, VS Code extension, and more. Python. Rust. TypeScript. Wasm.
-        </p>
+
+  <!-- LEFT -->
+  <div class="who-left">
+    <div>
+      <div class="s-label">01 // WHO</div>
+      <div class="who-heading">
+        <span class="out">WHO</span><br>
+        IS<br>
+        <span class="blue">KAADZ</span><br>
+        ?
       </div>
-      <div class="who-card">
-        <span class="who-card-icon">🧠</span>
-        <h3 class="who-card-title">PHILOSOPHY</h3>
-        <p class="who-card-body">
-          Infrastructure must be deterministic. No API keys. No cloud dependency. No ML inference in the enforcement path. Same input = same output. Always. If your guardrails are probabilistic, they aren't guardrails — they're suggestions. Suggestions don't stop $47,000 crypto arbitrage bots in Minsk.
-        </p>
+      <p class="who-body">
+        A <strong>17-year-old systems engineer</strong> from India who believes software infrastructure should be boring, predictable, and auditable — not a house of probabilistic cards.<br><br>
+        Building <strong>WatchLLM</strong>: runtime governance infrastructure for autonomous coding agents. 12 interconnected components — kernel, runtime, schemas, orchestrator, memory, observability, adversarial testing, benchmarks, and a VS Code extension.
+      </p>
+    </div>
+    <div class="who-axiom">
+      <div class="who-axiom-label">// Core Axiom //</div>
+      <div class="who-axiom-text">"THE ONLY JOBS I'LL HAVE ARE CRON JOBS."</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CARDS -->
+  <div class="who-right">
+    <div class="who-card">
+      <div class="who-card-num">01</div>
+      <div>
+        <div class="who-card-title">BUILDING WATCHLLM</div>
+        <div class="who-card-body">
+          Runtime governance infrastructure for autonomous coding agents. 12 interconnected components — kernel, runtime, schemas, orchestrator, memory (klyd), observability (replay), adversarial testing, benchmarks, VS Code extension.<br><br>
+          Python · Rust · TypeScript · Wasm
+        </div>
+        <div class="who-card-tag active">● ACTIVE</div>
       </div>
-      <div class="who-card">
-        <span class="who-card-icon">🔧</span>
-        <h3 class="who-card-title">STACK</h3>
-        <p class="who-card-body">
-          Python for the kernel (Tree-sitter AST analysis). Rust + Wasm for the runtime (zero-GC, cross-platform). TypeScript for VS Code extension and replay UI. SQLite for architectural memory (klyd). Shell for CI/CD. Everything compiles offline. Everything is auditable.
-        </p>
-      </div>
-      <div class="who-card">
-        <span class="who-card-icon">⚡️</span>
-        <h3 class="who-card-title">"THE ONLY JOBS I'LL HAVE ARE CRON JOBS"</h3>
-        <p class="who-card-body">
-          Automation is the point. WatchLLM is a cron job for your codebase — continuously intercepting, continuously enforcing, never sleeping. Zero human in the loop for the enforcement path. Human in the loop for the policy. That's the architecture.
-        </p>
+    </div>
+    <div class="who-card">
+      <div class="who-card-num">02</div>
+      <div>
+        <div class="who-card-title">PHILOSOPHY</div>
+        <div class="who-card-body">
+          Infrastructure must be deterministic. No API keys. No cloud dependency. No ML inference in the enforcement path. Same input = same output. Always.<br><br>
+          If your guardrails are probabilistic, they aren't guardrails — they're suggestions. Suggestions don't stop $47,000 crypto arbitrage bots in Minsk.
+        </div>
+        <div class="who-card-tag system">// SYSTEM DESIGN</div>
       </div>
     </div>
   </div>
+
 </section>
 
-<!-- ===== WORK ===== -->
+<!-- ══════════ WORK ══════════ -->
 <section id="work">
-  <div class="section-container">
-    <span class="section-label">02</span>
-    <h2 class="section-title">WHAT I'VE BUILT</h2>
-    <p class="section-subtitle">
-      From school coding platforms to runtime governance infrastructure. Every project is an exercise in making software predictable.
-    </p>
-    <div class="work-list">
-      <div class="work-row">
-        <span class="work-year">2026</span>
-        <div>
-          <div class="work-name"><a href="https://watchllm.dev" target="_blank">WatchLLM</a></div>
+
+  <div class="work-header">
+    <div class="work-header-left">
+      <div class="s-label">02 // WHAT I'VE BUILT</div>
+      <div class="s-heading">WORK</div>
+    </div>
+    <div class="work-header-right">
+      <p>From school coding platforms to runtime governance infrastructure. Every project is an exercise in making software predictable. No spaghetti. No vibes-driven architecture.</p>
+    </div>
+  </div>
+
+  <table class="work-table" role="list">
+    <tbody>
+      <tr class="work-row" role="listitem">
+        <td class="work-cell work-num">01</td>
+        <td class="work-cell work-year">2026</td>
+        <td class="work-name-cell">
+          <a href="https://watchllm.dev" target="_blank" class="work-name">WatchLLM</a>
           <div class="work-org">watchllm · Private Monorepo</div>
-        </div>
-        <span class="work-status active">ACTIVE</span>
-      </div>
-      <div class="work-row">
-        <span class="work-year">2026</span>
-        <div>
-          <div class="work-name"><a href="https://github.com/klyd-studio/klyd-harness" target="_blank">klyd-harness</a></div>
+        </td>
+        <td class="work-desc-cell work-cell">
+          <div class="work-desc">Runtime governance for autonomous coding agents.<br>Kernel · Runtime · VS Code Extension · Replay UI</div>
+        </td>
+        <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
+      </tr>
+      <tr class="work-row" role="listitem">
+        <td class="work-cell work-num">02</td>
+        <td class="work-cell work-year">2026</td>
+        <td class="work-name-cell">
+          <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="work-name">klyd-harness</a>
           <div class="work-org">klyd-studio · Public</div>
-        </div>
-        <span class="work-status active">ACTIVE</span>
-      </div>
-      <div class="work-row">
-        <span class="work-year">2026</span>
-        <div>
-          <div class="work-name"><a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank">Codify</a></div>
+        </td>
+        <td class="work-desc-cell work-cell">
+          <div class="work-desc">Architectural memory layer. SQLite-backed decision<br>ledger for autonomous agent context persistence.</div>
+        </td>
+        <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
+      </tr>
+      <tr class="work-row" role="listitem">
+        <td class="work-cell work-num">03</td>
+        <td class="work-cell work-year">2026</td>
+        <td class="work-name-cell">
+          <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="work-name">Codify</a>
           <div class="work-org">Codify-PSBB · Public</div>
-        </div>
-        <span class="work-status active">ACTIVE</span>
-      </div>
-      <div class="work-row">
-        <span class="work-year">2025</span>
-        <div>
-          <div class="work-name">ScriptBoost</div>
+        </td>
+        <td class="work-desc-cell work-cell">
+          <div class="work-desc">School-grade coding platform. Competitive programming<br>and learning management for PSBB students.</div>
+        </td>
+        <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
+      </tr>
+      <tr class="work-row" role="listitem">
+        <td class="work-cell work-num">04</td>
+        <td class="work-cell work-year">2025</td>
+        <td class="work-name-cell">
+          <span class="work-name" style="cursor:default">ScriptBoost</span>
           <div class="work-org">kaadipranav · Public</div>
-        </div>
-        <span class="work-status archived">ARCHIVED</span>
-      </div>
-      <div class="work-row">
-        <span class="work-year">2025</span>
-        <div>
-          <div class="work-name">Ghostwriter</div>
+        </td>
+        <td class="work-desc-cell work-cell">
+          <div class="work-desc">Automated scripting utilities.<br>Early infrastructure experiment.</div>
+        </td>
+        <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
+      </tr>
+      <tr class="work-row" role="listitem">
+        <td class="work-cell work-num">05</td>
+        <td class="work-cell work-year">2025</td>
+        <td class="work-name-cell">
+          <span class="work-name" style="cursor:default">Ghostwriter</span>
           <div class="work-org">kaadipranav · Public</div>
-        </div>
-        <span class="work-status archived">ARCHIVED</span>
-      </div>
-      <div class="work-row">
-        <span class="work-year">2025</span>
-        <div>
-          <div class="work-name">EduVerse</div>
+        </td>
+        <td class="work-desc-cell work-cell">
+          <div class="work-desc">AI-assisted content generation tool.<br>Deprecated in favor of deterministic tooling.</div>
+        </td>
+        <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
+      </tr>
+      <tr class="work-row" role="listitem">
+        <td class="work-cell work-num">06</td>
+        <td class="work-cell work-year">2025</td>
+        <td class="work-name-cell">
+          <span class="work-name" style="cursor:default">EduVerse</span>
           <div class="work-org">kaadipranav · Public</div>
-        </div>
-        <span class="work-status archived">ARCHIVED</span>
-      </div>
-      <div class="work-row">
-        <span class="work-year">2025</span>
-        <div>
-          <div class="work-name">colddm-ai</div>
-          <div class="work-org">kaadipranav · Public</div>
-        </div>
-        <span class="work-status archived">ARCHIVED</span>
-      </div>
-      <div class="work-row">
-        <span class="work-year">2025</span>
-        <div>
-          <div class="work-name">BOILERPLATE</div>
+        </td>
+        <td class="work-desc-cell work-cell">
+          <div class="work-desc">Educational platform prototype.<br>Precursor to Codify.</div>
+        </td>
+        <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
+      </tr>
+      <tr class="work-row" role="listitem">
+        <td class="work-cell work-num">07</td>
+        <td class="work-cell work-year">2025</td>
+        <td class="work-name-cell">
+          <span class="work-name" style="cursor:default">BOILERPLATE</span>
           <div class="work-org">kaadipranav · Public Template</div>
-        </div>
-        <span class="work-status public">PUBLIC</span>
+        </td>
+        <td class="work-desc-cell work-cell">
+          <div class="work-desc">Reusable project template.<br>Opinionated starter for deterministic projects.</div>
+        </td>
+        <td class="work-status-cell work-cell"><span class="badge public">PUBLIC</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>
+
+<!-- ══════════ PHILOSOPHY ══════════ -->
+<section id="philosophy">
+
+  <!-- LEFT: BLUE PANEL -->
+  <div class="phil-left">
+    <div>
+      <div class="s-label" style="color:rgba(255,255,255,0.4);">03 // PHILOSOPHY</div>
+      <div class="phil-big">
+        DETER<br>
+        MINISM<br>
+        <span class="dark">OVER</span><br>
+        VIBES.
+      </div>
+    </div>
+    <div class="phil-data">
+      <div class="phil-data-row">
+        <span class="phil-data-key">ENFORCEMENT PATH</span>
+        <span class="phil-data-val">ZERO ML INFERENCE</span>
+      </div>
+      <div class="phil-data-row">
+        <span class="phil-data-key">CLOUD DEPENDENCY</span>
+        <span class="phil-data-val">NONE</span>
+      </div>
+      <div class="phil-data-row">
+        <span class="phil-data-key">SAME INPUT → OUTPUT</span>
+        <span class="phil-data-val">ALWAYS</span>
+      </div>
+      <div class="phil-data-row">
+        <span class="phil-data-key">GUARDRAIL TYPE</span>
+        <span class="phil-data-val">DETERMINISTIC</span>
+      </div>
+      <div class="phil-data-row" style="border-bottom:none;padding-bottom:0;">
+        <span class="phil-data-key">API KEYS IN RUNTIME</span>
+        <span class="phil-data-val" style="color:var(--orange);">FORBIDDEN</span>
       </div>
     </div>
   </div>
+
+  <!-- RIGHT: QUOTES -->
+  <div class="phil-right">
+    <div class="s-label">AXIOMS</div>
+
+    <div class="phil-quote">
+      <div class="phil-quote-text">"EVERY SAVE MUST BE INTERCEPTED."</div>
+      <div class="phil-quote-attr">— WatchLLM Design Principle</div>
+    </div>
+
+    <div class="phil-rules">
+      <div class="phil-rule">
+        <div class="phil-rule-idx">01</div>
+        <div class="phil-rule-text">
+          <strong>No probabilistic guardrails.</strong> If your enforcement depends on an LLM saying "no", it can also say "yes". That's not safety — that's theatre.
+        </div>
+      </div>
+      <div class="phil-rule">
+        <div class="phil-rule-idx">02</div>
+        <div class="phil-rule-text">
+          <strong>Everything compiles offline.</strong> No cloud. No API. No vibes. The kernel works on an air-gapped laptop the same as a GitHub Actions runner.
+        </div>
+      </div>
+      <div class="phil-rule">
+        <div class="phil-rule-idx">03</div>
+        <div class="phil-rule-text">
+          <strong>Automation is the point.</strong> WatchLLM is a cron job for your codebase — continuously intercepting, continuously enforcing, never sleeping. Zero human in the enforcement path.
+        </div>
+      </div>
+      <div class="phil-rule">
+        <div class="phil-rule-idx">04</div>
+        <div class="phil-rule-text">
+          <strong>Suggestions don't stop $47k bots in Minsk.</strong> Deterministic rules do.
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 
-<!-- ===== LINKS ===== -->
-<section id="links">
-  <div class="section-container">
-    <span class="section-label">03</span>
-    <h2 class="section-title">FIND ME</h2>
-    <p class="section-subtitle">
-      If you're building infrastructure for autonomous systems, or you just want to argue about determinism vs. probabilistic guardrails — reach out.
-    </p>
-    <div class="links-grid">
-      <a href="https://github.com/kaadipranav" class="link-card" target="_blank">
-        <div class="link-card-label">GITHUB</div>
-        <div class="link-card-text">kaadipranav →</div>
-      </a>
-      <a href="https://twitter.com/kaad_zz" class="link-card" target="_blank">
-        <div class="link-card-label">TWITTER/X</div>
-        <div class="link-card-text">@kaad_zz →</div>
-      </a>
-      <a href="https://watchllm.dev" class="link-card" target="_blank">
-        <div class="link-card-label">WATCHLLM</div>
-        <div class="link-card-text">watchllm.dev →</div>
-      </a>
-      <a href="mailto:kaadz@protonmail.com" class="link-card">
-        <div class="link-card-label">EMAIL</div>
-        <div class="link-card-text">kaadz@protonmail.com →</div>
-      </a>
+<!-- ══════════ STACK ══════════ -->
+<section id="stack">
+  <div class="stack-header">
+    <div class="stack-header-left">THE<br>STACK</div>
+    <div class="s-label" style="writing-mode:vertical-rl;transform:rotate(180deg);height:auto;margin:0;font-size:10px;">04 // TECH</div>
+    <div class="stack-header-right">
+      Everything compiles offline. Everything is auditable. Tree-sitter for AST analysis. Zero-GC Wasm runtime. SQLite for memory. Shell for CI/CD. No cloud. No vibes.
+    </div>
+  </div>
+  <div class="stack-grid">
+    <div class="stack-item">
+      <div class="stack-lang blue">PYTHON</div>
+      <div class="stack-use">Kernel / Tree-sitter AST analysis / WatchLLM core enforcement engine</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:90%; background:var(--blue);"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-lang orange">RUST</div>
+      <div class="stack-use">Runtime / Zero-GC / Cross-platform Wasm target / Maximum performance</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:75%; background:var(--orange);"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-lang" style="color:#4DBBFF;">TS</div>
+      <div class="stack-use">VS Code extension / Replay UI / Observability dashboard / Tooling</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:80%; background:#4DBBFF;"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-lang yellow">WASM</div>
+      <div class="stack-use">Runtime compilation target / Runs anywhere / Zero dependency / Auditable</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:65%; background:var(--yellow);"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-lang">SQL<span style="color:var(--dim)">ite</span></div>
+      <div class="stack-use">Architectural memory (klyd) / Decision ledger / Context persistence</div>
+      <div class="stack-bar-wrap"><div class="stack-bar" style="width:70%;"></div></div>
     </div>
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
+<!-- ══════════ CONNECT ══════════ -->
+<section id="connect">
+
+  <!-- LEFT -->
+  <div class="connect-left">
+    <div class="s-label">05 // FIND ME</div>
+    <div class="connect-cta">
+      REACH<br>
+      <span class="out">OUT</span><br>
+      OR<br>
+      <span class="red">DIE</span><br>
+      CURIOUS.
+    </div>
+    <p class="connect-body">
+      Building infrastructure for autonomous systems? Want to argue about determinism vs. probabilistic guardrails? Think I'm wrong about something? Let's talk.<br><br>
+      <strong>Response time: &lt; 24h on email. Faster on X.</strong>
+    </p>
+    <div class="connect-actions">
+      <a href="https://github.com/kaadipranav" target="_blank" class="connect-link">
+        <div class="connect-link-left">
+          <span class="connect-link-platform">GITHUB</span>
+          <span class="connect-link-name">kaadipranav</span>
+        </div>
+        <span class="connect-link-arrow">→</span>
+      </a>
+      <a href="https://twitter.com/kaad_zz" target="_blank" class="connect-link">
+        <div class="connect-link-left">
+          <span class="connect-link-platform">TWITTER/X</span>
+          <span class="connect-link-name">@kaad_zz</span>
+        </div>
+        <span class="connect-link-arrow">→</span>
+      </a>
+      <a href="https://watchllm.dev" target="_blank" class="connect-link">
+        <div class="connect-link-left">
+          <span class="connect-link-platform">WATCHLLM</span>
+          <span class="connect-link-name">watchllm.dev</span>
+        </div>
+        <span class="connect-link-arrow">→</span>
+      </a>
+      <a href="mailto:kaadz@protonmail.com" class="connect-link">
+        <div class="connect-link-left">
+          <span class="connect-link-platform">EMAIL</span>
+          <span class="connect-link-name">kaadz@protonmail.com</span>
+        </div>
+        <span class="connect-link-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="connect-right">
+    <div class="connect-right-top">
+      <div class="connect-right-top-label">// Founder — WatchLLM //</div>
+      <div class="connect-right-top-big">
+        INFRA<br>STRUCTURE<br>IS THE<br>PRODUCT.
+      </div>
+    </div>
+    <div class="connect-right-bottom">
+      <div class="sys-row">
+        <span>SUBJECT</span>
+        <span class="sys-row-val">KAADIPRANAV</span>
+      </div>
+      <div class="sys-row">
+        <span>LOCATION</span>
+        <span class="sys-row-val">INDIA, CHENNAI</span>
+      </div>
+      <div class="sys-row">
+        <span>STATUS</span>
+        <span class="sys-row-val online">● BUILDING</span>
+      </div>
+      <div class="sys-row">
+        <span>PRIMARY VENTURE</span>
+        <span class="sys-row-val">WATCHLLM</span>
+      </div>
+      <div class="sys-row">
+        <span>OPEN TO</span>
+        <span class="sys-row-val">COLLAB / CONVO</span>
+      </div>
+      <div class="sys-row" style="border-bottom:none;">
+        <span>PROBABILISTIC SYSTEMS</span>
+        <span class="sys-row-val" style="color:var(--red);">REJECTED</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
 <footer>
-  <p>
-    KAADZ_[ACTIVE] · <a href="https://github.com/kaadipranav">github/kaadipranav</a> · <a href="https://watchllm.dev">watchllm.dev</a>
-  </p>
-  <p style="margin-top: 8px;">"The only jobs I'll have are cron jobs."</p>
+  <div class="footer-left">
+    <div>
+      <div class="footer-logo">KAADZ</div>
+      <div class="footer-sub">KAADIPRANAV · FOUNDER · INDIA</div>
+    </div>
+    <div class="footer-copyright">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>BUILT WITHOUT PROBABILISTIC GUARDRAILS.</div>
+  </div>
+  <div class="footer-right">
+    <div class="footer-motto">
+      "THE ONLY<br>JOBS I'LL<br>HAVE ARE<br><span class="orange">CRON JOBS."</span>
+    </div>
+    <div class="footer-meta">
+      <div class="footer-meta-row">
+        <span>GITHUB</span>
+        <span>github.com/kaadipranav</span>
+      </div>
+      <div class="footer-meta-row">
+        <span>TWITTER</span>
+        <span>@kaad_zz</span>
+      </div>
+      <div class="footer-meta-row">
+        <span>EMAIL</span>
+        <span>kaadz@protonmail.com</span>
+      </div>
+      <div class="footer-meta-row">
+        <span>PROJECT</span>
+        <span>watchllm.dev</span>
+      </div>
+    </div>
+  </div>
 </footer>
+
+<script>
+  // Intersection Observer for fade-up animations on sections
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.who-card, .work-row, .phil-rule, .stack-item, .connect-link').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    io.observe(el);
+  });
+
+  // Live clock in footer (just for fun)
+  function updateTime() {
+    const now = new Date();
+    const t = now.toLocaleTimeString('en-IN', { hour12: false, timeZone: 'Asia/Kolkata' });
+    const el = document.getElementById('live-time');
+    if (el) el.textContent = t + ' IST';
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+</script>
 
 </body>
 </html>
