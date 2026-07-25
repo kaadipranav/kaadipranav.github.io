@@ -3,1328 +3,1211 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KAADZ — Deterministic Runtime Governance</title>
-  <meta name="description" content="Kaadz — Founder of WatchLLM. Engineering deterministic runtime governance and interceptors for autonomous systems. Agents are probabilistic. Infrastructure is not." />
-  <meta property="og:title" content="KAADZ — Deterministic Runtime Governance" />
+  <title>KAADZ — Deterministic Infrastructure</title>
+  <meta name="description" content="Kaadz — Founder of WatchLLM. Building deterministic runtime governance and interceptors for autonomous systems. Agents are probabilistic. Infrastructure is not." />
+  <meta property="og:title" content="KAADZ — Deterministic Infrastructure" />
   <meta property="og:description" content="Founder of WatchLLM. Runtime governance for autonomous coding agents." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --black:   #080808;
-      --white:   #f0f0f0;
-      --blue:    #1540FF;
-      --blue-lt: #4D6EFF;
-      --orange:  #FF4D00;
-      --yellow:  #FFE600;
-      --green:   #00FF88;
-      --red:     #FF0022;
-      --gray:    #121214;
-      --gray-lt: #222226;
-      --dim:     #777780;
-      --font-display: 'Bebas Neue', 'Impact', sans-serif;
-      --font-body:    'Space Grotesk', sans-serif;
-      --font-mono:    'JetBrains Mono', monospace;
+      --bg:        #09090b;
+      --panel:     #111115;
+      --border:    #22222a;
+      --border-hi: #3a3a48;
+      --text:      #f4f4f6;
+      --text-muted:#888894;
+      --dim:       #555560;
+      
+      --blue:      #0038FF;
+      --blue-glow: #1a52ff;
+      --orange:    #FF3600;
+      --yellow:    #FFE600;
+      --green:     #00FF88;
+      --red:       #FF0033;
+      
+      --font-statement: 'Syne', sans-serif;
+      --font-display:   'Bebas Neue', impact, sans-serif;
+      --font-body:      'Space Grotesk', sans-serif;
+      --font-mono:      'JetBrains Mono', monospace;
     }
 
     html { scroll-behavior: smooth; }
     body {
       font-family: var(--font-body);
-      background: var(--black);
-      color: var(--white);
+      background: var(--bg);
+      color: var(--text);
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
-    /* ───── NOISE OVERLAY ───── */
+    /* ───── NOISE & GRID BACKGROUND ───── */
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 9999;
       pointer-events: none;
-      opacity: 0.022;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 140px 140px;
     }
 
     /* ───── SCROLLBAR ───── */
     ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--blue); }
 
-    /* ───── NAV ───── */
+    /* ───── GLOBAL SELECTION ───── */
+    ::selection { background: var(--blue); color: #fff; }
+
+    /* ───── TOP NAVIGATION BAR ───── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 0 40px;
-      height: 56px;
-      background: rgba(8, 8, 8, 0.95);
+      padding: 0 32px;
+      height: 54px;
+      background: rgba(9, 9, 11, 0.92);
       backdrop-filter: blur(12px);
-      border-bottom: 2px solid var(--blue);
+      border-bottom: 1px solid var(--border);
     }
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 24px; letter-spacing: 0.08em;
-      color: var(--white);
-      display: flex; align-items: center; gap: 10px;
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.12em; color: var(--text);
     }
-    .nav-dot {
-      width: 8px; height: 8px;
+    .nav-status-indicator {
+      width: 8px; height: 8px; border-radius: 50%;
       background: var(--green);
       box-shadow: 0 0 10px var(--green);
-      animation: blink 1.5s step-end infinite;
+      animation: pulse-dot 1.8s infinite;
     }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-    .nav-right { display: flex; gap: 0; align-items: center; }
-    .nav-link {
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--dim); text-decoration: none;
-      padding: 0 20px; height: 56px;
-      display: flex; align-items: center;
-      border-left: 1px solid var(--gray-lt);
-      transition: color 0.15s, background 0.15s;
-    }
-    .nav-link:hover { color: var(--white); background: #111114; }
-    .nav-link.cta {
-      background: var(--blue); color: var(--white);
-      border-left: none;
-    }
-    .nav-link.cta:hover { background: var(--blue-lt); }
+    @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
-    /* ───── HERO ───── */
+    .nav-links { display: flex; align-items: center; }
+    .nav-item {
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      padding: 0 20px; height: 54px;
+      display: flex; align-items: center;
+      border-left: 1px solid var(--border);
+      transition: all 0.15s ease;
+    }
+    .nav-item:hover { color: var(--text); background: var(--panel); }
+    .nav-item.cta {
+      background: var(--blue); color: #fff; border-left: none;
+    }
+    .nav-item.cta:hover { background: var(--blue-glow); }
+
+    /* ───── CORNER TICK DECORATOR ───── */
+    .corner-tick {
+      position: absolute; width: 8px; height: 8px;
+      border-color: var(--blue); border-style: solid;
+      pointer-events: none; opacity: 0.6;
+    }
+    .tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    .tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+    .bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+    .br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+    /* ───── HERO SECTION (GRAPHIC POSTER GRID) ───── */
     .hero {
-      min-height: calc(100vh - 56px);
+      margin-top: 54px;
+      min-height: calc(100vh - 54px);
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      border-bottom: 2px solid var(--blue);
-      margin-top: 56px;
+      grid-template-columns: 1.15fr 0.85fr;
+      border-bottom: 1px solid var(--border);
       position: relative;
-      overflow: hidden;
     }
+
+    /* HERO LEFT PANEL */
     .hero-left {
-      padding: 70px 60px;
+      padding: 60px 48px;
       display: flex; flex-direction: column; justify-content: space-between;
-      border-right: 2px solid var(--blue);
+      border-right: 1px solid var(--border);
       position: relative;
+      background: radial-gradient(circle at 10% 20%, rgba(0, 56, 255, 0.05) 0%, transparent 60%);
     }
-    .hero-tag {
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--blue);
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 30px;
+
+    .hero-meta-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 40px;
     }
-    .hero-tag::before {
-      content: '';
-      display: block; width: 32px; height: 2px;
-      background: var(--blue);
+    .hero-meta-bar span { display: flex; align-items: center; gap: 8px; }
+    .hero-meta-bar span::before {
+      content: ''; display: inline-block; width: 18px; height: 2px; background: var(--blue);
     }
-    .hero-main-text {
-      flex: 1;
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    h1.hero-headline {
-      font-family: var(--font-display);
-      font-size: clamp(68px, 9vw, 136px);
-      line-height: 0.88;
-      letter-spacing: 0.01em;
-      color: var(--white);
+
+    /* MASSIVE STATEMENT HEADLINE */
+    .hero-statement-title {
+      font-family: var(--font-statement);
+      font-size: clamp(48px, 6vw, 92px);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
       text-transform: uppercase;
+      margin-bottom: 32px;
     }
-    .hero-headline .blue   { color: var(--blue); }
-    .hero-headline .orange { color: var(--orange); }
-    .hero-headline .outline {
-      -webkit-text-stroke: 2px var(--white);
+    .hero-statement-title .line-white { color: var(--text); }
+    .hero-statement-title .line-blue  {
+      color: var(--blue);
+      text-shadow: 0 0 30px rgba(0, 56, 255, 0.3);
+    }
+    .hero-statement-title .line-outline {
       color: transparent;
+      -webkit-text-stroke: 1.5px var(--text);
     }
-    .hero-tagline {
+    .hero-statement-title .line-orange { color: var(--orange); }
+
+    .hero-description {
       font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--dim);
-      line-height: 1.7;
-      max-width: 460px;
-      margin-top: 36px;
+      font-size: 13px; line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin-bottom: 40px;
     }
-    .hero-tagline strong { color: var(--white); }
-    .hero-bottom {
-      display: flex; flex-direction: column; gap: 24px;
-      margin-top: 40px;
+    .hero-description strong { color: var(--text); font-weight: 600; }
+
+    .hero-metrics-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      background: var(--panel);
     }
-    .hero-stats-row {
-      display: flex; gap: 0;
-      border: 1px solid var(--gray-lt);
+    .metric-cell {
+      padding: 16px 18px;
+      border-right: 1px solid var(--border);
     }
-    .hero-stat {
-      flex: 1;
-      padding: 14px 20px;
-      border-right: 1px solid var(--gray-lt);
-    }
-    .hero-stat:last-child { border-right: none; }
-    .hero-stat-num {
+    .metric-cell:last-child { border-right: none; }
+    .metric-val {
       font-family: var(--font-display);
-      font-size: 36px;
+      font-size: 32px; line-height: 1;
       color: var(--yellow);
-      line-height: 1;
     }
-    .hero-stat-label {
+    .metric-lbl {
       font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 0.15em;
-      color: var(--dim); text-transform: uppercase;
-      margin-top: 2px;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 4px;
     }
-    .hero-btns { display: flex; gap: 0; }
-    .btn-block {
+
+    .hero-actions {
+      display: flex; gap: 0; margin-top: 24px;
+    }
+    .btn-action {
       font-family: var(--font-mono);
       font-size: 11px; font-weight: 700;
       letter-spacing: 0.14em; text-transform: uppercase;
       text-decoration: none;
       padding: 16px 28px;
-      border: 2px solid;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: all 0.15s;
-      cursor: pointer;
+      border: 1px solid;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: all 0.15s ease;
     }
-    .btn-block.primary {
-      background: var(--blue); color: var(--white);
-      border-color: var(--blue);
+    .btn-action.primary {
+      background: var(--blue); color: #fff; border-color: var(--blue);
     }
-    .btn-block.primary:hover { background: transparent; color: var(--blue); }
-    .btn-block.secondary {
-      background: transparent; color: var(--white);
-      border-color: var(--gray-lt);
+    .btn-action.primary:hover { background: var(--blue-glow); }
+    .btn-action.secondary {
+      background: transparent; color: var(--text); border-color: var(--border);
     }
-    .btn-block.secondary:hover { border-color: var(--white); }
+    .btn-action.secondary:hover { border-color: var(--text-muted); background: var(--panel); }
 
-    /* Hero Right Poster Panel */
+    /* HERO RIGHT POSTER PANEL */
     .hero-right {
-      background: var(--blue);
-      display: flex; flex-direction: column;
+      background: var(--panel);
+      display: flex; flex-direction: column; justify-content: space-between;
       position: relative; overflow: hidden;
+      border-left: 1px solid var(--border);
     }
-    .hero-right-top {
+
+    .poster-header-block {
+      padding: 48px;
+      border-bottom: 1px solid var(--border);
+      position: relative; z-index: 2;
+    }
+    .poster-badge {
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .poster-badge::before {
+      content: ''; width: 8px; height: 8px; background: var(--orange);
+    }
+    .poster-title-large {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 8vw, 110px);
+      line-height: 0.86;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .poster-subtitle {
+      font-family: var(--font-mono);
+      font-size: 12px; color: var(--text-muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-top: 16px;
+    }
+
+    /* SPECIFICATION CARD MATRIX IN RIGHT POSTER */
+    .poster-specs-body {
+      padding: 48px;
       flex: 1;
       display: flex; flex-direction: column; justify-content: center;
-      padding: 60px 50px;
-      position: relative; z-index: 1;
+      gap: 16px;
+      position: relative; z-index: 2;
     }
-    .hero-poster-label {
-      font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 0.22em;
-      color: rgba(255,255,255,0.6);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .hero-poster-big {
-      font-family: var(--font-display);
-      font-size: clamp(64px, 8vw, 120px);
-      line-height: 0.88;
-      color: var(--white);
-      text-transform: uppercase;
-    }
-    .hero-poster-sub {
-      font-family: var(--font-display);
-      font-size: clamp(28px, 3.5vw, 48px);
-      line-height: 0.95;
-      color: rgba(255,255,255,0.45);
-      text-transform: uppercase;
-      margin-top: 12px;
-    }
-    .hero-right-bottom {
-      background: var(--black);
-      border-top: 2px solid var(--blue);
-      padding: 24px 50px;
+    .spec-card-row {
       display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 18px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 11px;
     }
-    .hero-right-bottom-text {
-      font-family: var(--font-mono);
-      font-size: 10px; color: var(--dim);
-      letter-spacing: 0.12em; text-transform: uppercase;
-      line-height: 1.6;
+    .spec-card-key { color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .spec-card-val { color: var(--text); font-weight: 700; }
+    .spec-card-val.highlight { color: var(--green); }
+
+    .poster-footer-bar {
+      padding: 24px 48px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase;
+      position: relative; z-index: 2;
     }
-    .hero-right-bottom-text strong { color: var(--green); }
-    .hero-grid-bg {
+    .poster-footer-bar strong { color: var(--text); }
+
+    /* DECORATIVE GRAPHICS FOR POSTER */
+    .poster-grid-bg {
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-      background-size: 44px 44px;
-    }
-    .hero-circle {
-      position: absolute;
-      right: -60px; top: 50%;
-      transform: translateY(-50%);
-      width: 340px; height: 340px;
-      border-radius: 50%;
-      border: 50px solid rgba(255,255,255,0.08);
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
       pointer-events: none;
     }
+    .poster-giant-num {
+      position: absolute; right: -20px; bottom: 20px;
+      font-family: var(--font-display);
+      font-size: 260px; line-height: 1;
+      color: rgba(255,255,255,0.02);
+      user-select: none; pointer-events: none;
+    }
 
-    /* ───── MARQUEE ───── */
-    .marquee-wrap {
-      display: flex;
-      overflow: hidden;
-      background: var(--orange);
-      border-bottom: 2px solid var(--black);
+    /* ───── MARQUEE STRIP ───── */
+    .marquee-container {
+      background: var(--blue);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden; display: flex;
     }
     .marquee-track {
-      display: flex; gap: 0;
-      animation: march 26s linear infinite;
-      white-space: nowrap;
+      display: flex; white-space: nowrap;
+      animation: marquee-slide 28s linear infinite;
       flex-shrink: 0;
     }
-    .marquee-item {
+    .marquee-cell {
       font-family: var(--font-display);
-      font-size: 21px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--black);
-      padding: 11px 36px;
-      border-right: 2px solid rgba(0,0,0,0.18);
+      font-size: 22px; letter-spacing: 0.08em;
+      color: #fff; text-transform: uppercase;
+      padding: 12px 36px;
       display: flex; align-items: center; gap: 14px;
+      border-right: 1px solid rgba(255,255,255,0.2);
     }
-    .marquee-star { font-size: 16px; opacity: 0.7; }
-    @keyframes march {
+    .marquee-cell .dot { width: 6px; height: 6px; background: var(--yellow); border-radius: 50%; }
+    @keyframes marquee-slide {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
 
-    /* ───── SECTION COMMONS ───── */
-    .s-label {
+    /* ───── SECTION LAYOUT ───── */
+    section {
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .sec-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .sec-header-left {
+      padding: 60px 48px;
+      border-right: 1px solid var(--border);
+    }
+    .sec-header-right {
+      padding: 60px 48px;
+      background: var(--panel);
+      display: flex; align-items: flex-end;
+    }
+    .sec-header-right p {
+      font-family: var(--font-mono);
+      font-size: 13px; line-height: 1.7;
+      color: var(--text-muted); max-width: 440px;
+    }
+
+    .sec-tag {
       font-family: var(--font-mono);
       font-size: 10px; font-weight: 700;
       letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--blue);
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 24px;
+      color: var(--blue); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
     }
-    .s-label::after {
-      content: '';
-      flex: 1; height: 1px;
-      background: var(--gray-lt);
-    }
-    .s-heading {
-      font-family: var(--font-display);
-      font-size: clamp(56px, 8vw, 110px);
-      line-height: 0.88;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
+    .sec-tag::before { content: ''; width: 24px; height: 1px; background: var(--blue); }
+
+    .sec-title {
+      font-family: var(--font-statement);
+      font-size: clamp(40px, 5.5vw, 76px);
+      font-weight: 800; line-height: 0.94;
+      text-transform: uppercase; letter-spacing: -0.02em;
     }
 
-    /* ───── WHO SECTION ───── */
-    #who {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 2px solid var(--gray-lt);
+    /* ───── AXIOMS / ARCHITECTURE GRID ───── */
+    .axioms-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
     }
-    .who-left {
-      padding: 90px 60px;
-      border-right: 2px solid var(--gray-lt);
+    .axiom-card {
+      padding: 48px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
       display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 280px; position: relative;
+      transition: background 0.2s ease;
     }
-    .who-heading {
+    .axiom-card:nth-child(2n) { border-right: none; }
+    .axiom-card:hover { background: var(--panel); }
+
+    .axiom-num {
       font-family: var(--font-display);
-      font-size: clamp(58px, 8.5vw, 120px);
-      line-height: 0.88;
-      text-transform: uppercase;
+      font-size: 48px; color: var(--border-hi);
+      line-height: 1; margin-bottom: 24px;
     }
-    .who-heading .out {
-      -webkit-text-stroke: 2px var(--white);
-      color: transparent;
+    .axiom-card:hover .axiom-num { color: var(--blue); }
+
+    .axiom-title {
+      font-family: var(--font-statement);
+      font-size: 24px; font-weight: 800;
+      text-transform: uppercase; margin-bottom: 12px;
+      color: var(--text);
     }
-    .who-heading .blue { color: var(--blue); }
-    .who-body {
-      font-family: var(--font-mono);
-      font-size: 13px; line-height: 1.8;
-      color: #9999a0;
-      max-width: 440px;
-      margin-top: 36px;
-    }
-    .who-body strong { color: var(--white); }
-    .who-axiom {
-      margin-top: 48px;
-      border: 2px solid var(--blue);
-      padding: 24px 28px;
-      background: rgba(21, 64, 255, 0.04);
-    }
-    .who-axiom-label {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 0.22em;
-      color: var(--blue); text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .who-axiom-text {
-      font-family: var(--font-display);
-      font-size: 26px; line-height: 1.05;
-      text-transform: uppercase;
-      color: var(--white);
-    }
-    .who-right {
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-    }
-    .who-card {
-      padding: 48px 50px;
-      border-bottom: 2px solid var(--gray-lt);
-      display: flex; flex-direction: column; justify-content: space-between;
-      transition: background 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .who-card:last-child { border-bottom: none; }
-    .who-card:hover { background: #0c0c0e; }
-    .who-card-num {
-      font-family: var(--font-display);
-      font-size: 84px; line-height: 1;
-      color: var(--gray-lt);
-      position: absolute; right: 40px; top: 24px;
-      transition: color 0.2s;
-    }
-    .who-card:hover .who-card-num { color: #2a2a32; }
-    .who-card-title {
-      font-family: var(--font-display);
-      font-size: 32px; text-transform: uppercase;
-      color: var(--white);
-      position: relative; z-index: 1;
-    }
-    .who-card-body {
+    .axiom-body {
       font-family: var(--font-mono);
       font-size: 12px; line-height: 1.75;
-      color: var(--dim);
-      position: relative; z-index: 1;
-      max-width: 380px;
+      color: var(--text-muted);
     }
-    .who-card-tag {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding: 6px 12px;
-      border: 1px solid;
-      display: inline-block;
-      margin-top: 16px;
-      position: relative; z-index: 1;
-    }
-    .who-card-tag.active { border-color: var(--green); color: var(--green); }
-    .who-card-tag.system { border-color: var(--blue); color: var(--blue); }
 
-    /* ───── WORK SECTION ───── */
-    #work {
-      border-bottom: 2px solid var(--gray-lt);
+    /* ───── PROJECTS TABLE ───── */
+    .projects-table {
+      width: 100%; border-collapse: collapse;
     }
-    .work-header {
+    .project-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 2px solid var(--gray-lt);
-    }
-    .work-header-left {
-      padding: 80px 60px;
-      border-right: 2px solid var(--gray-lt);
-    }
-    .work-header-right {
-      background: var(--yellow);
-      display: flex; align-items: flex-end;
-      padding: 48px 50px;
-    }
-    .work-header-right p {
-      font-family: var(--font-mono);
-      font-size: 13px; line-height: 1.7;
-      color: var(--black);
-      max-width: 400px;
-      font-weight: 500;
-    }
-    .work-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .work-row {
-      display: grid;
-      grid-template-columns: 70px 80px 1.2fr 1.5fr auto;
+      grid-template-columns: 80px 100px 1.4fr 1.6fr 130px;
       align-items: center;
-      gap: 0;
-      border-bottom: 1px solid var(--gray-lt);
-      transition: background 0.12s;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s ease;
     }
-    .work-row:hover { background: #0c0c0e; }
-    .work-row:hover .work-num { color: var(--blue); }
-    .work-cell {
+    .project-row:hover { background: var(--panel); }
+    .project-cell {
       padding: 24px 20px;
-      border-right: 1px solid var(--gray-lt);
+      border-right: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 11px;
     }
-    .work-cell:last-child { border-right: none; }
-    .work-num {
+    .project-cell:last-child { border-right: none; }
+
+    .proj-idx {
       font-family: var(--font-display);
-      font-size: 22px;
-      color: #33333b;
-      transition: color 0.2s;
-      text-align: center;
+      font-size: 24px; color: var(--dim); text-align: center;
     }
-    .work-year {
+    .project-row:hover .proj-idx { color: var(--blue); }
+
+    .proj-year { color: var(--text-muted); }
+    .proj-name {
+      font-family: var(--font-statement);
+      font-size: 22px; font-weight: 800;
+      text-transform: uppercase; color: var(--text);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .proj-name:hover { color: var(--blue); }
+    .proj-org {
       font-family: var(--font-mono);
-      font-size: 11px; color: var(--dim);
-      letter-spacing: 0.1em;
+      font-size: 10px; color: var(--dim); margin-top: 4px;
     }
-    .work-name-cell { padding: 24px 32px; border-right: 1px solid var(--gray-lt); }
-    .work-name {
-      font-family: var(--font-display);
-      font-size: 28px; text-transform: uppercase;
-      color: var(--white);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .work-name:hover { color: var(--blue); }
-    .work-org {
-      font-family: var(--font-mono);
-      font-size: 10px; color: var(--dim);
-      letter-spacing: 0.1em;
-      margin-top: 4px;
-    }
-    .work-desc-cell { padding: 24px 32px; border-right: 1px solid var(--gray-lt); }
-    .work-desc {
-      font-family: var(--font-mono);
-      font-size: 11px; color: var(--dim);
-      line-height: 1.6;
-    }
-    .work-status-cell { padding: 24px 28px; min-width: 120px; text-align: center; }
+    .proj-desc { color: var(--text-muted); line-height: 1.6; }
+
     .badge {
       font-family: var(--font-mono);
       font-size: 9px; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      padding: 5px 10px;
-      display: inline-block;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 6px 12px; display: inline-block; text-align: center;
     }
-    .badge.active   { background: var(--green);  color: var(--black); }
-    .badge.archived { background: var(--gray-lt); color: var(--dim);   }
-    .badge.public   { background: var(--blue);    color: var(--white); }
+    .badge.active   { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid var(--green); }
+    .badge.archived { background: transparent; color: var(--dim); border: 1px solid var(--border); }
+    .badge.public   { background: rgba(0,56,255,0.1); color: var(--blue); border: 1px solid var(--blue); }
 
-    /* ───── PHILOSOPHY SECTION ───── */
-    #philosophy {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 2px solid var(--gray-lt);
+    /* ───── PHILOSOPHY PANEL (SPLIT) ───── */
+    .phil-container {
+      display: grid; grid-template-columns: 1fr 1fr;
     }
     .phil-left {
       background: var(--blue);
-      padding: 80px 60px;
+      padding: 80px 48px; color: #fff;
       display: flex; flex-direction: column; justify-content: space-between;
     }
-    .phil-big {
-      font-family: var(--font-display);
-      font-size: clamp(52px, 7vw, 96px);
-      line-height: 0.88;
+    .phil-left-title {
+      font-family: var(--font-statement);
+      font-size: clamp(44px, 6vw, 84px);
+      font-weight: 800; line-height: 0.92;
       text-transform: uppercase;
-      color: var(--white);
     }
-    .phil-big .dark { color: rgba(0,0,0,0.3); }
-    .phil-data {
-      display: flex; flex-direction: column; gap: 16px;
-      margin-top: 48px;
+    .phil-left-title .dim-text { opacity: 0.35; }
+
+    .phil-specs-list {
+      margin-top: 48px; display: flex; flex-direction: column; gap: 16px;
     }
-    .phil-data-row {
-      display: flex; justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.18);
-      padding-bottom: 14px;
+    .phil-spec-item {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px;
+      font-family: var(--font-mono); font-size: 11px;
     }
-    .phil-data-key {
-      font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-    }
-    .phil-data-val {
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 700;
-      color: var(--white);
-    }
+    .phil-spec-item span:first-child { opacity: 0.7; letter-spacing: 0.1em; }
+    .phil-spec-item span:last-child { font-weight: 700; }
+
     .phil-right {
-      padding: 80px 60px;
-      border-left: 2px solid var(--gray-lt);
-      display: flex; flex-direction: column; justify-content: center;
-      gap: 40px;
+      padding: 80px 48px;
+      border-left: 1px solid var(--border);
+      background: var(--bg);
+      display: flex; flex-direction: column; justify-content: center; gap: 36px;
     }
-    .phil-quote {
-      border-left: 4px solid var(--orange);
-      padding-left: 24px;
+    .phil-quote-box {
+      border-left: 3px solid var(--orange); padding-left: 20px;
     }
     .phil-quote-text {
-      font-family: var(--font-display);
-      font-size: 32px; line-height: 1.05;
-      text-transform: uppercase;
-      color: var(--white);
+      font-family: var(--font-statement);
+      font-size: 28px; font-weight: 800; line-height: 1.1;
+      text-transform: uppercase; color: var(--text);
     }
-    .phil-quote-attr {
-      font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 0.15em;
-      color: var(--dim); text-transform: uppercase;
-      margin-top: 12px;
+    .phil-quote-sub {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.15em; color: var(--text-muted);
+      margin-top: 10px; text-transform: uppercase;
     }
-    .phil-rules {
-      display: flex; flex-direction: column; gap: 16px;
-      margin-top: 16px;
-    }
-    .phil-rule {
-      display: flex; gap: 20px; align-items: flex-start;
-    }
-    .phil-rule-idx {
-      font-family: var(--font-display);
-      font-size: 28px; color: var(--gray-lt);
-      line-height: 1; flex-shrink: 0;
-    }
-    .phil-rule-text {
-      font-family: var(--font-mono);
-      font-size: 12px; line-height: 1.7;
-      color: #9999a0;
-    }
-    .phil-rule-text strong { color: var(--white); }
 
-    /* ───── STACK STRIP ───── */
-    #stack {
-      border-bottom: 2px solid var(--gray-lt);
+    .phil-rules-list {
+      display: flex; flex-direction: column; gap: 20px;
     }
-    .stack-header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 40px 60px;
-      border-bottom: 1px solid var(--gray-lt);
+    .phil-rule-item {
+      display: flex; gap: 18px; align-items: flex-start;
     }
-    .stack-header-left {
-      font-family: var(--font-display);
-      font-size: 56px; text-transform: uppercase;
-      color: var(--white);
+    .phil-rule-num {
+      font-family: var(--font-display); font-size: 28px;
+      color: var(--border-hi); line-height: 1; flex-shrink: 0;
     }
-    .stack-header-right {
-      font-family: var(--font-mono);
-      font-size: 11px; color: var(--dim);
-      text-align: right; line-height: 1.8;
-      max-width: 360px;
+    .phil-rule-desc {
+      font-family: var(--font-mono); font-size: 12px; line-height: 1.7;
+      color: var(--text-muted);
     }
+    .phil-rule-desc strong { color: var(--text); }
+
+    /* ───── TECH STACK GRID ───── */
     .stack-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      display: grid; grid-template-columns: repeat(5, 1fr);
     }
-    .stack-item {
-      padding: 36px 32px;
-      border-right: 1px solid var(--gray-lt);
-      display: flex; flex-direction: column; gap: 12px;
-      transition: background 0.15s;
+    .stack-card {
+      padding: 36px 28px;
+      border-right: 1px solid var(--border);
+      background: var(--bg);
+      display: flex; flex-direction: column; justify-content: space-between;
+      gap: 16px; transition: background 0.15s ease;
     }
-    .stack-item:last-child { border-right: none; }
-    .stack-item:hover { background: #0c0c0e; }
-    .stack-lang {
-      font-family: var(--font-display);
-      font-size: 40px; text-transform: uppercase;
-      color: var(--white);
-      line-height: 1;
+    .stack-card:last-child { border-right: none; }
+    .stack-card:hover { background: var(--panel); }
+    .stack-name {
+      font-family: var(--font-display); font-size: 38px;
+      line-height: 1; text-transform: uppercase; color: var(--text);
     }
-    .stack-lang.blue   { color: var(--blue); }
-    .stack-lang.orange { color: var(--orange); }
-    .stack-lang.yellow { color: var(--yellow); }
     .stack-use {
-      font-family: var(--font-mono);
-      font-size: 10px; color: var(--dim);
-      line-height: 1.6;
-      letter-spacing: 0.05em;
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--text-muted); line-height: 1.6;
     }
-    .stack-bar-wrap {
-      height: 3px; background: var(--gray-lt); margin-top: 8px;
+    .stack-indicator {
+      height: 2px; background: var(--border); width: 100%;
     }
-    .stack-bar {
-      height: 3px;
-      background: var(--blue);
+    .stack-indicator-fill {
+      height: 2px; background: var(--blue);
     }
 
     /* ───── CONNECT SECTION ───── */
-    #connect {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      border-bottom: 2px solid var(--gray-lt);
+    .connect-container {
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
     }
     .connect-left {
-      padding: 90px 60px;
-      border-right: 2px solid var(--gray-lt);
+      padding: 80px 48px;
+      border-right: 1px solid var(--border);
     }
-    .connect-cta {
-      font-family: var(--font-display);
-      font-size: clamp(48px, 6.5vw, 88px);
-      line-height: 0.88; text-transform: uppercase;
+    .connect-title {
+      font-family: var(--font-statement);
+      font-size: clamp(40px, 5.5vw, 76px);
+      font-weight: 800; line-height: 0.94;
+      text-transform: uppercase; margin-bottom: 24px;
     }
-    .connect-cta .blue { color: var(--blue); }
-    .connect-cta .out {
-      -webkit-text-stroke: 2px var(--white);
-      color: transparent;
-    }
+    .connect-title .blue { color: var(--blue); }
     .connect-body {
-      font-family: var(--font-mono);
-      font-size: 12px; color: var(--dim);
-      line-height: 1.8; margin-top: 32px;
-      max-width: 420px;
+      font-family: var(--font-mono); font-size: 12px;
+      line-height: 1.8; color: var(--text-muted);
+      max-width: 440px; margin-bottom: 40px;
     }
-    .connect-body strong { color: var(--white); }
-    .connect-actions {
-      display: flex; flex-direction: column; gap: 0;
-      margin-top: 40px;
-      border: 1px solid var(--gray-lt);
+    .connect-links-stack {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--border);
     }
-    .connect-link {
+    .connect-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--gray-lt);
-      text-decoration: none;
-      transition: background 0.12s;
-      color: var(--white);
+      padding: 18px 24px; border-bottom: 1px solid var(--border);
+      text-decoration: none; color: var(--text);
+      transition: background 0.15s ease;
     }
-    .connect-link:last-child { border-bottom: none; }
-    .connect-link:hover { background: var(--blue); }
-    .connect-link-left {
-      display: flex; align-items: center; gap: 16px;
+    .connect-row:last-child { border-bottom: none; }
+    .connect-row:hover { background: var(--blue); color: #fff; }
+    .connect-row-platform {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue); width: 100px;
     }
-    .connect-link-platform {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--blue);
-      min-width: 90px;
+    .connect-row:hover .connect-row-platform { color: rgba(255,255,255,0.7); }
+    .connect-row-label {
+      font-family: var(--font-body); font-size: 14px; font-weight: 600;
     }
-    .connect-link:hover .connect-link-platform { color: rgba(255,255,255,0.7); }
-    .connect-link-name {
-      font-family: var(--font-body);
-      font-size: 14px; font-weight: 600;
-      color: var(--white);
+    .connect-row-arrow {
+      font-family: var(--font-mono); font-size: 14px; color: var(--dim);
     }
-    .connect-link-arrow {
-      font-size: 16px; color: var(--dim);
-      transition: transform 0.15s;
-    }
-    .connect-link:hover .connect-link-arrow { transform: translateX(4px); color: var(--white); }
+    .connect-row:hover .connect-row-arrow { color: #fff; }
 
     .connect-right {
-      background: var(--black);
-      display: flex; flex-direction: column;
+      background: var(--panel);
+      display: flex; flex-direction: column; justify-content: space-between;
     }
-    .connect-right-top {
-      flex: 1;
-      background: var(--orange);
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 60px 50px;
+    .connect-poster-top {
+      padding: 60px 48px; background: var(--orange); color: #000;
+      flex: 1; display: flex; flex-direction: column; justify-content: flex-end;
     }
-    .connect-right-top-label {
-      font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.6);
-      margin-bottom: 16px;
+    .connect-poster-title {
+      font-family: var(--font-statement);
+      font-size: clamp(36px, 4.5vw, 64px);
+      font-weight: 800; line-height: 0.92; text-transform: uppercase;
     }
-    .connect-right-top-big {
-      font-family: var(--font-display);
-      font-size: clamp(44px, 5.5vw, 80px);
-      line-height: 0.88; text-transform: uppercase;
-      color: var(--black);
+    .connect-poster-bottom {
+      padding: 40px 48px; background: var(--bg);
+      border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 14px;
     }
-    .connect-right-bottom {
-      padding: 40px 50px;
-      border-top: 2px solid var(--gray-lt);
-      display: flex; flex-direction: column; gap: 16px;
-    }
-    .sys-row {
+    .sys-meta-row {
       display: flex; justify-content: space-between;
       font-family: var(--font-mono); font-size: 11px;
-      border-bottom: 1px solid var(--gray-lt);
-      padding-bottom: 12px;
-      color: var(--dim);
+      border-bottom: 1px solid var(--border); padding-bottom: 10px;
+      color: var(--text-muted);
     }
-    .sys-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .sys-row-val { color: var(--white); }
-    .sys-row-val.online { color: var(--green); }
+    .sys-meta-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .sys-meta-val { color: var(--text); font-weight: 600; }
+    .sys-meta-val.green { color: var(--green); }
 
     /* ───── FOOTER ───── */
     footer {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: grid; grid-template-columns: 1fr 1fr;
+      background: var(--bg);
     }
-    .footer-left {
-      padding: 60px;
-      border-right: 2px solid var(--gray-lt);
+    .footer-col {
+      padding: 60px 48px;
       display: flex; flex-direction: column; justify-content: space-between;
     }
-    .footer-logo {
-      font-family: var(--font-display);
-      font-size: 72px; line-height: 0.88;
-      text-transform: uppercase;
-      color: var(--white);
+    .footer-col:first-child { border-right: 1px solid var(--border); }
+
+    .footer-brand {
+      font-family: var(--font-statement);
+      font-size: 56px; font-weight: 800; line-height: 1;
+      text-transform: uppercase; color: var(--text);
     }
     .footer-sub {
-      font-family: var(--font-mono);
-      font-size: 10px; color: var(--dim);
-      letter-spacing: 0.14em; text-transform: uppercase;
-      margin-top: 8px;
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.14em; color: var(--text-muted);
+      text-transform: uppercase; margin-top: 8px;
     }
-    .footer-copyright {
-      font-family: var(--font-mono);
-      font-size: 10px; color: var(--dim);
-      letter-spacing: 0.1em;
+    .footer-copy {
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--dim); letter-spacing: 0.1em; margin-top: 32px;
     }
-    .footer-right {
-      padding: 60px;
-      display: flex; flex-direction: column; justify-content: space-between;
-    }
+
     .footer-motto {
-      font-family: var(--font-display);
-      font-size: clamp(26px, 3.2vw, 44px);
-      line-height: 1.05;
-      text-transform: uppercase;
-      color: var(--white);
+      font-family: var(--font-statement);
+      font-size: clamp(24px, 3vw, 40px);
+      font-weight: 800; line-height: 1.05;
+      text-transform: uppercase; color: var(--text);
     }
     .footer-motto .blue { color: var(--blue); }
-    .footer-meta {
-      display: flex; flex-direction: column; gap: 8px;
+
+    .footer-links-grid {
+      display: flex; flex-direction: column; gap: 8px; margin-top: 32px;
     }
-    .footer-meta-row {
+    .footer-link-item {
       display: flex; justify-content: space-between;
       font-family: var(--font-mono); font-size: 10px;
-      color: var(--dim);
-      border-top: 1px solid var(--gray-lt);
+      color: var(--text-muted); border-top: 1px solid var(--border);
       padding-top: 8px;
     }
-    .footer-meta-row span:last-child { color: var(--white); }
+    .footer-link-item span:last-child { color: var(--text); }
 
-    /* ───── ANIMATIONS ───── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-
-    /* ───── RESPONSIVE ───── */
+    /* ───── RESPONSIVE LAYOUT ───── */
     @media (max-width: 1024px) {
       .hero { grid-template-columns: 1fr; }
       .hero-right { display: none; }
-      .hero-left { padding: 60px 32px; }
-      #who { grid-template-columns: 1fr; }
-      .who-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
-      .who-right { grid-template-rows: auto auto; }
-      .work-header { grid-template-columns: 1fr; }
-      .work-header-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
-      .work-row { grid-template-columns: 60px 1fr auto; }
-      .work-desc-cell { display: none; }
-      #philosophy { grid-template-columns: 1fr; }
-      .phil-right { border-left: none; border-top: 2px solid var(--gray-lt); }
-      .stack-grid { grid-template-columns: repeat(3, 1fr); }
-      .stack-item:nth-child(3) { border-right: none; }
-      .stack-item:nth-child(4) { border-top: 1px solid var(--gray-lt); }
-      .stack-item:nth-child(5) { border-top: 1px solid var(--gray-lt); border-right: none; }
-      #connect { grid-template-columns: 1fr; }
-      .connect-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
+      .hero-left { padding: 48px 24px; }
+      .sec-header { grid-template-columns: 1fr; }
+      .sec-header-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .axioms-grid { grid-template-columns: 1fr; }
+      .axiom-card { border-right: none; }
+      .project-row { grid-template-columns: 60px 1fr auto; }
+      .project-cell:nth-child(2), .project-cell:nth-child(4) { display: none; }
+      .phil-container { grid-template-columns: 1fr; }
+      .phil-right { border-left: none; border-top: 1px solid var(--border); }
+      .stack-grid { grid-template-columns: repeat(2, 1fr); }
+      .stack-card { border-bottom: 1px solid var(--border); }
+      .stack-card:nth-child(2n) { border-right: none; }
+      .connect-container { grid-template-columns: 1fr; }
+      .connect-left { border-right: none; border-bottom: 1px solid var(--border); }
       footer { grid-template-columns: 1fr; }
-      .footer-left { border-right: none; border-bottom: 2px solid var(--gray-lt); }
-      nav { padding: 0 20px; }
-      .nav-link { padding: 0 12px; font-size: 10px; }
+      .footer-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      nav { padding: 0 16px; }
+      .nav-item { padding: 0 12px; font-size: 10px; }
     }
 
     @media (max-width: 640px) {
-      h1.hero-headline { font-size: 54px; }
-      .who-heading { font-size: 48px; }
-      .work-row { grid-template-columns: 1fr auto; }
-      .work-cell:first-child, .work-cell:nth-child(2) { display: none; }
-      .stack-header { flex-direction: column; gap: 16px; align-items: flex-start; }
-      .stack-grid { grid-template-columns: repeat(2, 1fr); }
-      .stack-header-left { font-size: 36px; }
-      .stack-item:nth-child(3) { border-right: 1px solid var(--gray-lt); }
-      .stack-item:nth-child(4) { border-top: none; }
-      .stack-item:nth-child(5) { border-right: none; }
+      .hero-statement-title { font-size: 38px; }
+      .hero-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .metric-cell:nth-child(2) { border-right: none; }
+      .metric-cell:nth-child(3), .metric-cell:nth-child(4) { border-top: 1px solid var(--border); }
+      .sec-title { font-size: 36px; }
+      .project-row { grid-template-columns: 1fr auto; }
+      .project-cell:first-child { display: none; }
+      .stack-grid { grid-template-columns: 1fr; }
+      .stack-card { border-right: none; }
     }
-
-    ::selection { background: var(--blue); color: var(--white); }
   </style>
 </head>
 <body>
 
-<!-- ══════════ NAV ══════════ -->
+<!-- ══════════ TOP NAV ══════════ -->
 <nav>
-  <div class="nav-logo">
-    <div class="nav-dot"></div>
+  <div class="nav-brand">
+    <div class="nav-status-indicator"></div>
     KAADZ
   </div>
-  <div class="nav-right">
-    <a href="#who"        class="nav-link">SYSTEMS</a>
-    <a href="#work"       class="nav-link">PROJECTS</a>
-    <a href="#philosophy" class="nav-link">PHILOSOPHY</a>
-    <a href="#stack"      class="nav-link">STACK</a>
-    <a href="#connect"    class="nav-link cta">CONTACT →</a>
+  <div class="nav-links">
+    <a href="#architecture" class="nav-link nav-item">ARCHITECTURE</a>
+    <a href="#projects"     class="nav-link nav-item">PROJECTS</a>
+    <a href="#philosophy"   class="nav-link nav-item">PHILOSOPHY</a>
+    <a href="#stack"        class="nav-link nav-item">STACK</a>
+    <a href="#contact"      class="nav-link nav-item cta">CONTACT →</a>
   </div>
 </nav>
 
-<!-- ══════════ HERO ══════════ -->
+<!-- ══════════ HERO SECTION ══════════ -->
 <header class="hero">
 
-  <!-- LEFT -->
+  <!-- LEFT PANEL -->
   <div class="hero-left">
+    <div class="corner-tick tl"></div><div class="corner-tick tr"></div>
+    <div class="corner-tick bl"></div><div class="corner-tick br"></div>
+
     <div>
-      <div class="hero-tag">KAADIPRANAV // WATCHLLM // SYSTEMS & RUNTIMES</div>
-      <div class="hero-main-text">
-        <h1 class="hero-headline fade-up">
-          <span class="blue">INFRA</span><br>
-          CANNOT<br>
-          <span class="outline">BE</span><br>
-          <span class="orange">PROB.</span>
-        </h1>
-        <p class="hero-tagline fade-up delay-2">
-          <strong>Founder of WatchLLM.</strong> Building deterministic runtime governance and interceptors for autonomous agentic systems. High-performance, air-gapped security paths.<br><br>
-          <strong>15 Repositories · 3 Organizations · Python, Rust, TypeScript.</strong>
-        </p>
+      <div class="hero-meta-bar">
+        <span>KAADIPRANAV // WATCHLLM</span>
+        <div>[VOL. 2026]</div>
       </div>
+
+      <h1 class="hero-statement-title">
+        <span class="line-white">AGENTS ARE</span><br>
+        <span class="line-blue">PROBABILISTIC.</span><br>
+        <span class="line-outline">INFRASTRUCTURE</span><br>
+        <span class="line-orange">IS NOT.</span>
+      </h1>
+
+      <p class="hero-description">
+        <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance, static AST interceptors, and air-gapped evaluation paths for autonomous software systems.
+      </p>
     </div>
 
-    <div class="hero-bottom fade-up delay-3">
-      <div class="hero-stats-row">
-        <div class="hero-stat">
-          <div class="hero-stat-num">15</div>
-          <div class="hero-stat-label">Repos</div>
+    <div>
+      <div class="hero-metrics-grid">
+        <div class="metric-cell">
+          <div class="metric-val">15</div>
+          <div class="metric-lbl">Repos</div>
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">3</div>
-          <div class="hero-stat-label">Orgs</div>
+        <div class="metric-cell">
+          <div class="metric-val">03</div>
+          <div class="metric-lbl">Orgs</div>
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">12</div>
-          <div class="hero-stat-label">Modules</div>
+        <div class="metric-cell">
+          <div class="metric-val">12</div>
+          <div class="metric-lbl">Modules</div>
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">0</div>
-          <div class="hero-stat-label">Cloud Deps</div>
+        <div class="metric-cell">
+          <div class="metric-val">0%</div>
+          <div class="metric-lbl">Cloud Dep</div>
         </div>
       </div>
-      <div class="hero-btns">
-        <a href="https://watchllm.dev" target="_blank" class="btn-block primary">WATCHLLM.DEV →</a>
-        <a href="https://github.com/kaadipranav" target="_blank" class="btn-block secondary">GITHUB</a>
+
+      <div class="hero-actions">
+        <a href="https://watchllm.dev" target="_blank" class="btn-action primary">WATCHLLM.DEV →</a>
+        <a href="https://github.com/kaadipranav" target="_blank" class="btn-action secondary">GITHUB</a>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT -->
+  <!-- RIGHT POSTER PANEL -->
   <div class="hero-right">
-    <div class="hero-grid-bg"></div>
-    <div class="hero-circle"></div>
-    <div class="hero-right-top">
-      <div class="hero-poster-label">// RUNTIME ARCHITECTURE //</div>
-      <div class="hero-poster-big">WATCH<br>LLM</div>
-      <div class="hero-poster-sub">RUNTIME<br>GOVERNANCE</div>
+    <div class="poster-grid-bg"></div>
+    <div class="poster-giant-num">01</div>
+
+    <div class="poster-header-block">
+      <div class="poster-badge">SYSTEM IDENTIFIER</div>
+      <div class="poster-title-large">WATCH<br>LLM</div>
+      <div class="poster-subtitle">RUNTIME GOVERNANCE STACK</div>
     </div>
-    <div class="hero-right-bottom">
-      <div class="hero-right-bottom-text">
-        SYSTEM: <strong>GOVERNANCE KERNEL</strong><br>
-        TYPE: <strong>DETERMINISTIC INTERCEPTOR</strong>
+
+    <div class="poster-specs-body">
+      <div class="spec-card-row">
+        <span class="spec-card-key">PARSER ENGINE</span>
+        <span class="spec-card-val">TREE-SITTER AST</span>
       </div>
-      <div class="hero-right-bottom-text" style="text-align:right;">
-        STATUS: <strong class="sys-row-val online">ONLINE</strong><br>
-        LATENCY: <strong style="color:var(--yellow)">&lt;1MS AST</strong>
+      <div class="spec-card-row">
+        <span class="spec-card-key">POLICY RUNTIME</span>
+        <span class="spec-card-val">ZERO-GC WASM</span>
       </div>
+      <div class="spec-card-row">
+        <span class="spec-card-key">STATE HARNESS</span>
+        <span class="spec-card-val">SQLITE MEMORY LEDGER</span>
+      </div>
+      <div class="spec-card-row">
+        <span class="spec-card-key">ENFORCEMENT LATENCY</span>
+        <span class="spec-card-val highlight">&lt;1MS SUB-ROUTINE</span>
+      </div>
+      <div class="spec-card-row">
+        <span class="spec-card-key">EXECUTION PATH</span>
+        <span class="spec-card-val">AIR-GAPPED / OFFLINE</span>
+      </div>
+    </div>
+
+    <div class="poster-footer-bar">
+      <span>KERNEL STATUS: <strong>ACTIVE</strong></span>
+      <span>INFERENCE: <strong style="color:var(--orange)">ZERO</strong></span>
     </div>
   </div>
 
 </header>
 
-<!-- ══════════ MARQUEE ══════════ -->
-<div class="marquee-wrap">
+<!-- ══════════ MARQUEE STRIP ══════════ -->
+<div class="marquee-container">
   <div class="marquee-track">
-    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> ZERO-GC WASM RUNTIME</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISTIC GOVERNANCE</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> AST TREE-SITTER INTERCEPT</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> ARCHITECTURAL MEMORY LEDGER</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> AUDITABLE ENFORCEMENT</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> ZERO-GC WASM RUNTIME</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> DETERMINISTIC GOVERNANCE</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> AST TREE-SITTER INTERCEPT</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> ARCHITECTURAL MEMORY LEDGER</div>
-    <div class="marquee-item"><span class="marquee-star">✦</span> AUDITABLE ENFORCEMENT</div>
+    <div class="marquee-cell"><span class="dot"></span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
+    <div class="marquee-cell"><span class="dot"></span> DETERMINISTIC RUNTIME GOVERNANCE</div>
+    <div class="marquee-cell"><span class="dot"></span> ZERO-GC WASM POLICY ENFORCEMENT</div>
+    <div class="marquee-cell"><span class="dot"></span> TREE-SITTER AST INTERCEPT</div>
+    <div class="marquee-cell"><span class="dot"></span> AUDITABLE DECISION LEDGERS</div>
+    <div class="marquee-cell"><span class="dot"></span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
+    <div class="marquee-cell"><span class="dot"></span> DETERMINISTIC RUNTIME GOVERNANCE</div>
+    <div class="marquee-cell"><span class="dot"></span> ZERO-GC WASM POLICY ENFORCEMENT</div>
+    <div class="marquee-cell"><span class="dot"></span> TREE-SITTER AST INTERCEPT</div>
+    <div class="marquee-cell"><span class="dot"></span> AUDITABLE DECISION LEDGERS</div>
   </div>
 </div>
 
-<!-- ══════════ WHO / SYSTEMS ══════════ -->
-<section id="who">
-
-  <!-- LEFT -->
-  <div class="who-left">
-    <div>
-      <div class="s-label">01 // ARCHITECTURE</div>
-      <div class="who-heading">
-        <span class="out">SYSTEMS</span><br>
-        & RUNTIME<br>
-        <span class="blue">DESIGN</span>
-      </div>
-      <p class="who-body">
-        Engineering software infrastructure focused on predictability, auditability, and static security paths.<br><br>
-        Building <strong>WatchLLM</strong>: a runtime governance stack for autonomous coding agents. Composed of 12 modular components including static AST analysis, zero-GC execution sandboxes, memory harnesses, and real-time observability telemetry.
-      </p>
+<!-- ══════════ SECTION 01: ARCHITECTURE / AXIOMS ══════════ -->
+<section id="architecture">
+  <div class="sec-header">
+    <div class="sec-header-left">
+      <div class="sec-tag">01 // CORE ARCHITECTURE</div>
+      <div class="sec-title">GOVERNANCE<br>PRIMITIVES</div>
     </div>
-    <div class="who-axiom">
-      <div class="who-axiom-label">// CORE DESIGN PRINCIPLE //</div>
-      <div class="who-axiom-text">"INTERCEPT EVERY SAVE. GOVERN EVERY EXECUTION."</div>
+    <div class="sec-header-right">
+      <p>Infrastructure requires predictable execution paths. The WatchLLM governance stack enforces structural rules before code mutations are committed.</p>
     </div>
   </div>
 
-  <!-- RIGHT: CARDS -->
-  <div class="who-right">
-    <div class="who-card">
-      <div class="who-card-num">01</div>
+  <div class="axioms-grid">
+    <div class="axiom-card">
+      <div class="axiom-num">01</div>
       <div>
-        <div class="who-card-title">WATCHLLM MONOREPO</div>
-        <div class="who-card-body">
-          Governance infrastructure for autonomous agents. Modular stack featuring Tree-sitter AST parsing, WASM runtime sandbox, decision schema validation, and replay telemetry.<br><br>
-          Python · Rust · TypeScript · Wasm
+        <div class="axiom-title">DETERMINISTIC ENFORCEMENT</div>
+        <div class="axiom-body">
+          Guardrails operate without LLM inference overhead in the execution critical path. Identical code inputs produce strictly identical policy evaluations every time.
         </div>
-        <div class="who-card-tag active">● ACTIVE DEVELOPMENT</div>
       </div>
     </div>
-    <div class="who-card">
-      <div class="who-card-num">02</div>
+
+    <div class="axiom-card">
+      <div class="axiom-num">02</div>
       <div>
-        <div class="who-card-title">DETERMINISTIC EVALUATION</div>
-        <div class="who-card-body">
-          The enforcement layer operates entirely offline without LLM inference overhead or external network dependencies. Identical code states produce guaranteed identical policy evaluations.
+        <div class="axiom-title">WATCHLLM MONOREPO</div>
+        <div class="axiom-body">
+          Composed of 12 modular units including AST tree-sitter interceptors, zero-GC WASM policy runners, decision schema validators, and execution replay telemetry.
         </div>
-        <div class="who-card-tag system">// SYSTEM SPECIFICATION</div>
+      </div>
+    </div>
+
+    <div class="axiom-card">
+      <div class="axiom-num">03</div>
+      <div>
+        <div class="axiom-title">AIR-GAPPED INTERCEPTION</div>
+        <div class="axiom-body">
+          Runs entirely offline without cloud network roundtrips. Integrates directly into developer local environments, IDE extensions, and automated CI pipelines.
+        </div>
+      </div>
+    </div>
+
+    <div class="axiom-card">
+      <div class="axiom-num">04</div>
+      <div>
+        <div class="axiom-title">ARCHITECTURAL MEMORY</div>
+        <div class="axiom-body">
+          SQLite-backed decision harness (klyd) maintaining structured, replayable state records for autonomous agentic operations.
+        </div>
       </div>
     </div>
   </div>
-
 </section>
 
-<!-- ══════════ WORK ══════════ -->
-<section id="work">
-
-  <div class="work-header">
-    <div class="work-header-left">
-      <div class="s-label">02 // PROJECTS</div>
-      <div class="s-heading">WORK</div>
+<!-- ══════════ SECTION 02: PROJECTS ══════════ -->
+<section id="projects">
+  <div class="sec-header">
+    <div class="sec-header-left">
+      <div class="sec-tag">02 // REPOSITORY INDEX</div>
+      <div class="sec-title">PROJECTS</div>
     </div>
-    <div class="work-header-right">
-      <p>From developer tooling to low-overhead runtime governance. High-performance abstractions built for security, auditability, and clean architecture.</p>
+    <div class="sec-header-right">
+      <p>Selected systems software and open-source infrastructure projects developed across WatchLLM, Klyd Studio, and Codify.</p>
     </div>
   </div>
 
-  <table class="work-table" role="list">
+  <table class="projects-table" role="list">
     <tbody>
-      <tr class="work-row" role="listitem">
-        <td class="work-cell work-num">01</td>
-        <td class="work-cell work-year">2026</td>
-        <td class="work-name-cell">
-          <a href="https://watchllm.dev" target="_blank" class="work-name">WatchLLM</a>
-          <div class="work-org">watchllm · Monorepo</div>
+      <tr class="project-row" role="listitem">
+        <td class="project-cell proj-idx">01</td>
+        <td class="project-cell proj-year">2026</td>
+        <td class="project-cell">
+          <a href="https://watchllm.dev" target="_blank" class="proj-name">WatchLLM</a>
+          <div class="proj-org">watchllm · Core Monorepo</div>
         </td>
-        <td class="work-desc-cell work-cell">
-          <div class="work-desc">Runtime governance for autonomous coding agents.<br>Kernel · AST Interceptor · Replay Telemetry · VS Code Extension</div>
+        <td class="project-cell proj-desc">
+          Runtime governance framework for autonomous agents.<br>AST Interceptor · Policy WASM · Replay Telemetry
         </td>
-        <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
+        <td class="project-cell"><span class="badge active">ACTIVE</span></td>
       </tr>
-      <tr class="work-row" role="listitem">
-        <td class="work-cell work-num">02</td>
-        <td class="work-cell work-year">2026</td>
-        <td class="work-name-cell">
-          <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="work-name">klyd-harness</a>
-          <div class="work-org">klyd-studio · Open Source</div>
+
+      <tr class="project-row" role="listitem">
+        <td class="project-cell proj-idx">02</td>
+        <td class="project-cell proj-year">2026</td>
+        <td class="project-cell">
+          <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="proj-name">klyd-harness</a>
+          <div class="proj-org">klyd-studio · Open Source</div>
         </td>
-        <td class="work-desc-cell work-cell">
-          <div class="work-desc">Architectural memory layer. SQLite-backed decision<br>ledger for agentic context persistence.</div>
+        <td class="project-cell proj-desc">
+          Architectural memory layer & decision ledger for agentic context tracking.
         </td>
-        <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
+        <td class="project-cell"><span class="badge active">ACTIVE</span></td>
       </tr>
-      <tr class="work-row" role="listitem">
-        <td class="work-cell work-num">03</td>
-        <td class="work-cell work-year">2026</td>
-        <td class="work-name-cell">
-          <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="work-name">Codify</a>
-          <div class="work-org">Codify-PSBB · Open Source</div>
+
+      <tr class="project-row" role="listitem">
+        <td class="project-cell proj-idx">03</td>
+        <td class="project-cell proj-year">2026</td>
+        <td class="project-cell">
+          <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="proj-name">Codify</a>
+          <div class="proj-org">Codify-PSBB · Open Source</div>
         </td>
-        <td class="work-desc-cell work-cell">
-          <div class="work-desc">Competitive programming & learning platform.<br>Core engine and problem evaluator.</div>
+        <td class="project-cell proj-desc">
+          Competitive programming & code learning engine platform core.
         </td>
-        <td class="work-status-cell work-cell"><span class="badge active">ACTIVE</span></td>
+        <td class="project-cell"><span class="badge active">ACTIVE</span></td>
       </tr>
-      <tr class="work-row" role="listitem">
-        <td class="work-cell work-num">04</td>
-        <td class="work-cell work-year">2025</td>
-        <td class="work-name-cell">
-          <span class="work-name" style="cursor:default">ScriptBoost</span>
-          <div class="work-org">kaadipranav · Public</div>
+
+      <tr class="project-row" role="listitem">
+        <td class="project-cell proj-idx">04</td>
+        <td class="project-cell proj-year">2025</td>
+        <td class="project-cell">
+          <span class="proj-name" style="cursor:default">ScriptBoost</span>
+          <div class="proj-org">kaadipranav · Public</div>
         </td>
-        <td class="work-desc-cell work-cell">
-          <div class="work-desc">Automated scripting and execution utilities.</div>
+        <td class="project-cell proj-desc">
+          Automated scripting and system execution utilities.
         </td>
-        <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
+        <td class="project-cell"><span class="badge archived">ARCHIVED</span></td>
       </tr>
-      <tr class="work-row" role="listitem">
-        <td class="work-cell work-num">05</td>
-        <td class="work-cell work-year">2025</td>
-        <td class="work-name-cell">
-          <span class="work-name" style="cursor:default">Ghostwriter</span>
-          <div class="work-org">kaadipranav · Public</div>
+
+      <tr class="project-row" role="listitem">
+        <td class="project-cell proj-idx">05</td>
+        <td class="project-cell proj-year">2025</td>
+        <td class="project-cell">
+          <span class="proj-name" style="cursor:default">Ghostwriter</span>
+          <div class="proj-org">kaadipranav · Public</div>
         </td>
-        <td class="work-desc-cell work-cell">
-          <div class="work-desc">Content parsing tool prototype.</div>
+        <td class="project-cell proj-desc">
+          Content parsing and text processing utility prototype.
         </td>
-        <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
+        <td class="project-cell"><span class="badge archived">ARCHIVED</span></td>
       </tr>
-      <tr class="work-row" role="listitem">
-        <td class="work-cell work-num">06</td>
-        <td class="work-cell work-year">2025</td>
-        <td class="work-name-cell">
-          <span class="work-name" style="cursor:default">EduVerse</span>
-          <div class="work-org">kaadipranav · Public</div>
+
+      <tr class="project-row" role="listitem">
+        <td class="project-cell proj-idx">06</td>
+        <td class="project-cell proj-year">2025</td>
+        <td class="project-cell">
+          <span class="proj-name" style="cursor:default">EduVerse</span>
+          <div class="proj-org">kaadipranav · Public</div>
         </td>
-        <td class="work-desc-cell work-cell">
-          <div class="work-desc">Educational platform architecture experiment.</div>
+        <td class="project-cell proj-desc">
+          Educational software platform prototype.
         </td>
-        <td class="work-status-cell work-cell"><span class="badge archived">ARCHIVED</span></td>
+        <td class="project-cell"><span class="badge archived">ARCHIVED</span></td>
       </tr>
-      <tr class="work-row" role="listitem">
-        <td class="work-cell work-num">07</td>
-        <td class="work-cell work-year">2025</td>
-        <td class="work-name-cell">
-          <span class="work-name" style="cursor:default">BOILERPLATE</span>
-          <div class="work-org">kaadipranav · Template</div>
+
+      <tr class="project-row" role="listitem">
+        <td class="project-cell proj-idx">07</td>
+        <td class="project-cell proj-year">2025</td>
+        <td class="project-cell">
+          <span class="proj-name" style="cursor:default">BOILERPLATE</span>
+          <div class="proj-org">kaadipranav · Template</div>
         </td>
-        <td class="work-desc-cell work-cell">
-          <div class="work-desc">Modular starter template for systems software.</div>
+        <td class="project-cell proj-desc">
+          Opinionated starter template for systems software.
         </td>
-        <td class="work-status-cell work-cell"><span class="badge public">PUBLIC</span></td>
+        <td class="project-cell"><span class="badge public">PUBLIC</span></td>
       </tr>
     </tbody>
   </table>
-
 </section>
 
-<!-- ══════════ PHILOSOPHY ══════════ -->
+<!-- ══════════ SECTION 03: PHILOSOPHY ══════════ -->
 <section id="philosophy">
+  <div class="phil-container">
+    <div class="phil-left">
+      <div>
+        <div class="sec-tag" style="color:rgba(255,255,255,0.7)">03 // DESIGN PRINCIPLES</div>
+        <div class="phil-left-title">
+          DETERMINISM<br>
+          <span class="dim-text">OVER</span><br>
+          VIBES.
+        </div>
+      </div>
 
-  <!-- LEFT: BLUE PANEL -->
-  <div class="phil-left">
-    <div>
-      <div class="s-label" style="color:rgba(255,255,255,0.5);">03 // PRINCIPLES</div>
-      <div class="phil-big">
-        DETER<br>
-        MINISM<br>
-        <span class="dark">OVER</span><br>
-        VIBES.
+      <div class="phil-specs-list">
+        <div class="phil-spec-item">
+          <span>ENFORCEMENT PATH</span>
+          <span>ZERO ML INFERENCE</span>
+        </div>
+        <div class="phil-spec-item">
+          <span>EVALUATION LATENCY</span>
+          <span>SUB-MILLISECOND</span>
+        </div>
+        <div class="phil-spec-item">
+          <span>EXECUTION ENVIRONMENT</span>
+          <span>AIR-GAPPED WASM</span>
+        </div>
+        <div class="phil-spec-item">
+          <span>STATE TRACKING</span>
+          <span>SQLITE LEDGER</span>
+        </div>
+        <div class="phil-spec-item" style="border-bottom:none;">
+          <span>CLOUD DEPENDENCY</span>
+          <span style="color:var(--yellow)">NONE</span>
+        </div>
       </div>
     </div>
-    <div class="phil-data">
-      <div class="phil-data-row">
-        <span class="phil-data-key">ENFORCEMENT PATH</span>
-        <span class="phil-data-val">ZERO ML INFERENCE</span>
+
+    <div class="phil-right">
+      <div class="sec-tag">AXIOMS</div>
+
+      <div class="phil-quote-box">
+        <div class="phil-quote-text">"A GUARDRAIL THAT IS PROBABILISTIC IS MERELY A SUGGESTION."</div>
+        <div class="phil-quote-sub">— WatchLLM Architectural Standard</div>
       </div>
-      <div class="phil-data-row">
-        <span class="phil-data-key">RUNTIME LATENCY</span>
-        <span class="phil-data-val">SUB-MILLISECOND</span>
-      </div>
-      <div class="phil-data-row">
-        <span class="phil-data-key">EXECUTION MODEL</span>
-        <span class="phil-data-val">AIR-GAPPED WASM</span>
-      </div>
-      <div class="phil-data-row">
-        <span class="phil-data-key">EVALUATION</span>
-        <span class="phil-data-val">DETERMINISTIC</span>
-      </div>
-      <div class="phil-data-row" style="border-bottom:none;padding-bottom:0;">
-        <span class="phil-data-key">CLOUD DEPENDENCY</span>
-        <span class="phil-data-val" style="color:var(--yellow);">NONE</span>
+
+      <div class="phil-rules-list">
+        <div class="phil-rule-item">
+          <div class="phil-rule-num">01</div>
+          <div class="phil-rule-desc">
+            <strong>Binary Safety Boundaries.</strong> Critical enforcement paths must produce absolute pass/fail outcomes, never statistical likelihoods.
+          </div>
+        </div>
+
+        <div class="phil-rule-item">
+          <div class="phil-rule-num">02</div>
+          <div class="phil-rule-desc">
+            <strong>Static AST Interception.</strong> Policy checks run at the syntax tree level using Tree-sitter before code changes reach disk or git state.
+          </div>
+        </div>
+
+        <div class="phil-rule-item">
+          <div class="phil-rule-num">03</div>
+          <div class="phil-rule-desc">
+            <strong>Auditable Replay Logs.</strong> Every governance decision is recorded in an immutable ledger for historical inspection and replay.
+          </div>
+        </div>
+
+        <div class="phil-rule-item">
+          <div class="phil-rule-num">04</div>
+          <div class="phil-rule-desc">
+            <strong>Local-First Runtime.</strong> Everything compiles to air-gapped WASM targets to run inside local editors and local CI runners seamlessly.
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- RIGHT: PRINCIPLES -->
-  <div class="phil-right">
-    <div class="s-label">AXIOMS</div>
-
-    <div class="phil-quote">
-      <div class="phil-quote-text">"A GUARDRAIL THAT IS PROBABILISTIC IS MERELY A SUGGESTION."</div>
-      <div class="phil-quote-attr">— WatchLLM Architectural Guideline</div>
-    </div>
-
-    <div class="phil-rules">
-      <div class="phil-rule">
-        <div class="phil-rule-idx">01</div>
-        <div class="phil-rule-text">
-          <strong>Deterministic Guardrails.</strong> Enforcement should never rely on non-deterministic model outputs. Security rules require absolute binary clarity.
-        </div>
-      </div>
-      <div class="phil-rule">
-        <div class="phil-rule-idx">02</div>
-        <div class="phil-rule-text">
-          <strong>Air-Gapped Analysis.</strong> Static AST inspection and policy checks compile and run locally without requiring remote network roundtrips.
-        </div>
-      </div>
-      <div class="phil-rule">
-        <div class="phil-rule-idx">03</div>
-        <div class="phil-rule-text">
-          <strong>Auditable Telemetry.</strong> Execution traces and architectural state changes are saved to immutable SQLite ledgers for full replayability.
-        </div>
-      </div>
-      <div class="phil-rule">
-        <div class="phil-rule-idx">04</div>
-        <div class="phil-rule-text">
-          <strong>Explicit Policy Rules.</strong> Replace probabilistic guesswork with precise structural checks at the compiler AST boundary.
-        </div>
-      </div>
-    </div>
-  </div>
-
 </section>
 
-<!-- ══════════ STACK ══════════ -->
+<!-- ══════════ SECTION 04: TECH STACK ══════════ -->
 <section id="stack">
-  <div class="stack-header">
-    <div class="stack-header-left">TECH<br>STACK</div>
-    <div class="s-label" style="writing-mode:vertical-rl;transform:rotate(180deg);height:auto;margin:0;font-size:10px;">04 // TECHNOLOGIES</div>
-    <div class="stack-header-right">
-      High-performance toolchains. Tree-sitter for AST analysis, zero-GC WASM runtime for sandboxed policy enforcement, SQLite for structured decision ledgers.
+  <div class="sec-header">
+    <div class="sec-header-left">
+      <div class="sec-tag">04 // TOOLCHAIN</div>
+      <div class="sec-title">TECH STACK</div>
+    </div>
+    <div class="sec-header-right">
+      <p>High-performance technologies utilized across the WatchLLM monorepo, runtime sandboxes, and developer tooling.</p>
     </div>
   </div>
+
   <div class="stack-grid">
-    <div class="stack-item">
-      <div class="stack-lang blue">PYTHON</div>
-      <div class="stack-use">Tree-sitter AST analysis / Governance kernel logic / Core enforcement engine</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:90%; background:var(--blue);"></div></div>
+    <div class="stack-card">
+      <div class="stack-name" style="color:var(--blue)">PYTHON</div>
+      <div class="stack-use">Tree-sitter AST analysis / Core governance engine</div>
+      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:90%; background:var(--blue)"></div></div>
     </div>
-    <div class="stack-item">
-      <div class="stack-lang orange">RUST</div>
-      <div class="stack-use">Zero-GC execution / Cross-platform WASM target / High-concurrency sandbox</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:80%; background:var(--orange);"></div></div>
+
+    <div class="stack-card">
+      <div class="stack-name" style="color:var(--orange)">RUST</div>
+      <div class="stack-use">Zero-GC WASM policy target / Low-overhead sandbox</div>
+      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:80%; background:var(--orange)"></div></div>
     </div>
-    <div class="stack-item">
-      <div class="stack-lang" style="color:#4DBBFF;">TS</div>
-      <div class="stack-use">VS Code extension / Replay UI dashboard / Developer tooling</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:85%; background:#4DBBFF;"></div></div>
+
+    <div class="stack-card">
+      <div class="stack-name" style="color:#4DBBFF">TS</div>
+      <div class="stack-use">VS Code extension / Replay UI dashboard</div>
+      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:85%; background:#4DBBFF"></div></div>
     </div>
-    <div class="stack-item">
-      <div class="stack-lang yellow">WASM</div>
-      <div class="stack-use">Sandboxed policy runtime / Cross-platform / Zero external dependency</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:75%; background:var(--yellow);"></div></div>
+
+    <div class="stack-card">
+      <div class="stack-name" style="color:var(--yellow)">WASM</div>
+      <div class="stack-use">Air-gapped policy execution sandbox</div>
+      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:75%; background:var(--yellow)"></div></div>
     </div>
-    <div class="stack-item">
-      <div class="stack-lang">SQL<span style="color:var(--dim)">ite</span></div>
-      <div class="stack-use">Architectural memory ledger / Decision audit trails / State persistence</div>
-      <div class="stack-bar-wrap"><div class="stack-bar" style="width:70%;"></div></div>
+
+    <div class="stack-card">
+      <div class="stack-name">SQLITE</div>
+      <div class="stack-use">Architectural memory ledger (klyd) / State tracking</div>
+      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:70%; background:var(--border-hi)"></div></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ CONNECT ══════════ -->
-<section id="connect">
+<!-- ══════════ SECTION 05: CONTACT ══════════ -->
+<section id="contact">
+  <div class="connect-container">
+    <div class="connect-left">
+      <div class="sec-tag">05 // CONTACT</div>
+      <div class="connect-title">
+        BUILD<br>
+        <span class="blue">DETERMINISTIC</span><br>
+        SYSTEMS.
+      </div>
+      <p class="connect-body">
+        Building autonomous agent infrastructure, runtime governance, or low-latency interceptors? Interested in static safety research? Reach out.
+      </p>
 
-  <!-- LEFT -->
-  <div class="connect-left">
-    <div class="s-label">05 // CONTACT</div>
-    <div class="connect-cta">
-      LET'S<br>
-      <span class="blue">BUILD</span><br>
-      HARD<br>
-      <span class="out">SYSTEMS</span>.
+      <div class="connect-links-stack">
+        <a href="https://github.com/kaadipranav" target="_blank" class="connect-row">
+          <span class="connect-row-platform">GITHUB</span>
+          <span class="connect-row-label">kaadipranav</span>
+          <span class="connect-row-arrow">→</span>
+        </a>
+        <a href="https://twitter.com/kaad_zz" target="_blank" class="connect-row">
+          <span class="connect-row-platform">TWITTER/X</span>
+          <span class="connect-row-label">@kaad_zz</span>
+          <span class="connect-row-arrow">→</span>
+        </a>
+        <a href="https://watchllm.dev" target="_blank" class="connect-row">
+          <span class="connect-row-platform">WATCHLLM</span>
+          <span class="connect-row-label">watchllm.dev</span>
+          <span class="connect-row-arrow">→</span>
+        </a>
+        <a href="mailto:kaadz@protonmail.com" class="connect-row">
+          <span class="connect-row-platform">EMAIL</span>
+          <span class="connect-row-label">kaadz@protonmail.com</span>
+          <span class="connect-row-arrow">→</span>
+        </a>
+      </div>
     </div>
-    <p class="connect-body">
-      Building autonomous agent infrastructure, runtime governance, or low-latency interceptors? Interested in deterministic systems research?<br><br>
-      <strong>Reach out via email or Twitter/X.</strong>
-    </p>
-    <div class="connect-actions">
-      <a href="https://github.com/kaadipranav" target="_blank" class="connect-link">
-        <div class="connect-link-left">
-          <span class="connect-link-platform">GITHUB</span>
-          <span class="connect-link-name">kaadipranav</span>
-        </div>
-        <span class="connect-link-arrow">→</span>
-      </a>
-      <a href="https://twitter.com/kaad_zz" target="_blank" class="connect-link">
-        <div class="connect-link-left">
-          <span class="connect-link-platform">TWITTER/X</span>
-          <span class="connect-link-name">@kaad_zz</span>
-        </div>
-        <span class="connect-link-arrow">→</span>
-      </a>
-      <a href="https://watchllm.dev" target="_blank" class="connect-link">
-        <div class="connect-link-left">
-          <span class="connect-link-platform">WATCHLLM</span>
-          <span class="connect-link-name">watchllm.dev</span>
-        </div>
-        <span class="connect-link-arrow">→</span>
-      </a>
-      <a href="mailto:kaadz@protonmail.com" class="connect-link">
-        <div class="connect-link-left">
-          <span class="connect-link-platform">EMAIL</span>
-          <span class="connect-link-name">kaadz@protonmail.com</span>
-        </div>
-        <span class="connect-link-arrow">→</span>
-      </a>
-    </div>
-  </div>
 
-  <!-- RIGHT -->
-  <div class="connect-right">
-    <div class="connect-right-top">
-      <div class="connect-right-top-label">// WatchLLM //</div>
-      <div class="connect-right-top-big">
-        INFRA<br>STRUCTURE<br>IS THE<br>PRODUCT.
+    <div class="connect-right">
+      <div class="connect-poster-top">
+        <div class="connect-poster-title">
+          INFRASTRUCTURE<br>IS THE<br>PRODUCT.
+        </div>
       </div>
-    </div>
-    <div class="connect-right-bottom">
-      <div class="sys-row">
-        <span>DEVELOPER</span>
-        <span class="sys-row-val">KAADIPRANAV</span>
-      </div>
-      <div class="sys-row">
-        <span>LOCATION</span>
-        <span class="sys-row-val">INDIA</span>
-      </div>
-      <div class="sys-row">
-        <span>STATUS</span>
-        <span class="sys-row-val online">● ACTIVE DEVELOPMENT</span>
-      </div>
-      <div class="sys-row">
-        <span>PRIMARY FOCUS</span>
-        <span class="sys-row-val">WATCHLLM</span>
-      </div>
-      <div class="sys-row" style="border-bottom:none;">
-        <span>DISCIPLINE</span>
-        <span class="sys-row-val">DETERMINISTIC RUNTIMES</span>
+
+      <div class="connect-poster-bottom">
+        <div class="sys-meta-row">
+          <span>DEVELOPER</span>
+          <span class="sys-meta-val">KAADIPRANAV</span>
+        </div>
+        <div class="sys-meta-row">
+          <span>LOCATION</span>
+          <span class="sys-meta-val">INDIA</span>
+        </div>
+        <div class="sys-meta-row">
+          <span>STATUS</span>
+          <span class="sys-meta-val green">● ACTIVE</span>
+        </div>
+        <div class="sys-meta-row">
+          <span>PRIMARY VENTURE</span>
+          <span class="sys-meta-val">WATCHLLM</span>
+        </div>
       </div>
     </div>
   </div>
-
 </section>
 
 <!-- ══════════ FOOTER ══════════ -->
 <footer>
-  <div class="footer-left">
+  <div class="footer-col">
     <div>
-      <div class="footer-logo">KAADZ</div>
+      <div class="footer-brand">KAADZ</div>
       <div class="footer-sub">KAADIPRANAV · FOUNDER & SYSTEMS ENGINEER</div>
     </div>
-    <div class="footer-copyright">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>DETERMINISTIC RUNTIME GOVERNANCE.</div>
+    <div class="footer-copy">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>DETERMINISTIC RUNTIME GOVERNANCE.</div>
   </div>
-  <div class="footer-right">
+
+  <div class="footer-col">
     <div class="footer-motto">
       "DETERMINISTIC<br>RUNTIMES FOR<br><span class="blue">PROBABILISTIC</span><br>AGENTS."
     </div>
-    <div class="footer-meta">
-      <div class="footer-meta-row">
+
+    <div class="footer-links-grid">
+      <div class="footer-link-item">
         <span>GITHUB</span>
         <span>github.com/kaadipranav</span>
       </div>
-      <div class="footer-meta-row">
+      <div class="footer-link-item">
         <span>TWITTER</span>
         <span>@kaad_zz</span>
       </div>
-      <div class="footer-meta-row">
+      <div class="footer-link-item">
         <span>EMAIL</span>
         <span>kaadz@protonmail.com</span>
       </div>
-      <div class="footer-meta-row">
+      <div class="footer-link-item">
         <span>PROJECT</span>
         <span>watchllm.dev</span>
       </div>
@@ -1333,22 +1216,22 @@
 </footer>
 
 <script>
-  // Intersection Observer for scroll animations
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
+  // Smooth reveal animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08 });
 
-  document.querySelectorAll('.who-card, .work-row, .phil-rule, .stack-item, .connect-link').forEach(el => {
+  document.querySelectorAll('.axiom-card, .project-row, .phil-rule-item, .stack-card').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(18px)';
-    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    io.observe(el);
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+    observer.observe(el);
   });
 </script>
 
