@@ -3,36 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KAADZ — Deterministic Infrastructure</title>
-  <meta name="description" content="Kaadz — Founder of WatchLLM. Building deterministic runtime governance and interceptors for autonomous systems. Agents are probabilistic. Infrastructure is not." />
-  <meta property="og:title" content="KAADZ — Deterministic Infrastructure" />
-  <meta property="og:description" content="Founder of WatchLLM. Runtime governance for autonomous coding agents." />
+  <title>KAADZ // Deterministic Runtime Governance</title>
+  <meta name="description" content="Kaadz — Founder of WatchLLM. Engineering deterministic runtime governance and static AST interceptors for autonomous agentic systems. Agents are probabilistic. Infrastructure cannot be." />
+  <meta property="og:title" content="KAADZ // Deterministic Runtime Governance" />
+  <meta property="og:description" content="Founder of WatchLLM. Runtime governance for autonomous coding agents. Zero ML inference in the enforcement loop." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:        #09090b;
-      --panel:     #111115;
-      --border:    #22222a;
-      --border-hi: #3a3a48;
-      --text:      #f4f4f6;
-      --text-muted:#888894;
-      --dim:       #555560;
+      --bg:        #060608;
+      --panel:     #0e0e12;
+      --panel-hi:  #16161d;
+      --border:    #202028;
+      --border-hi: #363644;
       
-      --blue:      #0038FF;
-      --blue-glow: #1a52ff;
-      --orange:    #FF3600;
-      --yellow:    #FFE600;
-      --green:     #00FF88;
-      --red:       #FF0033;
+      --text:      #f2f2f6;
+      --text-dim:  #8a8a98;
+      --text-mute: #565664;
       
-      --font-statement: 'Syne', sans-serif;
-      --font-display:   'Bebas Neue', impact, sans-serif;
-      --font-body:      'Space Grotesk', sans-serif;
-      --font-mono:      'JetBrains Mono', monospace;
+      --accent:    #FF3B00;
+      --accent-lt: #FF5C26;
+      --volt:      #DFFF00;
+      --cyan:      #00F0FF;
+      --blue:      #1242FF;
+      --white:     #FFFFFF;
+      
+      --font-mega: 'Anton', 'Bebas Neue', sans-serif;
+      --font-disp: 'Bebas Neue', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     html { scroll-behavior: smooth; }
@@ -42,1137 +44,945 @@
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+      selection-background: var(--accent);
+      selection-color: var(--white);
     }
 
-    /* ───── NOISE & GRID BACKGROUND ───── */
-    body::before {
+    ::selection { background: var(--accent); color: var(--white); }
+
+    /* ───── BACKGROUND NOISE & GRID ───── */
+    body::after {
       content: '';
       position: fixed; inset: 0; z-index: 9999;
-      pointer-events: none;
-      opacity: 0.025;
+      pointer-events: none; opacity: 0.03;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 140px 140px;
     }
 
-    /* ───── SCROLLBAR ───── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--blue); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--border); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); }
 
-    /* ───── GLOBAL SELECTION ───── */
-    ::selection { background: var(--blue); color: #fff; }
+    /* ───── GLOBAL UTILITIES & DECORATORS ───── */
+    .grid-line-h { width: 100%; height: 1px; background: var(--border); }
+    .grid-line-v { width: 1px; height: 100%; background: var(--border); }
+    
+    .crosshair {
+      position: absolute; width: 10px; height: 10px; pointer-events: none; z-index: 10;
+    }
+    .crosshair::before { content: ''; position: absolute; top: 4px; left: 0; width: 10px; height: 2px; background: var(--accent); }
+    .crosshair::after  { content: ''; position: absolute; top: 0; left: 4px; width: 2px; height: 10px; background: var(--accent); }
 
-    /* ───── TOP NAVIGATION BAR ───── */
+    .tl { top: -5px; left: -5px; }
+    .tr { top: -5px; right: -5px; }
+    .bl { bottom: -5px; left: -5px; }
+    .br { bottom: -5px; right: -5px; }
+
+    /* ───── INDUSTRIAL TELEMETRY NAV ───── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      height: 56px; background: rgba(6, 6, 8, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--border-hi);
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 32px;
-      height: 54px;
-      background: rgba(9, 9, 11, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
     }
-    .nav-brand {
-      display: flex; align-items: center; gap: 12px;
-      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      letter-spacing: 0.12em; color: var(--text);
+    .nav-left {
+      display: flex; align-items: center; gap: 20px;
     }
-    .nav-status-indicator {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 10px var(--green);
-      animation: pulse-dot 1.8s infinite;
+    .nav-logo {
+      font-family: var(--font-mega); font-size: 24px; letter-spacing: 0.08em;
+      color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px;
     }
-    @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-
-    .nav-links { display: flex; align-items: center; }
-    .nav-item {
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 600;
+    .status-badge {
+      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
       letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--text-muted); text-decoration: none;
-      padding: 0 20px; height: 54px;
-      display: flex; align-items: center;
+      padding: 3px 8px; background: rgba(223, 255, 0, 0.12);
+      color: var(--volt); border: 1px solid var(--volt);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .status-dot {
+      width: 6px; height: 6px; background: var(--volt); border-radius: 50%;
+      box-shadow: 0 0 8px var(--volt); animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+    .nav-right {
+      display: flex; align-items: center; height: 100%;
+    }
+    .nav-link {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-dim); text-decoration: none;
+      padding: 0 20px; height: 100%; display: flex; align-items: center;
       border-left: 1px solid var(--border);
-      transition: all 0.15s ease;
+      transition: all 0.15s;
     }
-    .nav-item:hover { color: var(--text); background: var(--panel); }
-    .nav-item.cta {
-      background: var(--blue); color: #fff; border-left: none;
+    .nav-link:hover { color: var(--white); background: var(--panel); }
+    .nav-link.cta {
+      background: var(--accent); color: var(--white); border-left: 1px solid var(--accent);
     }
-    .nav-item.cta:hover { background: var(--blue-glow); }
+    .nav-link.cta:hover { background: var(--accent-lt); }
 
-    /* ───── CORNER TICK DECORATOR ───── */
-    .corner-tick {
-      position: absolute; width: 8px; height: 8px;
-      border-color: var(--blue); border-style: solid;
-      pointer-events: none; opacity: 0.6;
-    }
-    .tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-    .tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-    .bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-    .br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-    /* ───── HERO SECTION (GRAPHIC POSTER GRID) ───── */
-    .hero {
-      margin-top: 54px;
-      min-height: calc(100vh - 54px);
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      border-bottom: 1px solid var(--border);
+    /* ───── HERO POSTER (INDUSTRIAL ARCHIVE LAYOUT) ───── */
+    .hero-wrapper {
+      margin-top: 56px;
+      border-bottom: 2px solid var(--border-hi);
       position: relative;
     }
+    .hero-top-strip {
+      padding: 12px 32px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .hero-top-strip span { display: flex; align-items: center; gap: 8px; }
+    .hero-top-strip strong { color: var(--text); }
 
-    /* HERO LEFT PANEL */
-    .hero-left {
-      padding: 60px 48px;
+    .hero-main {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      min-height: calc(100vh - 100px);
+    }
+
+    /* LEFT HERO BLOCK: MONUMENTAL STATEMENT */
+    .hero-statement-block {
+      padding: 64px 56px;
       display: flex; flex-direction: column; justify-content: space-between;
       border-right: 1px solid var(--border);
       position: relative;
-      background: radial-gradient(circle at 10% 20%, rgba(0, 56, 255, 0.05) 0%, transparent 60%);
+      background: radial-gradient(circle at 0% 0%, rgba(255, 59, 0, 0.05) 0%, transparent 50%);
     }
 
-    .hero-meta-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--blue); margin-bottom: 40px;
+    .hero-tagline-bar {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+      display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
     }
-    .hero-meta-bar span { display: flex; align-items: center; gap: 8px; }
-    .hero-meta-bar span::before {
-      content: ''; display: inline-block; width: 18px; height: 2px; background: var(--blue);
-    }
+    .hero-tagline-bar::before { content: ''; width: 24px; height: 2px; background: var(--accent); }
 
-    /* MASSIVE STATEMENT HEADLINE */
-    .hero-statement-title {
-      font-family: var(--font-statement);
-      font-size: clamp(48px, 6vw, 92px);
-      font-weight: 800;
-      line-height: 0.92;
-      letter-spacing: -0.03em;
+    /* FULL UNTRUNCATED HEADLINE TYPOGRAPHY */
+    .hero-h1 {
+      font-family: var(--font-mega);
+      font-size: clamp(60px, 7.5vw, 115px);
+      font-weight: 400;
+      line-height: 0.9;
+      letter-spacing: 0.01em;
       text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-    .hero-statement-title .line-white { color: var(--text); }
-    .hero-statement-title .line-blue  {
-      color: var(--blue);
-      text-shadow: 0 0 30px rgba(0, 56, 255, 0.3);
-    }
-    .hero-statement-title .line-outline {
-      color: transparent;
-      -webkit-text-stroke: 1.5px var(--text);
-    }
-    .hero-statement-title .line-orange { color: var(--orange); }
-
-    .hero-description {
-      font-family: var(--font-mono);
-      font-size: 13px; line-height: 1.7;
-      color: var(--text-muted);
-      max-width: 500px;
+      color: var(--white);
       margin-bottom: 40px;
     }
-    .hero-description strong { color: var(--text); font-weight: 600; }
+    .hero-h1 .solid-white { color: var(--white); }
+    .hero-h1 .box-accent {
+      background: var(--accent); color: var(--white);
+      padding: 0 16px; display: inline-block;
+      transform: skewX(-6deg);
+      box-shadow: 6px 6px 0px rgba(255,255,255,0.15);
+    }
+    .hero-h1 .outline-text {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--white);
+    }
+    .hero-h1 .volt-text { color: var(--volt); }
 
-    .hero-metrics-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      border: 1px solid var(--border);
-      background: var(--panel);
+    .hero-bio-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+      padding-top: 36px; border-top: 1px solid var(--border);
     }
-    .metric-cell {
-      padding: 16px 18px;
-      border-right: 1px solid var(--border);
+    .hero-bio-text {
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
+      color: var(--text-dim);
     }
-    .metric-cell:last-child { border-right: none; }
-    .metric-val {
-      font-family: var(--font-display);
-      font-size: 32px; line-height: 1;
-      color: var(--yellow);
-    }
-    .metric-lbl {
-      font-family: var(--font-mono);
-      font-size: 9px; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--text-muted); margin-top: 4px;
-    }
+    .hero-bio-text strong { color: var(--white); font-weight: 700; }
 
-    .hero-actions {
-      display: flex; gap: 0; margin-top: 24px;
+    .hero-specs-box {
+      background: var(--panel); border: 1px solid var(--border);
+      padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
     }
-    .btn-action {
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      text-decoration: none;
-      padding: 16px 28px;
-      border: 1px solid;
-      display: inline-flex; align-items: center; gap: 10px;
-      transition: all 0.15s ease;
+    .spec-line {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 11px;
+      padding-bottom: 8px; border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
     }
-    .btn-action.primary {
-      background: var(--blue); color: #fff; border-color: var(--blue);
-    }
-    .btn-action.primary:hover { background: var(--blue-glow); }
-    .btn-action.secondary {
-      background: transparent; color: var(--text); border-color: var(--border);
-    }
-    .btn-action.secondary:hover { border-color: var(--text-muted); background: var(--panel); }
+    .spec-line:last-child { border-bottom: none; padding-bottom: 0; }
+    .spec-line strong { color: var(--white); }
+    .spec-line strong.volt { color: var(--volt); }
 
-    /* HERO RIGHT POSTER PANEL */
-    .hero-right {
+    /* RIGHT HERO BLOCK: TECHNICAL BLUEPRINT POSTER */
+    .hero-poster-block {
       background: var(--panel);
       display: flex; flex-direction: column; justify-content: space-between;
       position: relative; overflow: hidden;
-      border-left: 1px solid var(--border);
+    }
+    
+    .poster-id-banner {
+      background: var(--accent); color: var(--white);
+      padding: 16px 36px; font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      display: flex; justify-content: space-between; align-items: center;
     }
 
-    .poster-header-block {
-      padding: 48px;
-      border-bottom: 1px solid var(--border);
-      position: relative; z-index: 2;
-    }
-    .poster-badge {
-      font-family: var(--font-mono);
-      font-size: 10px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--orange); margin-bottom: 16px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .poster-badge::before {
-      content: ''; width: 8px; height: 8px; background: var(--orange);
-    }
-    .poster-title-large {
-      font-family: var(--font-display);
-      font-size: clamp(64px, 8vw, 110px);
-      line-height: 0.86;
-      color: var(--text);
-      text-transform: uppercase;
-    }
-    .poster-subtitle {
-      font-family: var(--font-mono);
-      font-size: 12px; color: var(--text-muted);
-      letter-spacing: 0.1em; text-transform: uppercase;
-      margin-top: 16px;
-    }
-
-    /* SPECIFICATION CARD MATRIX IN RIGHT POSTER */
-    .poster-specs-body {
-      padding: 48px;
-      flex: 1;
+    .poster-center-art {
+      padding: 48px 36px; flex: 1;
       display: flex; flex-direction: column; justify-content: center;
-      gap: 16px;
-      position: relative; z-index: 2;
-    }
-    .spec-card-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 18px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      font-family: var(--font-mono); font-size: 11px;
-    }
-    .spec-card-key { color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
-    .spec-card-val { color: var(--text); font-weight: 700; }
-    .spec-card-val.highlight { color: var(--green); }
-
-    .poster-footer-bar {
-      padding: 24px 48px;
-      border-top: 1px solid var(--border);
-      background: var(--bg);
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase;
-      position: relative; z-index: 2;
-    }
-    .poster-footer-bar strong { color: var(--text); }
-
-    /* DECORATIVE GRAPHICS FOR POSTER */
-    .poster-grid-bg {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 32px 32px;
-      pointer-events: none;
-    }
-    .poster-giant-num {
-      position: absolute; right: -20px; bottom: 20px;
-      font-family: var(--font-display);
-      font-size: 260px; line-height: 1;
-      color: rgba(255,255,255,0.02);
-      user-select: none; pointer-events: none;
-    }
-
-    /* ───── MARQUEE STRIP ───── */
-    .marquee-container {
-      background: var(--blue);
-      border-bottom: 1px solid var(--border);
-      overflow: hidden; display: flex;
-    }
-    .marquee-track {
-      display: flex; white-space: nowrap;
-      animation: marquee-slide 28s linear infinite;
-      flex-shrink: 0;
-    }
-    .marquee-cell {
-      font-family: var(--font-display);
-      font-size: 22px; letter-spacing: 0.08em;
-      color: #fff; text-transform: uppercase;
-      padding: 12px 36px;
-      display: flex; align-items: center; gap: 14px;
-      border-right: 1px solid rgba(255,255,255,0.2);
-    }
-    .marquee-cell .dot { width: 6px; height: 6px; background: var(--yellow); border-radius: 50%; }
-    @keyframes marquee-slide {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* ───── SECTION LAYOUT ───── */
-    section {
-      border-bottom: 1px solid var(--border);
       position: relative;
     }
-    .sec-header {
+    .poster-watermark {
+      position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+      font-family: var(--font-mega); font-size: 240px; color: rgba(255,255,255,0.02);
+      line-height: 1; pointer-events: none; user-select: none;
+    }
+
+    .poster-main-title {
+      font-family: var(--font-mega); font-size: clamp(64px, 7vw, 100px);
+      line-height: 0.86; color: var(--white); letter-spacing: 0.02em;
+    }
+    .poster-sub-label {
+      font-family: var(--font-disp); font-size: 32px; color: var(--volt);
+      letter-spacing: 0.06em; margin-top: 8px;
+    }
+
+    .poster-data-matrix {
+      margin-top: 36px; border: 1px solid var(--border-hi);
+      background: var(--bg); display: flex; flex-direction: column;
+    }
+    .matrix-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 18px; border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 11px;
+    }
+    .matrix-row:last-child { border-bottom: none; }
+    .matrix-lbl { color: var(--text-mute); letter-spacing: 0.1em; }
+    .matrix-val { color: var(--white); font-weight: 700; }
+    .matrix-val.highlight { color: var(--accent); }
+
+    .poster-bottom-stamp {
+      padding: 24px 36px; background: var(--bg); border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .barcode-graphic {
+      display: flex; gap: 3px; align-items: center; height: 36px;
+    }
+    .barcode-bar { background: var(--text-dim); height: 100%; }
+    .stamp-seal {
+      border: 2px solid var(--text-dim); padding: 6px 12px;
+      font-family: var(--font-mono); font-size: 10px; font-weight: 800;
+      letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase;
+      transform: rotate(-3deg);
+    }
+
+    /* ───── HIGH-DENSITY TICKER ───── */
+    .ticker-wrap {
+      background: var(--volt); color: #000; border-bottom: 2px solid var(--border-hi);
+      overflow: hidden; display: flex;
+    }
+    .ticker-move {
+      display: flex; white-space: nowrap; animation: ticker 25s linear infinite; flex-shrink: 0;
+    }
+    .ticker-item {
+      font-family: var(--font-mega); font-size: 24px; letter-spacing: 0.05em;
+      padding: 10px 36px; display: flex; align-items: center; gap: 16px;
+      border-right: 2px solid rgba(0,0,0,0.2);
+    }
+    .ticker-item .sep { font-size: 18px; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ───── SECTION ARCHITECTURE / AXIOMS ───── */
+    section { border-bottom: 2px solid var(--border-hi); position: relative; }
+    .sec-banner {
       display: grid; grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border); background: var(--panel);
     }
-    .sec-header-left {
-      padding: 60px 48px;
-      border-right: 1px solid var(--border);
+    .sec-banner-left {
+      padding: 48px 56px; border-right: 1px solid var(--border);
     }
-    .sec-header-right {
-      padding: 60px 48px;
-      background: var(--panel);
-      display: flex; align-items: flex-end;
+    .sec-banner-right {
+      padding: 48px 56px; display: flex; align-items: flex-end;
     }
-    .sec-header-right p {
-      font-family: var(--font-mono);
-      font-size: 13px; line-height: 1.7;
-      color: var(--text-muted); max-width: 440px;
+    .sec-banner-right p {
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: var(--text-dim);
     }
 
-    .sec-tag {
-      font-family: var(--font-mono);
-      font-size: 10px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--blue); margin-bottom: 16px;
-      display: flex; align-items: center; gap: 10px;
+    .sec-tagline {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+      margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
     }
-    .sec-tag::before { content: ''; width: 24px; height: 1px; background: var(--blue); }
-
-    .sec-title {
-      font-family: var(--font-statement);
-      font-size: clamp(40px, 5.5vw, 76px);
-      font-weight: 800; line-height: 0.94;
-      text-transform: uppercase; letter-spacing: -0.02em;
+    .sec-tagline::before { content: ''; width: 20px; height: 2px; background: var(--accent); }
+    
+    .sec-h2 {
+      font-family: var(--font-mega); font-size: clamp(48px, 6vw, 76px);
+      line-height: 0.9; text-transform: uppercase; color: var(--white);
     }
 
-    /* ───── AXIOMS / ARCHITECTURE GRID ───── */
-    .axioms-grid {
+    /* INDUSTRIAL BLUEPRINT PANELS */
+    .blueprint-grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
     }
-    .axiom-card {
-      padding: 48px;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-      display: flex; flex-direction: column; justify-content: space-between;
-      min-height: 280px; position: relative;
-      transition: background 0.2s ease;
+    .blueprint-panel {
+      padding: 56px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--bg); display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 320px; position: relative; transition: background 0.2s;
     }
-    .axiom-card:nth-child(2n) { border-right: none; }
-    .axiom-card:hover { background: var(--panel); }
+    .blueprint-panel:nth-child(2n) { border-right: none; }
+    .blueprint-panel:hover { background: var(--panel); }
 
-    .axiom-num {
-      font-family: var(--font-display);
-      font-size: 48px; color: var(--border-hi);
-      line-height: 1; margin-bottom: 24px;
+    .panel-header {
+      display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;
     }
-    .axiom-card:hover .axiom-num { color: var(--blue); }
-
-    .axiom-title {
-      font-family: var(--font-statement);
-      font-size: 24px; font-weight: 800;
-      text-transform: uppercase; margin-bottom: 12px;
-      color: var(--text);
+    .panel-num {
+      font-family: var(--font-mega); font-size: 56px; line-height: 0.8; color: var(--border-hi);
+      transition: color 0.2s;
     }
-    .axiom-body {
-      font-family: var(--font-mono);
-      font-size: 12px; line-height: 1.75;
-      color: var(--text-muted);
+    .blueprint-panel:hover .panel-num { color: var(--accent); }
+    .panel-code {
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-mute); letter-spacing: 0.15em;
     }
 
-    /* ───── PROJECTS TABLE ───── */
-    .projects-table {
-      width: 100%; border-collapse: collapse;
+    .panel-title {
+      font-family: var(--font-disp); font-size: 34px; letter-spacing: 0.04em;
+      color: var(--white); margin-bottom: 16px;
     }
-    .project-row {
-      display: grid;
-      grid-template-columns: 80px 100px 1.4fr 1.6fr 130px;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s ease;
+    .panel-desc {
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: var(--text-dim);
     }
-    .project-row:hover { background: var(--panel); }
-    .project-cell {
-      padding: 24px 20px;
-      border-right: 1px solid var(--border);
-      font-family: var(--font-mono); font-size: 11px;
-    }
-    .project-cell:last-child { border-right: none; }
+    .panel-desc strong { color: var(--white); }
 
-    .proj-idx {
-      font-family: var(--font-display);
-      font-size: 24px; color: var(--dim); text-align: center;
+    .panel-footer {
+      margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-mute); letter-spacing: 0.12em;
     }
-    .project-row:hover .proj-idx { color: var(--blue); }
+    .panel-footer .status { color: var(--volt); font-weight: 700; }
 
-    .proj-year { color: var(--text-muted); }
-    .proj-name {
-      font-family: var(--font-statement);
-      font-size: 22px; font-weight: 800;
-      text-transform: uppercase; color: var(--text);
-      text-decoration: none; transition: color 0.15s;
+    /* ───── PROJECTS LEDGER (TABLE) ───── */
+    .ledger-table { width: 100%; border-collapse: collapse; }
+    .ledger-row {
+      display: grid; grid-template-columns: 80px 100px 1.5fr 1.8fr 140px;
+      align-items: center; border-bottom: 1px solid var(--border);
+      transition: all 0.15s; background: var(--bg); text-decoration: none; color: inherit;
     }
-    .proj-name:hover { color: var(--blue); }
-    .proj-org {
-      font-family: var(--font-mono);
-      font-size: 10px; color: var(--dim); margin-top: 4px;
+    .ledger-row:hover {
+      background: var(--accent); color: var(--white); transform: scale(1.002);
+      z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .proj-desc { color: var(--text-muted); line-height: 1.6; }
+    .ledger-cell {
+      padding: 26px 22px; border-right: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 12px;
+    }
+    .ledger-row:hover .ledger-cell { border-color: rgba(255,255,255,0.2); }
+    .ledger-cell:last-child { border-right: none; }
+
+    .ledger-idx { font-family: var(--font-disp); font-size: 26px; text-align: center; color: var(--text-dim); }
+    .ledger-row:hover .ledger-idx { color: var(--white); }
+    .ledger-year { color: var(--text-dim); }
+    .ledger-row:hover .ledger-year { color: var(--white); }
+
+    .ledger-name {
+      font-family: var(--font-disp); font-size: 28px; letter-spacing: 0.04em;
+      color: var(--white); display: block;
+    }
+    .ledger-org { font-size: 10px; color: var(--text-mute); margin-top: 2px; }
+    .ledger-row:hover .ledger-org { color: rgba(255,255,255,0.8); }
+
+    .ledger-desc { color: var(--text-dim); line-height: 1.6; }
+    .ledger-row:hover .ledger-desc { color: var(--white); }
 
     .badge {
-      font-family: var(--font-mono);
-      font-size: 9px; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      padding: 6px 12px; display: inline-block; text-align: center;
+      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px;
+      display: inline-block; text-align: center; border: 1px solid;
     }
-    .badge.active   { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid var(--green); }
-    .badge.archived { background: transparent; color: var(--dim); border: 1px solid var(--border); }
-    .badge.public   { background: rgba(0,56,255,0.1); color: var(--blue); border: 1px solid var(--blue); }
+    .badge.active   { background: rgba(223, 255, 0, 0.1); color: var(--volt); border-color: var(--volt); }
+    .badge.archived { background: transparent; color: var(--text-mute); border-color: var(--border-hi); }
+    .badge.public   { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border-color: var(--cyan); }
+    .ledger-row:hover .badge { background: var(--white); color: var(--accent); border-color: var(--white); }
 
-    /* ───── PHILOSOPHY PANEL (SPLIT) ───── */
-    .phil-container {
-      display: grid; grid-template-columns: 1fr 1fr;
-    }
-    .phil-left {
-      background: var(--blue);
-      padding: 80px 48px; color: #fff;
-      display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .phil-left-title {
-      font-family: var(--font-statement);
-      font-size: clamp(44px, 6vw, 84px);
-      font-weight: 800; line-height: 0.92;
-      text-transform: uppercase;
-    }
-    .phil-left-title .dim-text { opacity: 0.35; }
-
-    .phil-specs-list {
-      margin-top: 48px; display: flex; flex-direction: column; gap: 16px;
-    }
-    .phil-spec-item {
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px;
-      font-family: var(--font-mono); font-size: 11px;
-    }
-    .phil-spec-item span:first-child { opacity: 0.7; letter-spacing: 0.1em; }
-    .phil-spec-item span:last-child { font-weight: 700; }
-
-    .phil-right {
-      padding: 80px 48px;
-      border-left: 1px solid var(--border);
-      background: var(--bg);
-      display: flex; flex-direction: column; justify-content: center; gap: 36px;
-    }
-    .phil-quote-box {
-      border-left: 3px solid var(--orange); padding-left: 20px;
-    }
-    .phil-quote-text {
-      font-family: var(--font-statement);
-      font-size: 28px; font-weight: 800; line-height: 1.1;
-      text-transform: uppercase; color: var(--text);
-    }
-    .phil-quote-sub {
-      font-family: var(--font-mono); font-size: 10px;
-      letter-spacing: 0.15em; color: var(--text-muted);
-      margin-top: 10px; text-transform: uppercase;
-    }
-
-    .phil-rules-list {
-      display: flex; flex-direction: column; gap: 20px;
-    }
-    .phil-rule-item {
-      display: flex; gap: 18px; align-items: flex-start;
-    }
-    .phil-rule-num {
-      font-family: var(--font-display); font-size: 28px;
-      color: var(--border-hi); line-height: 1; flex-shrink: 0;
-    }
-    .phil-rule-desc {
-      font-family: var(--font-mono); font-size: 12px; line-height: 1.7;
-      color: var(--text-muted);
-    }
-    .phil-rule-desc strong { color: var(--text); }
-
-    /* ───── TECH STACK GRID ───── */
-    .stack-grid {
+    /* ───── TOOLCHAIN MATRIX ───── */
+    .toolchain-grid {
       display: grid; grid-template-columns: repeat(5, 1fr);
     }
-    .stack-card {
-      padding: 36px 28px;
-      border-right: 1px solid var(--border);
-      background: var(--bg);
-      display: flex; flex-direction: column; justify-content: space-between;
-      gap: 16px; transition: background 0.15s ease;
+    .tool-card {
+      padding: 40px 32px; border-right: 1px solid var(--border); background: var(--bg);
+      display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+      transition: background 0.15s;
     }
-    .stack-card:last-child { border-right: none; }
-    .stack-card:hover { background: var(--panel); }
-    .stack-name {
-      font-family: var(--font-display); font-size: 38px;
-      line-height: 1; text-transform: uppercase; color: var(--text);
+    .tool-card:last-child { border-right: none; }
+    .tool-card:hover { background: var(--panel); }
+    
+    .tool-name {
+      font-family: var(--font-mega); font-size: 44px; line-height: 1; letter-spacing: 0.02em;
     }
-    .stack-use {
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--text-muted); line-height: 1.6;
+    .tool-use {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.6;
     }
-    .stack-indicator {
-      height: 2px; background: var(--border); width: 100%;
+    .tool-bar {
+      height: 4px; background: var(--border); width: 100%; overflow: hidden;
     }
-    .stack-indicator-fill {
-      height: 2px; background: var(--blue);
-    }
+    .tool-bar-fill { height: 100%; background: var(--accent); }
 
-    /* ───── CONNECT SECTION ───── */
-    .connect-container {
-      display: grid; grid-template-columns: 1.1fr 0.9fr;
+    /* ───── CONTACT / POSTER BANNER ───── */
+    .contact-grid {
+      display: grid; grid-template-columns: 1.2fr 0.8fr;
     }
-    .connect-left {
-      padding: 80px 48px;
-      border-right: 1px solid var(--border);
+    .contact-left {
+      padding: 80px 56px; border-right: 1px solid var(--border); background: var(--bg);
     }
-    .connect-title {
-      font-family: var(--font-statement);
-      font-size: clamp(40px, 5.5vw, 76px);
-      font-weight: 800; line-height: 0.94;
-      text-transform: uppercase; margin-bottom: 24px;
+    .contact-mega {
+      font-family: var(--font-mega); font-size: clamp(52px, 7vw, 96px);
+      line-height: 0.88; color: var(--white); text-transform: uppercase; margin-bottom: 32px;
     }
-    .connect-title .blue { color: var(--blue); }
-    .connect-body {
-      font-family: var(--font-mono); font-size: 12px;
-      line-height: 1.8; color: var(--text-muted);
-      max-width: 440px; margin-bottom: 40px;
+    .contact-mega .highlight { color: var(--accent); }
+    
+    .contact-sub {
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.8; color: var(--text-dim);
+      max-width: 480px; margin-bottom: 48px;
     }
-    .connect-links-stack {
-      display: flex; flex-direction: column;
-      border: 1px solid var(--border);
+    .contact-sub strong { color: var(--white); }
+
+    .link-suite {
+      display: flex; flex-direction: column; border: 1px solid var(--border);
     }
-    .connect-row {
+    .suite-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 24px; border-bottom: 1px solid var(--border);
-      text-decoration: none; color: var(--text);
-      transition: background 0.15s ease;
+      padding: 20px 28px; border-bottom: 1px solid var(--border);
+      text-decoration: none; color: var(--text); background: var(--panel);
+      transition: all 0.15s;
     }
-    .connect-row:last-child { border-bottom: none; }
-    .connect-row:hover { background: var(--blue); color: #fff; }
-    .connect-row-platform {
-      font-family: var(--font-mono); font-size: 10px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--blue); width: 100px;
+    .suite-row:last-child { border-bottom: none; }
+    .suite-row:hover { background: var(--white); color: #000; }
+    .suite-row-platform {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+      color: var(--accent); width: 120px;
     }
-    .connect-row:hover .connect-row-platform { color: rgba(255,255,255,0.7); }
-    .connect-row-label {
-      font-family: var(--font-body); font-size: 14px; font-weight: 600;
+    .suite-row:hover .suite-row-platform { color: var(--accent); }
+    .suite-row-handle {
+      font-family: var(--font-body); font-size: 15px; font-weight: 700;
     }
-    .connect-row-arrow {
-      font-family: var(--font-mono); font-size: 14px; color: var(--dim);
+    .suite-row-arrow {
+      font-family: var(--font-mono); font-size: 16px; color: var(--text-mute);
     }
-    .connect-row:hover .connect-row-arrow { color: #fff; }
+    .suite-row:hover .suite-row-arrow { color: #000; transform: translateX(6px); }
 
-    .connect-right {
-      background: var(--panel);
-      display: flex; flex-direction: column; justify-content: space-between;
+    .contact-right {
+      background: var(--panel); display: flex; flex-direction: column; justify-content: space-between;
     }
-    .connect-poster-top {
-      padding: 60px 48px; background: var(--orange); color: #000;
-      flex: 1; display: flex; flex-direction: column; justify-content: flex-end;
+    .contact-poster-art {
+      padding: 64px 48px; background: var(--volt); color: #000; flex: 1;
+      display: flex; flex-direction: column; justify-content: flex-end;
     }
-    .connect-poster-title {
-      font-family: var(--font-statement);
-      font-size: clamp(36px, 4.5vw, 64px);
-      font-weight: 800; line-height: 0.92; text-transform: uppercase;
+    .art-title {
+      font-family: var(--font-mega); font-size: clamp(40px, 5.5vw, 76px); line-height: 0.88;
+      text-transform: uppercase; letter-spacing: 0.01em;
     }
-    .connect-poster-bottom {
-      padding: 40px 48px; background: var(--bg);
-      border-top: 1px solid var(--border);
+    .contact-meta-box {
+      padding: 40px 48px; background: var(--bg); border-top: 1px solid var(--border);
       display: flex; flex-direction: column; gap: 14px;
     }
-    .sys-meta-row {
-      display: flex; justify-content: space-between;
-      font-family: var(--font-mono); font-size: 11px;
-      border-bottom: 1px solid var(--border); padding-bottom: 10px;
-      color: var(--text-muted);
+    .meta-line {
+      display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border); color: var(--text-dim);
     }
-    .sys-meta-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .sys-meta-val { color: var(--text); font-weight: 600; }
-    .sys-meta-val.green { color: var(--green); }
+    .meta-line:last-child { border-bottom: none; padding-bottom: 0; }
+    .meta-line strong { color: var(--white); }
+    .meta-line strong.green { color: var(--volt); }
 
     /* ───── FOOTER ───── */
     footer {
-      display: grid; grid-template-columns: 1fr 1fr;
-      background: var(--bg);
+      display: grid; grid-template-columns: 1fr 1fr; background: var(--bg);
     }
-    .footer-col {
-      padding: 60px 48px;
-      display: flex; flex-direction: column; justify-content: space-between;
+    .footer-box {
+      padding: 64px 56px; display: flex; flex-direction: column; justify-content: space-between;
     }
-    .footer-col:first-child { border-right: 1px solid var(--border); }
-
-    .footer-brand {
-      font-family: var(--font-statement);
-      font-size: 56px; font-weight: 800; line-height: 1;
-      text-transform: uppercase; color: var(--text);
+    .footer-box:first-child { border-right: 1px solid var(--border); }
+    .footer-logo {
+      font-family: var(--font-mega); font-size: 72px; line-height: 0.9; color: var(--white);
     }
     .footer-sub {
-      font-family: var(--font-mono); font-size: 10px;
-      letter-spacing: 0.14em; color: var(--text-muted);
-      text-transform: uppercase; margin-top: 8px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; color: var(--text-dim); margin-top: 8px;
     }
     .footer-copy {
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--dim); letter-spacing: 0.1em; margin-top: 32px;
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-mute); letter-spacing: 0.1em; margin-top: 40px;
     }
+    .footer-quote {
+      font-family: var(--font-mega); font-size: clamp(28px, 3.5vw, 46px);
+      line-height: 1; color: var(--white); text-transform: uppercase;
+    }
+    .footer-quote .accent { color: var(--accent); }
 
-    .footer-motto {
-      font-family: var(--font-statement);
-      font-size: clamp(24px, 3vw, 40px);
-      font-weight: 800; line-height: 1.05;
-      text-transform: uppercase; color: var(--text);
-    }
-    .footer-motto .blue { color: var(--blue); }
-
-    .footer-links-grid {
-      display: flex; flex-direction: column; gap: 8px; margin-top: 32px;
-    }
-    .footer-link-item {
-      display: flex; justify-content: space-between;
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--text-muted); border-top: 1px solid var(--border);
-      padding-top: 8px;
-    }
-    .footer-link-item span:last-child { color: var(--text); }
-
-    /* ───── RESPONSIVE LAYOUT ───── */
+    /* ───── RESPONSIVE ───── */
     @media (max-width: 1024px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-right { display: none; }
-      .hero-left { padding: 48px 24px; }
-      .sec-header { grid-template-columns: 1fr; }
-      .sec-header-left { border-right: none; border-bottom: 1px solid var(--border); }
-      .axioms-grid { grid-template-columns: 1fr; }
-      .axiom-card { border-right: none; }
-      .project-row { grid-template-columns: 60px 1fr auto; }
-      .project-cell:nth-child(2), .project-cell:nth-child(4) { display: none; }
-      .phil-container { grid-template-columns: 1fr; }
-      .phil-right { border-left: none; border-top: 1px solid var(--border); }
-      .stack-grid { grid-template-columns: repeat(2, 1fr); }
-      .stack-card { border-bottom: 1px solid var(--border); }
-      .stack-card:nth-child(2n) { border-right: none; }
-      .connect-container { grid-template-columns: 1fr; }
-      .connect-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-main { grid-template-columns: 1fr; }
+      .hero-poster-block { display: none; }
+      .hero-statement-block { padding: 48px 28px; }
+      .sec-banner { grid-template-columns: 1fr; }
+      .sec-banner-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .blueprint-grid { grid-template-columns: 1fr; }
+      .blueprint-panel { border-right: none; }
+      .ledger-row { grid-template-columns: 60px 1fr auto; }
+      .ledger-cell:nth-child(2), .ledger-cell:nth-child(4) { display: none; }
+      .toolchain-grid { grid-template-columns: repeat(2, 1fr); }
+      .tool-card { border-bottom: 1px solid var(--border); }
+      .tool-card:nth-child(2n) { border-right: none; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-left { border-right: none; border-bottom: 1px solid var(--border); }
       footer { grid-template-columns: 1fr; }
-      .footer-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .footer-box:first-child { border-right: none; border-bottom: 1px solid var(--border); }
       nav { padding: 0 16px; }
-      .nav-item { padding: 0 12px; font-size: 10px; }
+      .nav-link { padding: 0 12px; font-size: 10px; }
     }
 
     @media (max-width: 640px) {
-      .hero-statement-title { font-size: 38px; }
-      .hero-metrics-grid { grid-template-columns: repeat(2, 1fr); }
-      .metric-cell:nth-child(2) { border-right: none; }
-      .metric-cell:nth-child(3), .metric-cell:nth-child(4) { border-top: 1px solid var(--border); }
-      .sec-title { font-size: 36px; }
-      .project-row { grid-template-columns: 1fr auto; }
-      .project-cell:first-child { display: none; }
-      .stack-grid { grid-template-columns: 1fr; }
-      .stack-card { border-right: none; }
+      .hero-h1 { font-size: 50px; }
+      .hero-bio-row { grid-template-columns: 1fr; }
+      .sec-h2 { font-size: 40px; }
+      .ledger-row { grid-template-columns: 1fr auto; }
+      .ledger-cell:first-child { display: none; }
+      .toolchain-grid { grid-template-columns: 1fr; }
+      .tool-card { border-right: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════ TOP NAV ══════════ -->
+<!-- ══════════ TOP TELEMETRY NAV ══════════ -->
 <nav>
-  <div class="nav-brand">
-    <div class="nav-status-indicator"></div>
-    KAADZ
+  <div class="nav-left">
+    <a href="#" class="nav-logo">KAADZ</a>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      SYS_ONLINE // ENFORCEMENT ACTIVE
+    </div>
   </div>
-  <div class="nav-links">
-    <a href="#architecture" class="nav-link nav-item">ARCHITECTURE</a>
-    <a href="#projects"     class="nav-link nav-item">PROJECTS</a>
-    <a href="#philosophy"   class="nav-link nav-item">PHILOSOPHY</a>
-    <a href="#stack"        class="nav-link nav-item">STACK</a>
-    <a href="#contact"      class="nav-link nav-item cta">CONTACT →</a>
+  <div class="nav-right">
+    <a href="#axioms"    class="nav-link">AXIOMS</a>
+    <a href="#projects"  class="nav-link">LEDGER</a>
+    <a href="#toolchain" class="nav-link">STACK</a>
+    <a href="#contact"   class="nav-link cta">INITIATE →</a>
   </div>
 </nav>
 
-<!-- ══════════ HERO SECTION ══════════ -->
-<header class="hero">
+<!-- ══════════ HERO POSTER SECTION ══════════ -->
+<header class="hero-wrapper">
+  <div class="hero-top-strip">
+    <span>KAADIPRANAV // WATCHLLM MONOREPO</span>
+    <span>RUNTIME SPECIFICATION: <strong>DETERMINISTIC KERNEL</strong></span>
+    <span>LOC: <strong>INDIA</strong> // VOL. 2026</span>
+  </div>
 
-  <!-- LEFT PANEL -->
-  <div class="hero-left">
-    <div class="corner-tick tl"></div><div class="corner-tick tr"></div>
-    <div class="corner-tick bl"></div><div class="corner-tick br"></div>
+  <div class="hero-main">
+    <!-- LEFT MONUMENTAL STATEMENT -->
+    <div class="hero-statement-block">
+      <div class="crosshair tl"></div><div class="crosshair tr"></div>
+      <div class="crosshair bl"></div><div class="crosshair br"></div>
 
-    <div>
-      <div class="hero-meta-bar">
-        <span>KAADIPRANAV // WATCHLLM</span>
-        <div>[VOL. 2026]</div>
+      <div>
+        <div class="hero-tagline-bar">CRITICAL ARCHITECTURAL AXIOM</div>
+        
+        <!-- COMPLETE, UNTRUNCATED, HIGH-IMPACT TYPOGRAPHY -->
+        <h1 class="hero-h1">
+          <span class="solid-white">AGENTS ARE</span><br>
+          <span class="box-accent">PROBABILISTIC.</span><br>
+          <span class="outline-text">INFRASTRUCTURE</span><br>
+          <span class="volt-text">CANNOT BE.</span>
+        </h1>
+
+        <div class="hero-bio-row">
+          <p class="hero-bio-text">
+            <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance, static AST interceptors, and air-gapped security paths for autonomous coding agents. Zero ML inference in the enforcement loop.
+          </p>
+
+          <div class="hero-specs-box">
+            <div class="spec-line"><span>REPOSITORIES</span> <strong>15 ACTIVE</strong></div>
+            <div class="spec-line"><span>ORGANIZATIONS</span> <strong>03 ORGS</strong></div>
+            <div class="spec-line"><span>CORE MODULES</span> <strong>12 UNITS</strong></div>
+            <div class="spec-line"><span>CLOUD DEP</span> <strong class="volt">0% OFFLINE</strong></div>
+          </div>
+        </div>
       </div>
-
-      <h1 class="hero-statement-title">
-        <span class="line-white">AGENTS ARE</span><br>
-        <span class="line-blue">PROBABILISTIC.</span><br>
-        <span class="line-outline">INFRASTRUCTURE</span><br>
-        <span class="line-orange">IS NOT.</span>
-      </h1>
-
-      <p class="hero-description">
-        <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance, static AST interceptors, and air-gapped evaluation paths for autonomous software systems.
-      </p>
     </div>
 
-    <div>
-      <div class="hero-metrics-grid">
-        <div class="metric-cell">
-          <div class="metric-val">15</div>
-          <div class="metric-lbl">Repos</div>
-        </div>
-        <div class="metric-cell">
-          <div class="metric-val">03</div>
-          <div class="metric-lbl">Orgs</div>
-        </div>
-        <div class="metric-cell">
-          <div class="metric-val">12</div>
-          <div class="metric-lbl">Modules</div>
-        </div>
-        <div class="metric-cell">
-          <div class="metric-val">0%</div>
-          <div class="metric-lbl">Cloud Dep</div>
+    <!-- RIGHT TECHNICAL BLUEPRINT POSTER -->
+    <div class="hero-poster-block">
+      <div class="poster-id-banner">
+        <span>SYSTEM ARCHITECTURE</span>
+        <span>SPEC // 001</span>
+      </div>
+
+      <div class="poster-center-art">
+        <div class="poster-watermark">W</div>
+        <div class="poster-main-title">WATCH<br>LLM</div>
+        <div class="poster-sub-label">RUNTIME GOVERNANCE STACK</div>
+
+        <div class="poster-data-matrix">
+          <div class="matrix-row">
+            <span class="matrix-lbl">01 // PARSER ENGINE</span>
+            <span class="matrix-val">TREE-SITTER STATIC AST</span>
+          </div>
+          <div class="matrix-row">
+            <span class="matrix-lbl">02 // POLICY SANDBOX</span>
+            <span class="matrix-val">ZERO-GC WASM RUNTIME</span>
+          </div>
+          <div class="matrix-row">
+            <span class="matrix-lbl">03 // STATE LEDGER</span>
+            <span class="matrix-val">SQLITE MEMORY HARNESS</span>
+          </div>
+          <div class="matrix-row">
+            <span class="matrix-lbl">04 // EXECUTION LATENCY</span>
+            <span class="matrix-val highlight">&lt;1MS SUB-ROUTINE</span>
+          </div>
+          <div class="matrix-row">
+            <span class="matrix-lbl">05 // INFERENCE DEP</span>
+            <span class="matrix-val" style="color:var(--volt)">ZERO ML ENFORCEMENT</span>
+          </div>
         </div>
       </div>
 
-      <div class="hero-actions">
-        <a href="https://watchllm.dev" target="_blank" class="btn-action primary">WATCHLLM.DEV →</a>
-        <a href="https://github.com/kaadipranav" target="_blank" class="btn-action secondary">GITHUB</a>
+      <div class="poster-bottom-stamp">
+        <div class="barcode-graphic">
+          <div class="barcode-bar" style="width:3px"></div><div class="barcode-bar" style="width:1px"></div>
+          <div class="barcode-bar" style="width:4px"></div><div class="barcode-bar" style="width:2px"></div>
+          <div class="barcode-bar" style="width:6px"></div><div class="barcode-bar" style="width:1px"></div>
+          <div class="barcode-bar" style="width:3px"></div><div class="barcode-bar" style="width:5px"></div>
+          <div class="barcode-bar" style="width:2px"></div><div class="barcode-bar" style="width:1px"></div>
+          <div class="barcode-bar" style="width:4px"></div><div class="barcode-bar" style="width:2px"></div>
+          <div class="barcode-bar" style="width:3px"></div><div class="barcode-bar" style="width:1px"></div>
+        </div>
+        <div class="stamp-seal">[ VERIFIED DETERMINISTIC ]</div>
       </div>
     </div>
   </div>
-
-  <!-- RIGHT POSTER PANEL -->
-  <div class="hero-right">
-    <div class="poster-grid-bg"></div>
-    <div class="poster-giant-num">01</div>
-
-    <div class="poster-header-block">
-      <div class="poster-badge">SYSTEM IDENTIFIER</div>
-      <div class="poster-title-large">WATCH<br>LLM</div>
-      <div class="poster-subtitle">RUNTIME GOVERNANCE STACK</div>
-    </div>
-
-    <div class="poster-specs-body">
-      <div class="spec-card-row">
-        <span class="spec-card-key">PARSER ENGINE</span>
-        <span class="spec-card-val">TREE-SITTER AST</span>
-      </div>
-      <div class="spec-card-row">
-        <span class="spec-card-key">POLICY RUNTIME</span>
-        <span class="spec-card-val">ZERO-GC WASM</span>
-      </div>
-      <div class="spec-card-row">
-        <span class="spec-card-key">STATE HARNESS</span>
-        <span class="spec-card-val">SQLITE MEMORY LEDGER</span>
-      </div>
-      <div class="spec-card-row">
-        <span class="spec-card-key">ENFORCEMENT LATENCY</span>
-        <span class="spec-card-val highlight">&lt;1MS SUB-ROUTINE</span>
-      </div>
-      <div class="spec-card-row">
-        <span class="spec-card-key">EXECUTION PATH</span>
-        <span class="spec-card-val">AIR-GAPPED / OFFLINE</span>
-      </div>
-    </div>
-
-    <div class="poster-footer-bar">
-      <span>KERNEL STATUS: <strong>ACTIVE</strong></span>
-      <span>INFERENCE: <strong style="color:var(--orange)">ZERO</strong></span>
-    </div>
-  </div>
-
 </header>
 
-<!-- ══════════ MARQUEE STRIP ══════════ -->
-<div class="marquee-container">
-  <div class="marquee-track">
-    <div class="marquee-cell"><span class="dot"></span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
-    <div class="marquee-cell"><span class="dot"></span> DETERMINISTIC RUNTIME GOVERNANCE</div>
-    <div class="marquee-cell"><span class="dot"></span> ZERO-GC WASM POLICY ENFORCEMENT</div>
-    <div class="marquee-cell"><span class="dot"></span> TREE-SITTER AST INTERCEPT</div>
-    <div class="marquee-cell"><span class="dot"></span> AUDITABLE DECISION LEDGERS</div>
-    <div class="marquee-cell"><span class="dot"></span> AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT</div>
-    <div class="marquee-cell"><span class="dot"></span> DETERMINISTIC RUNTIME GOVERNANCE</div>
-    <div class="marquee-cell"><span class="dot"></span> ZERO-GC WASM POLICY ENFORCEMENT</div>
-    <div class="marquee-cell"><span class="dot"></span> TREE-SITTER AST INTERCEPT</div>
-    <div class="marquee-cell"><span class="dot"></span> AUDITABLE DECISION LEDGERS</div>
+<!-- ══════════ HIGH-DENSITY TICKER ══════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-move">
+    <div class="ticker-item">AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT <span class="sep">///</span></div>
+    <div class="ticker-item">DETERMINISTIC RUNTIME GOVERNANCE <span class="sep">///</span></div>
+    <div class="ticker-item">ZERO-GC WASM POLICY ENFORCEMENT <span class="sep">///</span></div>
+    <div class="ticker-item">TREE-SITTER AST INTERCEPT <span class="sep">///</span></div>
+    <div class="ticker-item">AUDITABLE DECISION LEDGERS <span class="sep">///</span></div>
+    <div class="ticker-item">AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT <span class="sep">///</span></div>
+    <div class="ticker-item">DETERMINISTIC RUNTIME GOVERNANCE <span class="sep">///</span></div>
+    <div class="ticker-item">ZERO-GC WASM POLICY ENFORCEMENT <span class="sep">///</span></div>
+    <div class="ticker-item">TREE-SITTER AST INTERCEPT <span class="sep">///</span></div>
+    <div class="ticker-item">AUDITABLE DECISION LEDGERS <span class="sep">///</span></div>
   </div>
 </div>
 
-<!-- ══════════ SECTION 01: ARCHITECTURE / AXIOMS ══════════ -->
-<section id="architecture">
-  <div class="sec-header">
-    <div class="sec-header-left">
-      <div class="sec-tag">01 // CORE ARCHITECTURE</div>
-      <div class="sec-title">GOVERNANCE<br>PRIMITIVES</div>
+<!-- ══════════ SECTION 01: ARCHITECTURAL AXIOMS ══════════ -->
+<section id="axioms">
+  <div class="sec-banner">
+    <div class="sec-banner-left">
+      <div class="sec-tagline">01 // CORE SPECIFICATIONS</div>
+      <h2 class="sec-h2">GOVERNANCE<br>PRIMITIVES</h2>
     </div>
-    <div class="sec-header-right">
-      <p>Infrastructure requires predictable execution paths. The WatchLLM governance stack enforces structural rules before code mutations are committed.</p>
+    <div class="sec-banner-right">
+      <p>Probabilistic guardrails are merely suggestions. The WatchLLM governance architecture enforces structural rules at the AST compiler boundary before code mutations are committed.</p>
     </div>
   </div>
 
-  <div class="axioms-grid">
-    <div class="axiom-card">
-      <div class="axiom-num">01</div>
+  <div class="blueprint-grid">
+    <div class="blueprint-panel">
+      <div class="crosshair tl"></div>
       <div>
-        <div class="axiom-title">DETERMINISTIC ENFORCEMENT</div>
-        <div class="axiom-body">
-          Guardrails operate without LLM inference overhead in the execution critical path. Identical code inputs produce strictly identical policy evaluations every time.
+        <div class="panel-header">
+          <span class="panel-num">01</span>
+          <span class="panel-code">[SPEC_REF: AST_001]</span>
         </div>
+        <h3 class="panel-title">DETERMINISTIC ENFORCEMENT</h3>
+        <p class="panel-desc">
+          Guardrails operate without LLM inference overhead in the execution critical path. Identical syntax inputs produce strictly identical policy evaluations every time without exception.
+        </p>
+      </div>
+      <div class="panel-footer">
+        <span>INFERENCE: <strong>DISABLED</strong></span>
+        <span class="status">● GUARANTEED</span>
       </div>
     </div>
 
-    <div class="axiom-card">
-      <div class="axiom-num">02</div>
+    <div class="blueprint-panel">
+      <div class="crosshair tr"></div>
       <div>
-        <div class="axiom-title">WATCHLLM MONOREPO</div>
-        <div class="axiom-body">
-          Composed of 12 modular units including AST tree-sitter interceptors, zero-GC WASM policy runners, decision schema validators, and execution replay telemetry.
+        <div class="panel-header">
+          <span class="panel-num">02</span>
+          <span class="panel-code">[SPEC_REF: WLLM_012]</span>
         </div>
+        <h3 class="panel-title">WATCHLLM MONOREPO</h3>
+        <p class="panel-desc">
+          Composed of 12 modular units including Tree-sitter AST interceptors, zero-GC WASM policy runners, decision schema validators, and execution replay telemetry.
+        </p>
+      </div>
+      <div class="panel-footer">
+        <span>STACK: <strong>PY / RS / TS / WASM</strong></span>
+        <span class="status">● ACTIVE CORE</span>
       </div>
     </div>
 
-    <div class="axiom-card">
-      <div class="axiom-num">03</div>
+    <div class="blueprint-panel">
+      <div class="crosshair bl"></div>
       <div>
-        <div class="axiom-title">AIR-GAPPED INTERCEPTION</div>
-        <div class="axiom-body">
-          Runs entirely offline without cloud network roundtrips. Integrates directly into developer local environments, IDE extensions, and automated CI pipelines.
+        <div class="panel-header">
+          <span class="panel-num">03</span>
+          <span class="panel-code">[SPEC_REF: AIR_GAP]</span>
         </div>
+        <h3 class="panel-title">AIR-GAPPED INTERCEPTION</h3>
+        <p class="panel-desc">
+          Runs entirely offline without cloud network roundtrips. Integrates directly into developer local environments, IDE extensions, and automated CI/CD runners.
+        </div>
+      </div>
+      <div class="panel-footer">
+        <span>NETWORK: <strong>AIR-GAPPED</strong></span>
+        <span class="status">● LOCAL FIRST</span>
       </div>
     </div>
 
-    <div class="axiom-card">
-      <div class="axiom-num">04</div>
+    <div class="blueprint-panel">
+      <div class="crosshair br"></div>
       <div>
-        <div class="axiom-title">ARCHITECTURAL MEMORY</div>
-        <div class="axiom-body">
-          SQLite-backed decision harness (klyd) maintaining structured, replayable state records for autonomous agentic operations.
+        <div class="panel-header">
+          <span class="panel-num">04</span>
+          <span class="panel-code">[SPEC_REF: KLYD_SQL]</span>
         </div>
+        <h3 class="panel-title">ARCHITECTURAL MEMORY</h3>
+        <p class="panel-desc">
+          SQLite-backed decision harness (klyd) maintaining structured, replayable state records and decision ledgers for autonomous agentic operations.
+        </div>
+      </div>
+      <div class="panel-footer">
+        <span>PERSISTENCE: <strong>SQLITE LEDGER</strong></span>
+        <span class="status">● AUDITABLE</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ SECTION 02: PROJECTS ══════════ -->
+<!-- ══════════ SECTION 02: REPOSITORY LEDGER ══════════ -->
 <section id="projects">
-  <div class="sec-header">
-    <div class="sec-header-left">
-      <div class="sec-tag">02 // REPOSITORY INDEX</div>
-      <div class="sec-title">PROJECTS</div>
+  <div class="sec-banner">
+    <div class="sec-banner-left">
+      <div class="sec-tagline">02 // INVENTORY ARCHIVE</div>
+      <h2 class="sec-h2">PROJECT<br>LEDGER</h2>
     </div>
-    <div class="sec-header-right">
-      <p>Selected systems software and open-source infrastructure projects developed across WatchLLM, Klyd Studio, and Codify.</p>
+    <div class="sec-banner-right">
+      <p>Selected systems software and open-source infrastructure projects developed across WatchLLM, Klyd Studio, and Codify organizations.</p>
     </div>
   </div>
 
-  <table class="projects-table" role="list">
+  <table class="ledger-table" role="list">
     <tbody>
-      <tr class="project-row" role="listitem">
-        <td class="project-cell proj-idx">01</td>
-        <td class="project-cell proj-year">2026</td>
-        <td class="project-cell">
-          <a href="https://watchllm.dev" target="_blank" class="proj-name">WatchLLM</a>
-          <div class="proj-org">watchllm · Core Monorepo</div>
-        </td>
-        <td class="project-cell proj-desc">
+      <a href="https://watchllm.dev" target="_blank" class="ledger-row" role="listitem">
+        <div class="ledger-cell ledger-idx">01</div>
+        <div class="ledger-cell ledger-year">2026</div>
+        <div class="ledger-cell">
+          <span class="ledger-name">WatchLLM</span>
+          <span class="ledger-org">watchllm · Core Monorepo</span>
+        </div>
+        <div class="ledger-cell ledger-desc">
           Runtime governance framework for autonomous agents.<br>AST Interceptor · Policy WASM · Replay Telemetry
-        </td>
-        <td class="project-cell"><span class="badge active">ACTIVE</span></td>
-      </tr>
+        </div>
+        <div class="ledger-cell"><span class="badge active">ACTIVE</span></div>
+      </a>
 
-      <tr class="project-row" role="listitem">
-        <td class="project-cell proj-idx">02</td>
-        <td class="project-cell proj-year">2026</td>
-        <td class="project-cell">
-          <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="proj-name">klyd-harness</a>
-          <div class="proj-org">klyd-studio · Open Source</div>
-        </td>
-        <td class="project-cell proj-desc">
-          Architectural memory layer & decision ledger for agentic context tracking.
-        </td>
-        <td class="project-cell"><span class="badge active">ACTIVE</span></td>
-      </tr>
+      <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="ledger-row" role="listitem">
+        <div class="ledger-cell ledger-idx">02</div>
+        <div class="ledger-cell ledger-year">2026</div>
+        <div class="ledger-cell">
+          <span class="ledger-name">klyd-harness</span>
+          <span class="ledger-org">klyd-studio · Open Source</span>
+        </div>
+        <div class="ledger-cell ledger-desc">
+          Architectural memory layer & SQLite decision ledger for agentic context tracking and auditability.
+        </div>
+        <div class="ledger-cell"><span class="badge active">ACTIVE</span></div>
+      </a>
 
-      <tr class="project-row" role="listitem">
-        <td class="project-cell proj-idx">03</td>
-        <td class="project-cell proj-year">2026</td>
-        <td class="project-cell">
-          <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="proj-name">Codify</a>
-          <div class="proj-org">Codify-PSBB · Open Source</div>
-        </td>
-        <td class="project-cell proj-desc">
-          Competitive programming & code learning engine platform core.
-        </td>
-        <td class="project-cell"><span class="badge active">ACTIVE</span></td>
-      </tr>
+      <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="ledger-row" role="listitem">
+        <div class="ledger-cell ledger-idx">03</div>
+        <div class="ledger-cell ledger-year">2026</div>
+        <div class="ledger-cell">
+          <span class="ledger-name">Codify</span>
+          <span class="ledger-org">Codify-PSBB · Open Source</span>
+        </div>
+        <div class="ledger-cell ledger-desc">
+          Competitive programming & code evaluation engine platform core.
+        </div>
+        <div class="ledger-cell"><span class="badge active">ACTIVE</span></div>
+      </a>
 
-      <tr class="project-row" role="listitem">
-        <td class="project-cell proj-idx">04</td>
-        <td class="project-cell proj-year">2025</td>
-        <td class="project-cell">
-          <span class="proj-name" style="cursor:default">ScriptBoost</span>
-          <div class="proj-org">kaadipranav · Public</div>
-        </td>
-        <td class="project-cell proj-desc">
+      <div class="ledger-row" role="listitem">
+        <div class="ledger-cell ledger-idx">04</div>
+        <div class="ledger-cell ledger-year">2025</div>
+        <div class="ledger-cell">
+          <span class="ledger-name">ScriptBoost</span>
+          <span class="ledger-org">kaadipranav · Public Archive</span>
+        </div>
+        <div class="ledger-cell ledger-desc">
           Automated scripting and system execution utilities.
-        </td>
-        <td class="project-cell"><span class="badge archived">ARCHIVED</span></td>
-      </tr>
+        </div>
+        <div class="ledger-cell"><span class="badge archived">ARCHIVED</span></div>
+      </div>
 
-      <tr class="project-row" role="listitem">
-        <td class="project-cell proj-idx">05</td>
-        <td class="project-cell proj-year">2025</td>
-        <td class="project-cell">
-          <span class="proj-name" style="cursor:default">Ghostwriter</span>
-          <div class="proj-org">kaadipranav · Public</div>
-        </td>
-        <td class="project-cell proj-desc">
+      <div class="ledger-row" role="listitem">
+        <div class="ledger-cell ledger-idx">05</div>
+        <div class="ledger-cell ledger-year">2025</div>
+        <div class="ledger-cell">
+          <span class="ledger-name">Ghostwriter</span>
+          <span class="ledger-org">kaadipranav · Public Archive</span>
+        </div>
+        <div class="ledger-cell ledger-desc">
           Content parsing and text processing utility prototype.
-        </td>
-        <td class="project-cell"><span class="badge archived">ARCHIVED</span></td>
-      </tr>
+        </div>
+        <div class="ledger-cell"><span class="badge archived">ARCHIVED</span></div>
+      </div>
 
-      <tr class="project-row" role="listitem">
-        <td class="project-cell proj-idx">06</td>
-        <td class="project-cell proj-year">2025</td>
-        <td class="project-cell">
-          <span class="proj-name" style="cursor:default">EduVerse</span>
-          <div class="proj-org">kaadipranav · Public</div>
-        </td>
-        <td class="project-cell proj-desc">
-          Educational software platform prototype.
-        </td>
-        <td class="project-cell"><span class="badge archived">ARCHIVED</span></td>
-      </tr>
+      <div class="ledger-row" role="listitem">
+        <div class="ledger-cell ledger-idx">06</div>
+        <div class="ledger-cell ledger-year">2025</div>
+        <div class="ledger-cell">
+          <span class="ledger-name">EduVerse</span>
+          <span class="ledger-org">kaadipranav · Public Archive</span>
+        </div>
+        <div class="ledger-cell ledger-desc">
+          Educational software platform architecture prototype.
+        </div>
+        <div class="ledger-cell"><span class="badge archived">ARCHIVED</span></div>
+      </div>
 
-      <tr class="project-row" role="listitem">
-        <td class="project-cell proj-idx">07</td>
-        <td class="project-cell proj-year">2025</td>
-        <td class="project-cell">
-          <span class="proj-name" style="cursor:default">BOILERPLATE</span>
-          <div class="proj-org">kaadipranav · Template</div>
-        </td>
-        <td class="project-cell proj-desc">
-          Opinionated starter template for systems software.
-        </td>
-        <td class="project-cell"><span class="badge public">PUBLIC</span></td>
-      </tr>
+      <a href="https://github.com/kaadipranav" target="_blank" class="ledger-row" role="listitem">
+        <div class="ledger-cell ledger-idx">07</div>
+        <div class="ledger-cell ledger-year">2025</div>
+        <div class="ledger-cell">
+          <span class="ledger-name">BOILERPLATE</span>
+          <span class="ledger-org">kaadipranav · Template</span>
+        </div>
+        <div class="ledger-cell ledger-desc">
+          Opinionated starter template for modular systems software.
+        </div>
+        <div class="ledger-cell"><span class="badge public">TEMPLATE</span></div>
+      </a>
     </tbody>
   </table>
 </section>
 
-<!-- ══════════ SECTION 03: PHILOSOPHY ══════════ -->
-<section id="philosophy">
-  <div class="phil-container">
-    <div class="phil-left">
-      <div>
-        <div class="sec-tag" style="color:rgba(255,255,255,0.7)">03 // DESIGN PRINCIPLES</div>
-        <div class="phil-left-title">
-          DETERMINISM<br>
-          <span class="dim-text">OVER</span><br>
-          VIBES.
-        </div>
-      </div>
-
-      <div class="phil-specs-list">
-        <div class="phil-spec-item">
-          <span>ENFORCEMENT PATH</span>
-          <span>ZERO ML INFERENCE</span>
-        </div>
-        <div class="phil-spec-item">
-          <span>EVALUATION LATENCY</span>
-          <span>SUB-MILLISECOND</span>
-        </div>
-        <div class="phil-spec-item">
-          <span>EXECUTION ENVIRONMENT</span>
-          <span>AIR-GAPPED WASM</span>
-        </div>
-        <div class="phil-spec-item">
-          <span>STATE TRACKING</span>
-          <span>SQLITE LEDGER</span>
-        </div>
-        <div class="phil-spec-item" style="border-bottom:none;">
-          <span>CLOUD DEPENDENCY</span>
-          <span style="color:var(--yellow)">NONE</span>
-        </div>
-      </div>
+<!-- ══════════ SECTION 03: TOOLCHAIN MATRIX ══════════ -->
+<section id="toolchain">
+  <div class="sec-banner">
+    <div class="sec-banner-left">
+      <div class="sec-tagline">03 // TOOLCHAIN MATRIX</div>
+      <h2 class="sec-h2">TECH<br>STACK</h2>
     </div>
-
-    <div class="phil-right">
-      <div class="sec-tag">AXIOMS</div>
-
-      <div class="phil-quote-box">
-        <div class="phil-quote-text">"A GUARDRAIL THAT IS PROBABILISTIC IS MERELY A SUGGESTION."</div>
-        <div class="phil-quote-sub">— WatchLLM Architectural Standard</div>
-      </div>
-
-      <div class="phil-rules-list">
-        <div class="phil-rule-item">
-          <div class="phil-rule-num">01</div>
-          <div class="phil-rule-desc">
-            <strong>Binary Safety Boundaries.</strong> Critical enforcement paths must produce absolute pass/fail outcomes, never statistical likelihoods.
-          </div>
-        </div>
-
-        <div class="phil-rule-item">
-          <div class="phil-rule-num">02</div>
-          <div class="phil-rule-desc">
-            <strong>Static AST Interception.</strong> Policy checks run at the syntax tree level using Tree-sitter before code changes reach disk or git state.
-          </div>
-        </div>
-
-        <div class="phil-rule-item">
-          <div class="phil-rule-num">03</div>
-          <div class="phil-rule-desc">
-            <strong>Auditable Replay Logs.</strong> Every governance decision is recorded in an immutable ledger for historical inspection and replay.
-          </div>
-        </div>
-
-        <div class="phil-rule-item">
-          <div class="phil-rule-num">04</div>
-          <div class="phil-rule-desc">
-            <strong>Local-First Runtime.</strong> Everything compiles to air-gapped WASM targets to run inside local editors and local CI runners seamlessly.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ SECTION 04: TECH STACK ══════════ -->
-<section id="stack">
-  <div class="sec-header">
-    <div class="sec-header-left">
-      <div class="sec-tag">04 // TOOLCHAIN</div>
-      <div class="sec-title">TECH STACK</div>
-    </div>
-    <div class="sec-header-right">
+    <div class="sec-banner-right">
       <p>High-performance technologies utilized across the WatchLLM monorepo, runtime sandboxes, and developer tooling.</p>
     </div>
   </div>
 
-  <div class="stack-grid">
-    <div class="stack-card">
-      <div class="stack-name" style="color:var(--blue)">PYTHON</div>
-      <div class="stack-use">Tree-sitter AST analysis / Core governance engine</div>
-      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:90%; background:var(--blue)"></div></div>
+  <div class="toolchain-grid">
+    <div class="tool-card">
+      <div>
+        <div class="tool-name" style="color:#3B82F6">PYTHON</div>
+        <div class="tool-use" style="margin-top:12px;">Tree-sitter AST analysis / Core governance engine / Syntax evaluation</div>
+      </div>
+      <div class="tool-bar"><div class="tool-bar-fill" style="width:90%; background:#3B82F6"></div></div>
     </div>
 
-    <div class="stack-card">
-      <div class="stack-name" style="color:var(--orange)">RUST</div>
-      <div class="stack-use">Zero-GC WASM policy target / Low-overhead sandbox</div>
-      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:80%; background:var(--orange)"></div></div>
+    <div class="tool-card">
+      <div>
+        <div class="tool-name" style="color:var(--accent)">RUST</div>
+        <div class="tool-use" style="margin-top:12px;">Zero-GC WASM policy target / Low-overhead sandbox / Memory safety</div>
+      </div>
+      <div class="tool-bar"><div class="tool-bar-fill" style="width:80%; background:var(--accent)"></div></div>
     </div>
 
-    <div class="stack-card">
-      <div class="stack-name" style="color:#4DBBFF">TS</div>
-      <div class="stack-use">VS Code extension / Replay UI dashboard</div>
-      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:85%; background:#4DBBFF"></div></div>
+    <div class="tool-card">
+      <div>
+        <div class="tool-name" style="color:var(--cyan)">TS</div>
+        <div class="tool-use" style="margin-top:12px;">VS Code extension / Replay UI dashboard / Developer tooling</div>
+      </div>
+      <div class="tool-bar"><div class="tool-bar-fill" style="width:85%; background:var(--cyan)"></div></div>
     </div>
 
-    <div class="stack-card">
-      <div class="stack-name" style="color:var(--yellow)">WASM</div>
-      <div class="stack-use">Air-gapped policy execution sandbox</div>
-      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:75%; background:var(--yellow)"></div></div>
+    <div class="tool-card">
+      <div>
+        <div class="tool-name" style="color:var(--volt)">WASM</div>
+        <div class="tool-use" style="margin-top:12px;">Air-gapped policy execution sandbox / Cross-platform portability</div>
+      </div>
+      <div class="tool-bar"><div class="tool-bar-fill" style="width:75%; background:var(--volt)"></div></div>
     </div>
 
-    <div class="stack-card">
-      <div class="stack-name">SQLITE</div>
-      <div class="stack-use">Architectural memory ledger (klyd) / State tracking</div>
-      <div class="stack-indicator"><div class="stack-indicator-fill" style="width:70%; background:var(--border-hi)"></div></div>
+    <div class="tool-card">
+      <div>
+        <div class="tool-name" style="color:var(--white)">SQLITE</div>
+        <div class="tool-use" style="margin-top:12px;">Architectural memory ledger (klyd) / Replayable state tracking</div>
+      </div>
+      <div class="tool-bar"><div class="tool-bar-fill" style="width:70%; background:var(--white)"></div></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ SECTION 05: CONTACT ══════════ -->
+<!-- ══════════ SECTION 04: CONTACT POSTER ══════════ -->
 <section id="contact">
-  <div class="connect-container">
-    <div class="connect-left">
-      <div class="sec-tag">05 // CONTACT</div>
-      <div class="connect-title">
+  <div class="contact-grid">
+    <div class="contact-left">
+      <div class="sec-tagline">04 // INITIATE COMMUNICATION</div>
+      <div class="contact-mega">
         BUILD<br>
-        <span class="blue">DETERMINISTIC</span><br>
+        <span class="highlight">DETERMINISTIC</span><br>
         SYSTEMS.
       </div>
-      <p class="connect-body">
-        Building autonomous agent infrastructure, runtime governance, or low-latency interceptors? Interested in static safety research? Reach out.
+      <p class="contact-sub">
+        Building autonomous agent infrastructure, runtime governance, or low-latency interceptors? Interested in static safety research? Let's connect.
       </p>
 
-      <div class="connect-links-stack">
-        <a href="https://github.com/kaadipranav" target="_blank" class="connect-row">
-          <span class="connect-row-platform">GITHUB</span>
-          <span class="connect-row-label">kaadipranav</span>
-          <span class="connect-row-arrow">→</span>
+      <div class="link-suite">
+        <a href="https://github.com/kaadipranav" target="_blank" class="suite-row">
+          <span class="suite-row-platform">GITHUB</span>
+          <span class="suite-row-handle">kaadipranav</span>
+          <span class="suite-row-arrow">→</span>
         </a>
-        <a href="https://twitter.com/kaad_zz" target="_blank" class="connect-row">
-          <span class="connect-row-platform">TWITTER/X</span>
-          <span class="connect-row-label">@kaad_zz</span>
-          <span class="connect-row-arrow">→</span>
+        <a href="https://twitter.com/kaad_zz" target="_blank" class="suite-row">
+          <span class="suite-row-platform">TWITTER/X</span>
+          <span class="suite-row-handle">@kaad_zz</span>
+          <span class="suite-row-arrow">→</span>
         </a>
-        <a href="https://watchllm.dev" target="_blank" class="connect-row">
-          <span class="connect-row-platform">WATCHLLM</span>
-          <span class="connect-row-label">watchllm.dev</span>
-          <span class="connect-row-arrow">→</span>
+        <a href="https://watchllm.dev" target="_blank" class="suite-row">
+          <span class="suite-row-platform">WATCHLLM</span>
+          <span class="suite-row-handle">watchllm.dev</span>
+          <span class="suite-row-arrow">→</span>
         </a>
-        <a href="mailto:kaadz@protonmail.com" class="connect-row">
-          <span class="connect-row-platform">EMAIL</span>
-          <span class="connect-row-label">kaadz@protonmail.com</span>
-          <span class="connect-row-arrow">→</span>
+        <a href="mailto:kaadz@protonmail.com" class="suite-row">
+          <span class="suite-row-platform">EMAIL</span>
+          <span class="suite-row-handle">kaadz@protonmail.com</span>
+          <span class="suite-row-arrow">→</span>
         </a>
       </div>
     </div>
 
-    <div class="connect-right">
-      <div class="connect-poster-top">
-        <div class="connect-poster-title">
+    <div class="contact-right">
+      <div class="contact-poster-art">
+        <div class="art-title">
           INFRASTRUCTURE<br>IS THE<br>PRODUCT.
         </div>
       </div>
 
-      <div class="connect-poster-bottom">
-        <div class="sys-meta-row">
+      <div class="contact-meta-box">
+        <div class="meta-line">
           <span>DEVELOPER</span>
-          <span class="sys-meta-val">KAADIPRANAV</span>
+          <span>KAADIPRANAV</span>
         </div>
-        <div class="sys-meta-row">
+        <div class="meta-line">
           <span>LOCATION</span>
-          <span class="sys-meta-val">INDIA</span>
+          <span>INDIA</span>
         </div>
-        <div class="sys-meta-row">
-          <span>STATUS</span>
-          <span class="sys-meta-val green">● ACTIVE</span>
+        <div class="meta-line">
+          <span>SYSTEM STATUS</span>
+          <span class="green">● ACTIVE DEVELOPMENT</span>
         </div>
-        <div class="sys-meta-row">
-          <span>PRIMARY VENTURE</span>
-          <span class="sys-meta-val">WATCHLLM</span>
+        <div class="meta-line">
+          <span>PRIMARY FOCUS</span>
+          <span>WATCHLLM</span>
         </div>
       </div>
     </div>
@@ -1181,57 +991,38 @@
 
 <!-- ══════════ FOOTER ══════════ -->
 <footer>
-  <div class="footer-col">
+  <div class="footer-box">
     <div>
-      <div class="footer-brand">KAADZ</div>
-      <div class="footer-sub">KAADIPRANAV · FOUNDER & SYSTEMS ENGINEER</div>
+      <div class="footer-logo">KAADZ</div>
+      <div class="footer-sub">KAADIPRANAV // FOUNDER & SYSTEMS ENGINEER</div>
     </div>
-    <div class="footer-copy">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>DETERMINISTIC RUNTIME GOVERNANCE.</div>
+    <div class="footer-copy">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>BUILT WITH DETERMINISTIC RUNTIME GOVERNANCE.</div>
   </div>
 
-  <div class="footer-col">
-    <div class="footer-motto">
-      "DETERMINISTIC<br>RUNTIMES FOR<br><span class="blue">PROBABILISTIC</span><br>AGENTS."
-    </div>
-
-    <div class="footer-links-grid">
-      <div class="footer-link-item">
-        <span>GITHUB</span>
-        <span>github.com/kaadipranav</span>
-      </div>
-      <div class="footer-link-item">
-        <span>TWITTER</span>
-        <span>@kaad_zz</span>
-      </div>
-      <div class="footer-link-item">
-        <span>EMAIL</span>
-        <span>kaadz@protonmail.com</span>
-      </div>
-      <div class="footer-link-item">
-        <span>PROJECT</span>
-        <span>watchllm.dev</span>
-      </div>
+  <div class="footer-box">
+    <div class="footer-quote">
+      "DETERMINISTIC RUNTIMES<br>FOR <span class="accent">PROBABILISTIC</span> AGENTS."
     </div>
   </div>
 </footer>
 
 <script>
-  // Smooth reveal animations
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-        observer.unobserve(entry.target);
+  // Intersection Observer for crisp reveal animations
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        obs.unobserve(e.target);
       }
     });
   }, { threshold: 0.08 });
 
-  document.querySelectorAll('.axiom-card, .project-row, .phil-rule-item, .stack-card').forEach(el => {
+  document.querySelectorAll('.blueprint-panel, .ledger-row, .tool-card, .suite-row').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(16px)';
     el.style.transition = 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-    observer.observe(el);
+    obs.observe(el);
   });
 </script>
 
