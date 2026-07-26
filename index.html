@@ -3,1011 +3,894 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KAADZ // Deterministic Runtime Governance</title>
-  <meta name="description" content="Kaadz — Founder of WatchLLM. Engineering deterministic runtime governance and static AST interceptors for autonomous agentic systems. Agents are probabilistic. Infrastructure cannot be." />
-  <meta property="og:title" content="KAADZ // Deterministic Runtime Governance" />
-  <meta property="og:description" content="Founder of WatchLLM. Runtime governance for autonomous coding agents. Zero ML inference in the enforcement loop." />
+  <title>KAADZ // 05 SYSTEM // DETERMINISTIC RUNTIME</title>
+  <meta name="description" content="Kaadz — Founder of WatchLLM. Engineering deterministic runtime governance and air-gapped AST interceptors for autonomous agentic systems." />
+  <meta property="og:title" content="KAADZ // 05 SYSTEM // DETERMINISTIC RUNTIME" />
+  <meta property="og:description" content="Founder of WatchLLM. Runtime governance for autonomous software agents. Zero ML inference in the enforcement loop." />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,400&family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:        #060608;
-      --panel:     #0e0e12;
-      --panel-hi:  #16161d;
-      --border:    #202028;
-      --border-hi: #363644;
+      --bg:        #050507;
+      --panel:     #0d0d11;
+      --border:    #1c1c24;
+      --border-hi: #2c2c38;
       
-      --text:      #f2f2f6;
-      --text-dim:  #8a8a98;
-      --text-mute: #565664;
+      --text:      #f0f0f5;
+      --text-dim:  #828292;
+      --text-mute: #4e4e5c;
       
-      --accent:    #FF3B00;
-      --accent-lt: #FF5C26;
+      /* Intense statement palette inspired by reference posters */
+      --orange:    #FF3300;
+      --orange-hi: #FF5522;
       --volt:      #DFFF00;
+      --blue:      #1133FF;
       --cyan:      #00F0FF;
-      --blue:      #1242FF;
       --white:     #FFFFFF;
+      --charcoal:  #141419;
       
       --font-mega: 'Anton', 'Bebas Neue', sans-serif;
       --font-disp: 'Bebas Neue', sans-serif;
+      --font-syne: 'Syne', sans-serif;
       --font-body: 'Space Grotesk', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; background: var(--bg); }
     body {
       font-family: var(--font-body);
       background: var(--bg);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-      selection-background: var(--accent);
+      selection-background: var(--orange);
       selection-color: var(--white);
     }
 
-    ::selection { background: var(--accent); color: var(--white); }
+    ::selection { background: var(--orange); color: var(--white); }
 
-    /* ───── BACKGROUND NOISE & GRID ───── */
+    /* ───── ARCHIVAL NOISE TEXTURE ───── */
     body::after {
       content: '';
       position: fixed; inset: 0; z-index: 9999;
-      pointer-events: none; opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--border); }
-    ::-webkit-scrollbar-thumb { background: var(--accent); }
+    ::-webkit-scrollbar-thumb { background: var(--orange); }
 
-    /* ───── GLOBAL UTILITIES & DECORATORS ───── */
-    .grid-line-h { width: 100%; height: 1px; background: var(--border); }
-    .grid-line-v { width: 1px; height: 100%; background: var(--border); }
-    
+    /* ───── DECORATIVE CROSSHAIRS & ARCHITECTURAL TICKS ───── */
     .crosshair {
-      position: absolute; width: 10px; height: 10px; pointer-events: none; z-index: 10;
+      position: absolute; width: 12px; height: 12px; pointer-events: none; z-index: 20;
     }
-    .crosshair::before { content: ''; position: absolute; top: 4px; left: 0; width: 10px; height: 2px; background: var(--accent); }
-    .crosshair::after  { content: ''; position: absolute; top: 0; left: 4px; width: 2px; height: 10px; background: var(--accent); }
+    .crosshair::before { content: ''; position: absolute; top: 5px; left: 0; width: 12px; height: 2px; background: var(--text-dim); }
+    .crosshair::after  { content: ''; position: absolute; top: 0; left: 5px; width: 2px; height: 12px; background: var(--text-dim); }
+    
+    .crosshair.orange::before, .crosshair.orange::after { background: var(--orange); }
+    .crosshair.volt::before, .crosshair.volt::after { background: var(--volt); }
 
-    .tl { top: -5px; left: -5px; }
-    .tr { top: -5px; right: -5px; }
-    .bl { bottom: -5px; left: -5px; }
-    .br { bottom: -5px; right: -5px; }
+    .tl { top: -6px; left: -6px; }
+    .tr { top: -6px; right: -6px; }
+    .bl { bottom: -6px; left: -6px; }
+    .br { bottom: -6px; right: -6px; }
 
-    /* ───── INDUSTRIAL TELEMETRY NAV ───── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-      height: 56px; background: rgba(6, 6, 8, 0.94);
-      backdrop-filter: blur(12px);
+    /* ───── TOP ARCHIVAL CATALOG BANNER (NO STANDARD NAVBAR) ───── */
+    .catalog-header {
+      position: sticky; top: 0; z-index: 500;
+      background: rgba(5, 5, 7, 0.95);
+      backdrop-filter: blur(10px);
       border-bottom: 2px solid var(--border-hi);
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 32px;
-    }
-    .nav-left {
-      display: flex; align-items: center; gap: 20px;
-    }
-    .nav-logo {
-      font-family: var(--font-mega); font-size: 24px; letter-spacing: 0.08em;
-      color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px;
-    }
-    .status-badge {
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      padding: 3px 8px; background: rgba(223, 255, 0, 0.12);
-      color: var(--volt); border: 1px solid var(--volt);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .status-dot {
-      width: 6px; height: 6px; background: var(--volt); border-radius: 50%;
-      box-shadow: 0 0 8px var(--volt); animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
-
-    .nav-right {
-      display: flex; align-items: center; height: 100%;
-    }
-    .nav-link {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--text-dim); text-decoration: none;
-      padding: 0 20px; height: 100%; display: flex; align-items: center;
-      border-left: 1px solid var(--border);
-      transition: all 0.15s;
-    }
-    .nav-link:hover { color: var(--white); background: var(--panel); }
-    .nav-link.cta {
-      background: var(--accent); color: var(--white); border-left: 1px solid var(--accent);
-    }
-    .nav-link.cta:hover { background: var(--accent-lt); }
-
-    /* ───── HERO POSTER (INDUSTRIAL ARCHIVE LAYOUT) ───── */
-    .hero-wrapper {
-      margin-top: 56px;
-      border-bottom: 2px solid var(--border-hi);
-      position: relative;
-    }
-    .hero-top-strip {
       padding: 12px 32px;
-      background: var(--panel);
-      border-bottom: 1px solid var(--border);
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim);
       display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim);
     }
-    .hero-top-strip span { display: flex; align-items: center; gap: 8px; }
-    .hero-top-strip strong { color: var(--text); }
+    .catalog-header span { display: flex; align-items: center; gap: 10px; }
+    .catalog-header strong { color: var(--white); }
+    .catalog-id { background: var(--orange); color: var(--white); padding: 2px 8px; font-weight: 800; }
+    
+    .status-pulse {
+      width: 8px; height: 8px; background: var(--volt);
+      border-radius: 50%; box-shadow: 0 0 10px var(--volt);
+      animation: pulse 1.2s infinite alternate;
+    }
+    @keyframes pulse { from { opacity: 1; transform: scale(1); } to { opacity: 0.3; transform: scale(0.85); } }
 
-    .hero-main {
+    .catalog-nav { display: flex; gap: 24px; }
+    .catalog-nav a {
+      color: var(--text-dim); text-decoration: none; transition: color 0.15s;
+    }
+    .catalog-nav a:hover { color: var(--volt); }
+
+    /* ══════════════════════════════════════════════════════════════
+       CANVAS 01: THE 05 SYSTEM MANIFESTO POSTER
+       Inspired by "05 SYSTEM / CTL-00122" & "BERG WERK"
+    ══════════════════════════════════════════════════════════════ */
+    .poster-canvas-01 {
+      min-height: calc(100vh - 43px);
       display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
-      min-height: calc(100vh - 100px);
+      grid-template-columns: 80px 1.2fr 0.8fr;
+      border-bottom: 3px solid var(--border-hi);
+      position: relative;
+      background: var(--bg);
     }
 
-    /* LEFT HERO BLOCK: MONUMENTAL STATEMENT */
-    .hero-statement-block {
+    /* LEFT VERTICAL TEXT BAR */
+    .vertical-side-strip {
+      border-right: 1px solid var(--border);
+      background: var(--charcoal);
+      display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+      padding: 32px 0;
+      user-select: none;
+    }
+    .vert-text {
+      writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+      font-family: var(--font-mega); font-size: 42px; letter-spacing: 0.08em;
+      color: var(--border-hi); text-transform: uppercase;
+    }
+    .vert-meta {
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-family: var(--font-mono); font-size: 10px; font-weight: 800;
+      color: var(--text-mute); letter-spacing: 0.2em;
+    }
+    .vert-kanji {
+      font-family: var(--font-body); font-size: 14px; font-weight: 700;
+      color: var(--orange); writing-mode: vertical-rl; letter-spacing: 0.3em;
+    }
+
+    /* CENTER MONUMENTAL TYPOGRAPHY BLOCK */
+    .canvas-01-center {
       padding: 64px 56px;
       display: flex; flex-direction: column; justify-content: space-between;
       border-right: 1px solid var(--border);
       position: relative;
-      background: radial-gradient(circle at 0% 0%, rgba(255, 59, 0, 0.05) 0%, transparent 50%);
+      background: radial-gradient(circle at 10% 20%, rgba(17, 51, 255, 0.08) 0%, transparent 60%);
     }
 
-    .hero-tagline-bar {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
-      display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
+    .poster-issue-tag {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.25em; text-transform: uppercase; color: var(--volt);
+      display: flex; align-items: center; gap: 12px;
     }
-    .hero-tagline-bar::before { content: ''; width: 24px; height: 2px; background: var(--accent); }
+    .poster-issue-tag::before { content: '///'; color: var(--orange); }
 
-    /* FULL UNTRUNCATED HEADLINE TYPOGRAPHY */
-    .hero-h1 {
+    /* THE BOLD STATEMENT TYPOGRAPHY */
+    .statement-h1 {
       font-family: var(--font-mega);
-      font-size: clamp(60px, 7.5vw, 115px);
-      font-weight: 400;
-      line-height: 0.9;
+      font-size: clamp(64px, 8vw, 128px);
+      line-height: 0.86;
       letter-spacing: 0.01em;
       text-transform: uppercase;
       color: var(--white);
-      margin-bottom: 40px;
+      margin: 32px 0;
     }
-    .hero-h1 .solid-white { color: var(--white); }
-    .hero-h1 .box-accent {
-      background: var(--accent); color: var(--white);
-      padding: 0 16px; display: inline-block;
-      transform: skewX(-6deg);
-      box-shadow: 6px 6px 0px rgba(255,255,255,0.15);
+    .statement-h1 .block-white { display: block; color: var(--white); }
+    .statement-h1 .block-blue {
+      background: var(--blue); color: var(--white);
+      padding: 2px 20px; display: inline-block;
+      box-shadow: 8px 8px 0px var(--volt);
+      margin: 8px 0;
     }
-    .hero-h1 .outline-text {
+    .statement-h1 .block-stroke {
       color: transparent;
-      -webkit-text-stroke: 2px var(--white);
+      -webkit-text-stroke: 2px var(--text);
+      display: block;
     }
-    .hero-h1 .volt-text { color: var(--volt); }
+    .statement-h1 .block-orange { color: var(--orange); }
 
-    .hero-bio-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
-      padding-top: 36px; border-top: 1px solid var(--border);
+    .canvas-01-bio {
+      display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: flex-end;
+      padding-top: 40px; border-top: 1px solid var(--border);
     }
-    .hero-bio-text {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
-      color: var(--text-dim);
+    .bio-text {
+      font-family: var(--font-mono); font-size: 14px; line-height: 1.7; color: var(--text-dim);
+      max-width: 520px;
     }
-    .hero-bio-text strong { color: var(--white); font-weight: 700; }
+    .bio-text strong { color: var(--white); font-weight: 800; }
+    .bio-text .highlight { color: var(--volt); background: rgba(223, 255, 0, 0.08); padding: 0 4px; }
 
-    .hero-specs-box {
-      background: var(--panel); border: 1px solid var(--border);
-      padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+    .stamp-badge-01 {
+      border: 2px solid var(--volt); color: var(--volt);
+      padding: 12px 18px; font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase; text-align: center;
+      transform: rotate(-4deg); background: rgba(223, 255, 0, 0.05);
+      box-shadow: 4px 4px 0px var(--orange);
     }
-    .spec-line {
-      display: flex; justify-content: space-between;
-      font-family: var(--font-mono); font-size: 11px;
-      padding-bottom: 8px; border-bottom: 1px solid var(--border);
-      color: var(--text-dim);
-    }
-    .spec-line:last-child { border-bottom: none; padding-bottom: 0; }
-    .spec-line strong { color: var(--white); }
-    .spec-line strong.volt { color: var(--volt); }
 
-    /* RIGHT HERO BLOCK: TECHNICAL BLUEPRINT POSTER */
-    .hero-poster-block {
+    /* RIGHT ARCHITECTURAL DATA MATRIX & 05 GRAPHIC */
+    .canvas-01-right {
       background: var(--panel);
       display: flex; flex-direction: column; justify-content: space-between;
       position: relative; overflow: hidden;
     }
-    
-    .poster-id-banner {
-      background: var(--accent); color: var(--white);
-      padding: 16px 36px; font-family: var(--font-mono); font-size: 11px; font-weight: 800;
-      letter-spacing: 0.18em; text-transform: uppercase;
+
+    .giant-05-graphic {
+      padding: 40px;
+      background: var(--blue); color: var(--white);
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 360px;
+    }
+    .giant-05-num {
+      font-family: var(--font-mega); font-size: clamp(140px, 16vw, 240px);
+      line-height: 0.75; font-weight: 400; color: var(--white);
+      letter-spacing: -0.04em; user-select: none;
+    }
+    .giant-05-label {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 800;
+      letter-spacing: 0.25em; color: var(--volt); text-transform: uppercase;
       display: flex; justify-content: space-between; align-items: center;
     }
-
-    .poster-center-art {
-      padding: 48px 36px; flex: 1;
-      display: flex; flex-direction: column; justify-content: center;
-      position: relative;
-    }
-    .poster-watermark {
-      position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
-      font-family: var(--font-mega); font-size: 240px; color: rgba(255,255,255,0.02);
-      line-height: 1; pointer-events: none; user-select: none;
+    .giant-05-bg-text {
+      position: absolute; right: -20px; bottom: -20px;
+      font-family: var(--font-mega); font-size: 300px; color: rgba(0,0,0,0.25);
+      line-height: 0.8; pointer-events: none;
     }
 
-    .poster-main-title {
-      font-family: var(--font-mega); font-size: clamp(64px, 7vw, 100px);
-      line-height: 0.86; color: var(--white); letter-spacing: 0.02em;
+    .matrix-specs-box {
+      padding: 36px 40px; background: var(--bg); flex: 1;
+      display: flex; flex-direction: column; justify-content: space-between;
+      border-top: 2px solid var(--border-hi);
     }
-    .poster-sub-label {
-      font-family: var(--font-disp); font-size: 32px; color: var(--volt);
-      letter-spacing: 0.06em; margin-top: 8px;
-    }
-
-    .poster-data-matrix {
-      margin-top: 36px; border: 1px solid var(--border-hi);
-      background: var(--bg); display: flex; flex-direction: column;
-    }
-    .matrix-row {
+    .spec-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 18px; border-bottom: 1px solid var(--border);
-      font-family: var(--font-mono); font-size: 11px;
-    }
-    .matrix-row:last-child { border-bottom: none; }
-    .matrix-lbl { color: var(--text-mute); letter-spacing: 0.1em; }
-    .matrix-val { color: var(--white); font-weight: 700; }
-    .matrix-val.highlight { color: var(--accent); }
-
-    .poster-bottom-stamp {
-      padding: 24px 36px; background: var(--bg); border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .barcode-graphic {
-      display: flex; gap: 3px; align-items: center; height: 36px;
-    }
-    .barcode-bar { background: var(--text-dim); height: 100%; }
-    .stamp-seal {
-      border: 2px solid var(--text-dim); padding: 6px 12px;
-      font-family: var(--font-mono); font-size: 10px; font-weight: 800;
-      letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase;
-      transform: rotate(-3deg);
-    }
-
-    /* ───── HIGH-DENSITY TICKER ───── */
-    .ticker-wrap {
-      background: var(--volt); color: #000; border-bottom: 2px solid var(--border-hi);
-      overflow: hidden; display: flex;
-    }
-    .ticker-move {
-      display: flex; white-space: nowrap; animation: ticker 25s linear infinite; flex-shrink: 0;
-    }
-    .ticker-item {
-      font-family: var(--font-mega); font-size: 24px; letter-spacing: 0.05em;
-      padding: 10px 36px; display: flex; align-items: center; gap: 16px;
-      border-right: 2px solid rgba(0,0,0,0.2);
-    }
-    .ticker-item .sep { font-size: 18px; }
-    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-    /* ───── SECTION ARCHITECTURE / AXIOMS ───── */
-    section { border-bottom: 2px solid var(--border-hi); position: relative; }
-    .sec-banner {
-      display: grid; grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid var(--border); background: var(--panel);
-    }
-    .sec-banner-left {
-      padding: 48px 56px; border-right: 1px solid var(--border);
-    }
-    .sec-banner-right {
-      padding: 48px 56px; display: flex; align-items: flex-end;
-    }
-    .sec-banner-right p {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: var(--text-dim);
-    }
-
-    .sec-tagline {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
-      margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
-    }
-    .sec-tagline::before { content: ''; width: 20px; height: 2px; background: var(--accent); }
-    
-    .sec-h2 {
-      font-family: var(--font-mega); font-size: clamp(48px, 6vw, 76px);
-      line-height: 0.9; text-transform: uppercase; color: var(--white);
-    }
-
-    /* INDUSTRIAL BLUEPRINT PANELS */
-    .blueprint-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr);
-    }
-    .blueprint-panel {
-      padding: 56px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      background: var(--bg); display: flex; flex-direction: column; justify-content: space-between;
-      min-height: 320px; position: relative; transition: background 0.2s;
-    }
-    .blueprint-panel:nth-child(2n) { border-right: none; }
-    .blueprint-panel:hover { background: var(--panel); }
-
-    .panel-header {
-      display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;
-    }
-    .panel-num {
-      font-family: var(--font-mega); font-size: 56px; line-height: 0.8; color: var(--border-hi);
-      transition: color 0.2s;
-    }
-    .blueprint-panel:hover .panel-num { color: var(--accent); }
-    .panel-code {
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-mute); letter-spacing: 0.15em;
-    }
-
-    .panel-title {
-      font-family: var(--font-disp); font-size: 34px; letter-spacing: 0.04em;
-      color: var(--white); margin-bottom: 16px;
-    }
-    .panel-desc {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: var(--text-dim);
-    }
-    .panel-desc strong { color: var(--white); }
-
-    .panel-footer {
-      margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-mute); letter-spacing: 0.12em;
-    }
-    .panel-footer .status { color: var(--volt); font-weight: 700; }
-
-    /* ───── PROJECTS LEDGER (TABLE) ───── */
-    .ledger-table { width: 100%; border-collapse: collapse; }
-    .ledger-row {
-      display: grid; grid-template-columns: 80px 100px 1.5fr 1.8fr 140px;
-      align-items: center; border-bottom: 1px solid var(--border);
-      transition: all 0.15s; background: var(--bg); text-decoration: none; color: inherit;
-    }
-    .ledger-row:hover {
-      background: var(--accent); color: var(--white); transform: scale(1.002);
-      z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .ledger-cell {
-      padding: 26px 22px; border-right: 1px solid var(--border);
+      padding: 14px 0; border-bottom: 1px dashed var(--border-hi);
       font-family: var(--font-mono); font-size: 12px;
     }
-    .ledger-row:hover .ledger-cell { border-color: rgba(255,255,255,0.2); }
-    .ledger-cell:last-child { border-right: none; }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-lbl { color: var(--text-dim); letter-spacing: 0.08em; }
+    .spec-val { color: var(--white); font-weight: 800; }
+    .spec-val.volt { color: var(--volt); }
+    .spec-val.orange { color: var(--orange); }
 
-    .ledger-idx { font-family: var(--font-disp); font-size: 26px; text-align: center; color: var(--text-dim); }
-    .ledger-row:hover .ledger-idx { color: var(--white); }
-    .ledger-year { color: var(--text-dim); }
-    .ledger-row:hover .ledger-year { color: var(--white); }
-
-    .ledger-name {
-      font-family: var(--font-disp); font-size: 28px; letter-spacing: 0.04em;
-      color: var(--white); display: block;
-    }
-    .ledger-org { font-size: 10px; color: var(--text-mute); margin-top: 2px; }
-    .ledger-row:hover .ledger-org { color: rgba(255,255,255,0.8); }
-
-    .ledger-desc { color: var(--text-dim); line-height: 1.6; }
-    .ledger-row:hover .ledger-desc { color: var(--white); }
-
-    .badge {
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px;
-      display: inline-block; text-align: center; border: 1px solid;
-    }
-    .badge.active   { background: rgba(223, 255, 0, 0.1); color: var(--volt); border-color: var(--volt); }
-    .badge.archived { background: transparent; color: var(--text-mute); border-color: var(--border-hi); }
-    .badge.public   { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border-color: var(--cyan); }
-    .ledger-row:hover .badge { background: var(--white); color: var(--accent); border-color: var(--white); }
-
-    /* ───── TOOLCHAIN MATRIX ───── */
-    .toolchain-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr);
-    }
-    .tool-card {
-      padding: 40px 32px; border-right: 1px solid var(--border); background: var(--bg);
-      display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
-      transition: background 0.15s;
-    }
-    .tool-card:last-child { border-right: none; }
-    .tool-card:hover { background: var(--panel); }
-    
-    .tool-name {
-      font-family: var(--font-mega); font-size: 44px; line-height: 1; letter-spacing: 0.02em;
-    }
-    .tool-use {
-      font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.6;
-    }
-    .tool-bar {
-      height: 4px; background: var(--border); width: 100%; overflow: hidden;
-    }
-    .tool-bar-fill { height: 100%; background: var(--accent); }
-
-    /* ───── CONTACT / POSTER BANNER ───── */
-    .contact-grid {
-      display: grid; grid-template-columns: 1.2fr 0.8fr;
-    }
-    .contact-left {
-      padding: 80px 56px; border-right: 1px solid var(--border); background: var(--bg);
-    }
-    .contact-mega {
-      font-family: var(--font-mega); font-size: clamp(52px, 7vw, 96px);
-      line-height: 0.88; color: var(--white); text-transform: uppercase; margin-bottom: 32px;
-    }
-    .contact-mega .highlight { color: var(--accent); }
-    
-    .contact-sub {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.8; color: var(--text-dim);
-      max-width: 480px; margin-bottom: 48px;
-    }
-    .contact-sub strong { color: var(--white); }
-
-    .link-suite {
-      display: flex; flex-direction: column; border: 1px solid var(--border);
-    }
-    .suite-row {
+    .barcode-container {
+      padding: 24px 40px; background: var(--charcoal); border-top: 1px solid var(--border);
       display: flex; justify-content: space-between; align-items: center;
-      padding: 20px 28px; border-bottom: 1px solid var(--border);
-      text-decoration: none; color: var(--text); background: var(--panel);
-      transition: all 0.15s;
     }
-    .suite-row:last-child { border-bottom: none; }
-    .suite-row:hover { background: var(--white); color: #000; }
-    .suite-row-platform {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
-      color: var(--accent); width: 120px;
+    .svg-barcode { height: 42px; display: flex; gap: 4px; align-items: center; }
+    .bar { background: var(--text); height: 100%; }
+    .qr-box {
+      width: 42px; height: 42px; background: var(--white); padding: 4px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
     }
-    .suite-row:hover .suite-row-platform { color: var(--accent); }
-    .suite-row-handle {
-      font-family: var(--font-body); font-size: 15px; font-weight: 700;
-    }
-    .suite-row-arrow {
-      font-family: var(--font-mono); font-size: 16px; color: var(--text-mute);
-    }
-    .suite-row:hover .suite-row-arrow { color: #000; transform: translateX(6px); }
+    .qr-cell { background: #000; }
+    .qr-cell:nth-child(2n), .qr-cell:nth-child(3n) { background: transparent; }
 
-    .contact-right {
-      background: var(--panel); display: flex; flex-direction: column; justify-content: space-between;
+    /* ══════════════════════════════════════════════════════════════
+       CANVAS 02: INDUSTRIAL HAZARD & SPECIFICATION POSTER
+       Inspired by "012 / 024 / POLYMER / F4" & "CYBER DRIVE"
+    ══════════════════════════════════════════════════════════════ */
+    .poster-canvas-02 {
+      border-bottom: 3px solid var(--border-hi);
+      background: var(--bg);
+      position: relative;
     }
-    .contact-poster-art {
-      padding: 64px 48px; background: var(--volt); color: #000; flex: 1;
-      display: flex; flex-direction: column; justify-content: flex-end;
+    
+    .hazard-header-strip {
+      background: var(--orange); color: var(--white);
+      padding: 20px 40px;
+      font-family: var(--font-mono); font-size: 13px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      border-bottom: 2px solid #000;
     }
-    .art-title {
-      font-family: var(--font-mega); font-size: clamp(40px, 5.5vw, 76px); line-height: 0.88;
-      text-transform: uppercase; letter-spacing: 0.01em;
+    .hazard-title { font-family: var(--font-mega); font-size: 32px; letter-spacing: 0.05em; text-align: center; }
+    
+    .hazard-grid {
+      display: grid; grid-template-columns: 100px 1fr 1fr 1fr;
     }
-    .contact-meta-box {
-      padding: 40px 48px; background: var(--bg); border-top: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 14px;
-    }
-    .meta-line {
-      display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px;
-      padding-bottom: 10px; border-bottom: 1px solid var(--border); color: var(--text-dim);
-    }
-    .meta-line:last-child { border-bottom: none; padding-bottom: 0; }
-    .meta-line strong { color: var(--white); }
-    .meta-line strong.green { color: var(--volt); }
 
-    /* ───── FOOTER ───── */
+    /* VERTICAL 012 / 024 NUMBER STRIP */
+    .hazard-num-strip {
+      background: var(--charcoal); border-right: 2px solid var(--border-hi);
+      display: flex; flex-direction: column; justify-content: space-around; align-items: center;
+      padding: 40px 0;
+    }
+    .hazard-big-num {
+      font-family: var(--font-mega); font-size: 56px; color: var(--orange);
+      writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: 0.05em;
+    }
+    .hazard-sep {
+      width: 40px; height: 2px; background: var(--border-hi); margin: 20px 0;
+    }
+
+    /* SECTOR PANELS */
+    .sector-panel {
+      padding: 56px 48px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; background: var(--bg);
+      transition: all 0.2s;
+    }
+    .sector-panel:last-child { border-right: none; }
+    .sector-panel:hover { background: var(--panel); }
+
+    .sector-top-code {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+      color: var(--text-mute); letter-spacing: 0.15em; margin-bottom: 36px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .sector-top-code .tag { color: var(--orange); }
+
+    .sector-title {
+      font-family: var(--font-mega); font-size: 48px; line-height: 0.9;
+      color: var(--white); margin-bottom: 20px; letter-spacing: 0.02em;
+    }
+    .sector-desc {
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: var(--text-dim);
+      margin-bottom: 40px;
+    }
+    .sector-desc strong { color: var(--white); }
+    .sector-desc .volt-box { color: #000; background: var(--volt); padding: 1px 6px; font-weight: 800; }
+
+    .sector-footer-spec {
+      padding: 16px 20px; background: var(--charcoal); border: 1px solid var(--border-hi);
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .sector-footer-spec .status { color: var(--volt); }
+
+    /* ══════════════════════════════════════════════════════════════
+       CANVAS 03: THE EDITORIAL MONOREPO ARCHIVE
+       Inspired by "HIGH CONQUEROR" & "WHAT IF IT ALL WORKS OUT?"
+    ══════════════════════════════════════════════════════════════ */
+    .poster-canvas-03 {
+      border-bottom: 3px solid var(--border-hi);
+      background: var(--bg);
+    }
+
+    .archive-header {
+      padding: 64px 56px;
+      border-bottom: 2px solid var(--border-hi);
+      display: grid; grid-template-columns: 1fr 1fr; align-items: flex-end;
+      background: var(--panel);
+    }
+    .archive-h2 {
+      font-family: var(--font-mega); font-size: clamp(56px, 7vw, 96px);
+      line-height: 0.85; text-transform: uppercase; color: var(--white);
+    }
+    .archive-h2 .orange { color: var(--orange); }
+    .archive-sub {
+      font-family: var(--font-mono); font-size: 14px; line-height: 1.7; color: var(--text-dim);
+      max-width: 480px; justify-self: end;
+    }
+
+    /* ARCHIVAL LEDGER ROWS */
+    .archive-list { display: flex; flex-direction: column; }
+    
+    .archive-row {
+      display: grid;
+      grid-template-columns: 120px 2.2fr 1.8fr 180px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none; color: inherit;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative; background: var(--bg);
+    }
+    .archive-row:last-child { border-bottom: none; }
+    
+    .archive-row:hover {
+      background: var(--orange); color: var(--white);
+      transform: scale(1.003); z-index: 10;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+    
+    .row-cell {
+      padding: 36px 32px; border-right: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 13px;
+    }
+    .archive-row:hover .row-cell { border-color: rgba(255,255,255,0.25); }
+    .row-cell:last-child { border-right: none; }
+
+    .row-num {
+      font-family: var(--font-mega); font-size: 42px; text-align: center; color: var(--text-mute);
+    }
+    .archive-row:hover .row-num { color: var(--white); }
+
+    .row-title-block { display: flex; flex-direction: column; gap: 6px; }
+    .row-name { font-family: var(--font-mega); font-size: 38px; letter-spacing: 0.04em; color: var(--white); line-height: 1; }
+    .row-org { font-family: var(--font-mono); font-size: 11px; color: var(--volt); font-weight: 800; text-transform: uppercase; }
+    .archive-row:hover .row-org { color: #000; }
+
+    .row-desc { color: var(--text-dim); line-height: 1.6; }
+    .archive-row:hover .row-desc { color: var(--white); }
+
+    .row-badge {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase; padding: 10px 16px;
+      border: 2px solid; text-align: center; display: inline-block; width: 100%;
+    }
+    .badge-active   { color: var(--volt); border-color: var(--volt); background: rgba(223, 255, 0, 0.08); }
+    .badge-archive  { color: var(--text-mute); border-color: var(--border-hi); background: transparent; }
+    .badge-core     { color: var(--cyan); border-color: var(--cyan); background: rgba(0, 240, 255, 0.08); }
+    
+    .archive-row:hover .row-badge { background: var(--white); color: var(--orange); border-color: var(--white); }
+
+    /* ══════════════════════════════════════════════════════════════
+       CANVAS 04: THE TERMINAL INITIATION POSTER
+       Inspired by "LOGIN TO KUNMING", "STUDIO INNATE", & "TAKE IT EASY"
+    ══════════════════════════════════════════════════════════════ */
+    .poster-canvas-04 {
+      display: grid; grid-template-columns: 1.2fr 0.8fr;
+      min-height: 700px; background: var(--bg);
+    }
+    
+    .initiate-left {
+      padding: 80px 64px; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .initiate-tag {
+      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
+      letter-spacing: 0.25em; color: var(--volt); text-transform: uppercase;
+    }
+    .initiate-mega {
+      font-family: var(--font-mega); font-size: clamp(64px, 8vw, 115px);
+      line-height: 0.85; color: var(--white); text-transform: uppercase; margin: 32px 0;
+    }
+    .initiate-mega .orange { color: var(--orange); }
+
+    /* INTERACTIVE TICKETS */
+    .ticket-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; }
+    
+    .ticket-link {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 32px; background: var(--charcoal); border: 1px solid var(--border-hi);
+      text-decoration: none; color: var(--white); font-family: var(--font-mono); font-size: 14px;
+      font-weight: 700; transition: all 0.15s;
+    }
+    .ticket-link:hover {
+      background: var(--volt); color: #000; border-color: var(--volt);
+      transform: translateX(10px); box-shadow: -10px 10px 0px var(--orange);
+    }
+    .ticket-platform { letter-spacing: 0.2em; color: var(--orange); }
+    .ticket-link:hover .ticket-platform { color: #000; }
+    .ticket-arrow { font-size: 20px; }
+
+    .initiate-right {
+      background: var(--orange); color: var(--white);
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 80px 56px; position: relative; overflow: hidden;
+    }
+    .initiate-right-art {
+      font-family: var(--font-mega); font-size: clamp(52px, 6.5vw, 92px);
+      line-height: 0.85; text-transform: uppercase; color: #000;
+    }
+    .initiate-right-art .white { color: var(--white); display: block; }
+    
+    .stamp-seal-final {
+      border: 3px solid #000; padding: 20px; color: #000;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      background: var(--white); transform: rotate(2deg);
+      box-shadow: 8px 8px 0px #000;
+    }
+
+    /* ───── FOOTER ARCHIVE STAMP ───── */
     footer {
-      display: grid; grid-template-columns: 1fr 1fr; background: var(--bg);
+      padding: 40px 64px; background: #000; border-top: 2px solid var(--border-hi);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      color: var(--text-dim); letter-spacing: 0.12em;
     }
-    .footer-box {
-      padding: 64px 56px; display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .footer-box:first-child { border-right: 1px solid var(--border); }
-    .footer-logo {
-      font-family: var(--font-mega); font-size: 72px; line-height: 0.9; color: var(--white);
-    }
-    .footer-sub {
-      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; color: var(--text-dim); margin-top: 8px;
-    }
-    .footer-copy {
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-mute); letter-spacing: 0.1em; margin-top: 40px;
-    }
-    .footer-quote {
-      font-family: var(--font-mega); font-size: clamp(28px, 3.5vw, 46px);
-      line-height: 1; color: var(--white); text-transform: uppercase;
-    }
-    .footer-quote .accent { color: var(--accent); }
+    footer strong { color: var(--white); }
 
-    /* ───── RESPONSIVE ───── */
-    @media (max-width: 1024px) {
-      .hero-main { grid-template-columns: 1fr; }
-      .hero-poster-block { display: none; }
-      .hero-statement-block { padding: 48px 28px; }
-      .sec-banner { grid-template-columns: 1fr; }
-      .sec-banner-left { border-right: none; border-bottom: 1px solid var(--border); }
-      .blueprint-grid { grid-template-columns: 1fr; }
-      .blueprint-panel { border-right: none; }
-      .ledger-row { grid-template-columns: 60px 1fr auto; }
-      .ledger-cell:nth-child(2), .ledger-cell:nth-child(4) { display: none; }
-      .toolchain-grid { grid-template-columns: repeat(2, 1fr); }
-      .tool-card { border-bottom: 1px solid var(--border); }
-      .tool-card:nth-child(2n) { border-right: none; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .contact-left { border-right: none; border-bottom: 1px solid var(--border); }
-      footer { grid-template-columns: 1fr; }
-      .footer-box:first-child { border-right: none; border-bottom: 1px solid var(--border); }
-      nav { padding: 0 16px; }
-      .nav-link { padding: 0 12px; font-size: 10px; }
+    /* ───── RESPONSIVE DESIGN ───── */
+    @media (max-width: 1200px) {
+      .poster-canvas-01 { grid-template-columns: 60px 1fr; }
+      .canvas-01-right { display: none; }
+      .hazard-grid { grid-template-columns: 70px 1fr; }
+      .sector-panel { border-right: none; border-bottom: 1px solid var(--border); }
+      .archive-row { grid-template-columns: 80px 1fr auto; }
+      .row-cell:nth-child(3) { display: none; }
+      .poster-canvas-04 { grid-template-columns: 1fr; }
+      .initiate-right { min-height: 400px; padding: 56px 40px; }
     }
 
-    @media (max-width: 640px) {
-      .hero-h1 { font-size: 50px; }
-      .hero-bio-row { grid-template-columns: 1fr; }
-      .sec-h2 { font-size: 40px; }
-      .ledger-row { grid-template-columns: 1fr auto; }
-      .ledger-cell:first-child { display: none; }
-      .toolchain-grid { grid-template-columns: 1fr; }
-      .tool-card { border-right: none; }
+    @media (max-width: 768px) {
+      .catalog-header { flex-direction: column; gap: 10px; padding: 16px; text-align: center; }
+      .catalog-nav { display: none; }
+      .poster-canvas-01 { grid-template-columns: 1fr; }
+      .vertical-side-strip { display: none; }
+      .canvas-01-center { padding: 40px 24px; }
+      .statement-h1 { font-size: 56px; }
+      .canvas-01-bio { grid-template-columns: 1fr; gap: 24px; }
+      .hazard-header-strip { grid-template-columns: 1fr; gap: 10px; text-align: center; }
+      .hazard-grid { grid-template-columns: 1fr; }
+      .hazard-num-strip { display: none; }
+      .sector-panel { padding: 40px 24px; }
+      .archive-header { grid-template-columns: 1fr; gap: 20px; padding: 40px 24px; }
+      .archive-row { grid-template-columns: 1fr auto; }
+      .row-cell:first-child { display: none; }
+      .initiate-left { padding: 40px 24px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 24px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════ TOP TELEMETRY NAV ══════════ -->
-<nav>
-  <div class="nav-left">
-    <a href="#" class="nav-logo">KAADZ</a>
-    <div class="status-badge">
-      <div class="status-dot"></div>
-      SYS_ONLINE // ENFORCEMENT ACTIVE
-    </div>
-  </div>
-  <div class="nav-right">
-    <a href="#axioms"    class="nav-link">AXIOMS</a>
-    <a href="#projects"  class="nav-link">LEDGER</a>
-    <a href="#toolchain" class="nav-link">STACK</a>
-    <a href="#contact"   class="nav-link cta">INITIATE →</a>
-  </div>
-</nav>
-
-<!-- ══════════ HERO POSTER SECTION ══════════ -->
-<header class="hero-wrapper">
-  <div class="hero-top-strip">
-    <span>KAADIPRANAV // WATCHLLM MONOREPO</span>
-    <span>RUNTIME SPECIFICATION: <strong>DETERMINISTIC KERNEL</strong></span>
-    <span>LOC: <strong>INDIA</strong> // VOL. 2026</span>
-  </div>
-
-  <div class="hero-main">
-    <!-- LEFT MONUMENTAL STATEMENT -->
-    <div class="hero-statement-block">
-      <div class="crosshair tl"></div><div class="crosshair tr"></div>
-      <div class="crosshair bl"></div><div class="crosshair br"></div>
-
-      <div>
-        <div class="hero-tagline-bar">CRITICAL ARCHITECTURAL AXIOM</div>
-        
-        <!-- COMPLETE, UNTRUNCATED, HIGH-IMPACT TYPOGRAPHY -->
-        <h1 class="hero-h1">
-          <span class="solid-white">AGENTS ARE</span><br>
-          <span class="box-accent">PROBABILISTIC.</span><br>
-          <span class="outline-text">INFRASTRUCTURE</span><br>
-          <span class="volt-text">CANNOT BE.</span>
-        </h1>
-
-        <div class="hero-bio-row">
-          <p class="hero-bio-text">
-            <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance, static AST interceptors, and air-gapped security paths for autonomous coding agents. Zero ML inference in the enforcement loop.
-          </p>
-
-          <div class="hero-specs-box">
-            <div class="spec-line"><span>REPOSITORIES</span> <strong>15 ACTIVE</strong></div>
-            <div class="spec-line"><span>ORGANIZATIONS</span> <strong>03 ORGS</strong></div>
-            <div class="spec-line"><span>CORE MODULES</span> <strong>12 UNITS</strong></div>
-            <div class="spec-line"><span>CLOUD DEP</span> <strong class="volt">0% OFFLINE</strong></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT TECHNICAL BLUEPRINT POSTER -->
-    <div class="hero-poster-block">
-      <div class="poster-id-banner">
-        <span>SYSTEM ARCHITECTURE</span>
-        <span>SPEC // 001</span>
-      </div>
-
-      <div class="poster-center-art">
-        <div class="poster-watermark">W</div>
-        <div class="poster-main-title">WATCH<br>LLM</div>
-        <div class="poster-sub-label">RUNTIME GOVERNANCE STACK</div>
-
-        <div class="poster-data-matrix">
-          <div class="matrix-row">
-            <span class="matrix-lbl">01 // PARSER ENGINE</span>
-            <span class="matrix-val">TREE-SITTER STATIC AST</span>
-          </div>
-          <div class="matrix-row">
-            <span class="matrix-lbl">02 // POLICY SANDBOX</span>
-            <span class="matrix-val">ZERO-GC WASM RUNTIME</span>
-          </div>
-          <div class="matrix-row">
-            <span class="matrix-lbl">03 // STATE LEDGER</span>
-            <span class="matrix-val">SQLITE MEMORY HARNESS</span>
-          </div>
-          <div class="matrix-row">
-            <span class="matrix-lbl">04 // EXECUTION LATENCY</span>
-            <span class="matrix-val highlight">&lt;1MS SUB-ROUTINE</span>
-          </div>
-          <div class="matrix-row">
-            <span class="matrix-lbl">05 // INFERENCE DEP</span>
-            <span class="matrix-val" style="color:var(--volt)">ZERO ML ENFORCEMENT</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="poster-bottom-stamp">
-        <div class="barcode-graphic">
-          <div class="barcode-bar" style="width:3px"></div><div class="barcode-bar" style="width:1px"></div>
-          <div class="barcode-bar" style="width:4px"></div><div class="barcode-bar" style="width:2px"></div>
-          <div class="barcode-bar" style="width:6px"></div><div class="barcode-bar" style="width:1px"></div>
-          <div class="barcode-bar" style="width:3px"></div><div class="barcode-bar" style="width:5px"></div>
-          <div class="barcode-bar" style="width:2px"></div><div class="barcode-bar" style="width:1px"></div>
-          <div class="barcode-bar" style="width:4px"></div><div class="barcode-bar" style="width:2px"></div>
-          <div class="barcode-bar" style="width:3px"></div><div class="barcode-bar" style="width:1px"></div>
-        </div>
-        <div class="stamp-seal">[ VERIFIED DETERMINISTIC ]</div>
-      </div>
-    </div>
-  </div>
+<!-- ══════════ TOP ARCHIVAL CATALOG BANNER (NO STANDARD NAVBAR) ══════════ -->
+<header class="catalog-header">
+  <span>
+    <span class="catalog-id">SYS_05 // WLLM</span>
+    <strong>KAADIPRANAV MONOREPO ARCHIVE</strong>
+  </span>
+  <span>
+    <div class="status-pulse"></div>
+    <span>ENFORCEMENT: <strong>DETERMINISTIC // ACTIVE</strong></span>
+  </span>
+  <nav class="catalog-nav">
+    <a href="#canvas-01">01 / MANIFESTO</a>
+    <a href="#canvas-02">02 / ARCHITECTURE</a>
+    <a href="#canvas-03">03 / ARCHIVE</a>
+    <a href="#canvas-04">04 / INITIATE</a>
+  </nav>
 </header>
 
-<!-- ══════════ HIGH-DENSITY TICKER ══════════ -->
-<div class="ticker-wrap">
-  <div class="ticker-move">
-    <div class="ticker-item">AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT <span class="sep">///</span></div>
-    <div class="ticker-item">DETERMINISTIC RUNTIME GOVERNANCE <span class="sep">///</span></div>
-    <div class="ticker-item">ZERO-GC WASM POLICY ENFORCEMENT <span class="sep">///</span></div>
-    <div class="ticker-item">TREE-SITTER AST INTERCEPT <span class="sep">///</span></div>
-    <div class="ticker-item">AUDITABLE DECISION LEDGERS <span class="sep">///</span></div>
-    <div class="ticker-item">AGENTS ARE PROBABILISTIC — INFRASTRUCTURE IS NOT <span class="sep">///</span></div>
-    <div class="ticker-item">DETERMINISTIC RUNTIME GOVERNANCE <span class="sep">///</span></div>
-    <div class="ticker-item">ZERO-GC WASM POLICY ENFORCEMENT <span class="sep">///</span></div>
-    <div class="ticker-item">TREE-SITTER AST INTERCEPT <span class="sep">///</span></div>
-    <div class="ticker-item">AUDITABLE DECISION LEDGERS <span class="sep">///</span></div>
-  </div>
-</div>
-
-<!-- ══════════ SECTION 01: ARCHITECTURAL AXIOMS ══════════ -->
-<section id="axioms">
-  <div class="sec-banner">
-    <div class="sec-banner-left">
-      <div class="sec-tagline">01 // CORE SPECIFICATIONS</div>
-      <h2 class="sec-h2">GOVERNANCE<br>PRIMITIVES</h2>
-    </div>
-    <div class="sec-banner-right">
-      <p>Probabilistic guardrails are merely suggestions. The WatchLLM governance architecture enforces structural rules at the AST compiler boundary before code mutations are committed.</p>
-    </div>
+<!-- ══════════════════════════════════════════════════════════════
+   CANVAS 01: THE 05 SYSTEM MANIFESTO POSTER
+   Inspired by "05 SYSTEM", "BERG WERK", & "WHAT IF IT ALL WORKS OUT?"
+══════════════════════════════════════════════════════════════ -->
+<section id="canvas-01" class="poster-canvas-01">
+  <!-- LEFT VERTICAL TEXT BAR -->
+  <div class="vertical-side-strip">
+    <span class="vert-text">SYSTEM 05 // SPEC</span>
+    <span class="vert-kanji">決定論的ランタイム</span>
+    <span class="vert-meta">[VOL. 2026 // CHENNAI]</span>
   </div>
 
-  <div class="blueprint-grid">
-    <div class="blueprint-panel">
-      <div class="crosshair tl"></div>
+  <!-- CENTER MONUMENTAL TYPOGRAPHY BLOCK -->
+  <div class="canvas-01-center">
+    <div class="crosshair tl"></div><div class="crosshair tr"></div>
+    <div class="crosshair bl"></div><div class="crosshair br"></div>
+
+    <div>
+      <div class="poster-issue-tag">EXHIBITION: DETERMINISTIC RUNTIME GOVERNANCE</div>
+      
+      <!-- UNCOMPROMISED, HIGH-IMPACT EXPERIMENTAL POSTER TYPOGRAPHY -->
+      <h1 class="statement-h1">
+        <span class="block-white">AGENTS ARE</span>
+        <span class="block-blue">PROBABILISTIC.</span>
+        <span class="block-stroke">INFRASTRUCTURE</span>
+        <span class="block-orange">CANNOT BE.</span>
+      </h1>
+    </div>
+
+    <div class="canvas-01-bio">
+      <p class="bio-text">
+        <strong>Founder of WatchLLM.</strong> We engineer deterministic runtime governance, static AST interceptors, and air-gapped security paths for autonomous coding agents. <span class="highlight">Zero ML inference in the enforcement loop.</span> Structural rules are verified at the syntax boundary before code mutations are committed to disk.
+      </p>
+      
+      <div class="stamp-badge-01">
+        [ ZERO INFERENCE ]<br>
+        <strong>VERIFIED CORE</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT ARCHITECTURAL DATA MATRIX & 05 GRAPHIC -->
+  <div class="canvas-01-right">
+    <div class="giant-05-graphic">
+      <div class="giant-05-bg-text">05</div>
+      <div class="giant-05-label">
+        <span>CATALOG REF // 05</span>
+        <span>WATCHLLM</span>
+      </div>
+      <div class="giant-05-num">05</div>
+      <div class="giant-05-label" style="color:#fff; font-size:11px;">
+        <span>AST INTERCEPT</span>
+        <span>WASM SANDBOX</span>
+      </div>
+    </div>
+
+    <div class="matrix-specs-box">
+      <div class="spec-row">
+        <span class="spec-lbl">01 / PARSER ENGINE</span>
+        <span class="spec-val">TREE-SITTER STATIC AST</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-lbl">02 / POLICY TARGET</span>
+        <span class="spec-val volt">ZERO-GC WASM RUNTIME</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-lbl">03 / STATE LEDGER</span>
+        <span class="spec-val">SQLITE HARNESS (KLYD)</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-lbl">04 / EXEC LATENCY</span>
+        <span class="spec-val orange">&lt;1MS SUB-ROUTINE</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-lbl">05 / NETWORK DEP</span>
+        <span class="spec-val volt">AIR-GAPPED // 100% OFFLINE</span>
+      </div>
+    </div>
+
+    <div class="barcode-container">
+      <div class="svg-barcode">
+        <div class="bar" style="width:3px"></div><div class="bar" style="width:1px"></div>
+        <div class="bar" style="width:5px"></div><div class="bar" style="width:2px"></div>
+        <div class="bar" style="width:8px"></div><div class="bar" style="width:1px"></div>
+        <div class="bar" style="width:3px"></div><div class="bar" style="width:6px"></div>
+        <div class="bar" style="width:2px"></div><div class="bar" style="width:1px"></div>
+        <div class="bar" style="width:4px"></div><div class="bar" style="width:2px"></div>
+        <div class="bar" style="width:5px"></div><div class="bar" style="width:1px"></div>
+        <div class="bar" style="width:3px"></div><div class="bar" style="width:4px"></div>
+      </div>
+      <div class="qr-box">
+        <div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div>
+        <div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div>
+        <div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div>
+        <div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+   CANVAS 02: INDUSTRIAL HAZARD & SPECIFICATION POSTER
+   Inspired by "012 / 024 / POLYMER / F4" & "CYBER DRIVE"
+══════════════════════════════════════════════════════════════ -->
+<section id="canvas-02" class="poster-canvas-02">
+  <div class="hazard-header-strip">
+    <span>/// HAZARD & GOVERNANCE SPECIFICATION ///</span>
+    <span class="hazard-title">SECTOR 012 // WLLM ARCHITECTURAL PRIMITIVES</span>
+    <span style="text-align:right;">[ENFORCEMENT MANDATE: ZERO MINIMALISM]</span>
+  </div>
+
+  <div class="hazard-grid">
+    <!-- VERTICAL NUMBER STRIP -->
+    <div class="hazard-num-strip">
+      <span class="hazard-big-num">012</span>
+      <div class="hazard-sep"></div>
+      <span class="hazard-big-num" style="color:var(--text-mute);">024</span>
+    </div>
+
+    <!-- SECTOR 01 -->
+    <div class="sector-panel">
+      <div class="crosshair tl orange"></div>
       <div>
-        <div class="panel-header">
-          <span class="panel-num">01</span>
-          <span class="panel-code">[SPEC_REF: AST_001]</span>
+        <div class="sector-top-code">
+          <span>[SECTOR 01 // KERNEL]</span>
+          <span class="tag">SPEC_REF: AST_001</span>
         </div>
-        <h3 class="panel-title">DETERMINISTIC ENFORCEMENT</h3>
-        <p class="panel-desc">
-          Guardrails operate without LLM inference overhead in the execution critical path. Identical syntax inputs produce strictly identical policy evaluations every time without exception.
+        <h2 class="sector-title">STATIC AST<br>INTERCEPTION</h2>
+        <p class="sector-desc">
+          Probabilistic guardrails are merely suggestions. WatchLLM parses agent-generated code into strict Tree-sitter Abstract Syntax Trees (AST). <span class="volt-box">Zero ML hallucination</span> in the verification loop. Identical syntax inputs yield strictly identical policy evaluations every single time.
         </p>
       </div>
-      <div class="panel-footer">
+      <div class="sector-footer-spec">
         <span>INFERENCE: <strong>DISABLED</strong></span>
         <span class="status">● GUARANTEED</span>
       </div>
     </div>
 
-    <div class="blueprint-panel">
-      <div class="crosshair tr"></div>
+    <!-- SECTOR 02 -->
+    <div class="sector-panel">
+      <div class="crosshair tr orange"></div>
       <div>
-        <div class="panel-header">
-          <span class="panel-num">02</span>
-          <span class="panel-code">[SPEC_REF: WLLM_012]</span>
+        <div class="sector-top-code">
+          <span>[SECTOR 02 // SANDBOX]</span>
+          <span class="tag">SPEC_REF: WASM_008</span>
         </div>
-        <h3 class="panel-title">WATCHLLM MONOREPO</h3>
-        <p class="panel-desc">
-          Composed of 12 modular units including Tree-sitter AST interceptors, zero-GC WASM policy runners, decision schema validators, and execution replay telemetry.
+        <h2 class="sector-title">ZERO-GC WASM<br>RUNTIME</h2>
+        <p class="sector-desc">
+          Enforcement policies compile down to ultra-lightweight, zero-garbage-collection WebAssembly sandboxes written in Rust. Executing with <span class="volt-box">&lt;1ms sub-routine latency</span> directly inside developer IDEs, local terminal harnesses, and automated CI/CD runners.
         </p>
       </div>
-      <div class="panel-footer">
-        <span>STACK: <strong>PY / RS / TS / WASM</strong></span>
-        <span class="status">● ACTIVE CORE</span>
-      </div>
-    </div>
-
-    <div class="blueprint-panel">
-      <div class="crosshair bl"></div>
-      <div>
-        <div class="panel-header">
-          <span class="panel-num">03</span>
-          <span class="panel-code">[SPEC_REF: AIR_GAP]</span>
-        </div>
-        <h3 class="panel-title">AIR-GAPPED INTERCEPTION</h3>
-        <p class="panel-desc">
-          Runs entirely offline without cloud network roundtrips. Integrates directly into developer local environments, IDE extensions, and automated CI/CD runners.
-        </div>
-      </div>
-      <div class="panel-footer">
+      <div class="sector-footer-spec">
         <span>NETWORK: <strong>AIR-GAPPED</strong></span>
         <span class="status">● LOCAL FIRST</span>
       </div>
     </div>
 
-    <div class="blueprint-panel">
-      <div class="crosshair br"></div>
+    <!-- SECTOR 03 -->
+    <div class="sector-panel">
       <div>
-        <div class="panel-header">
-          <span class="panel-num">04</span>
-          <span class="panel-code">[SPEC_REF: KLYD_SQL]</span>
+        <div class="sector-top-code">
+          <span>[SECTOR 03 // MEMORY]</span>
+          <span class="tag">SPEC_REF: KLYD_SQL</span>
         </div>
-        <h3 class="panel-title">ARCHITECTURAL MEMORY</h3>
-        <p class="panel-desc">
-          SQLite-backed decision harness (klyd) maintaining structured, replayable state records and decision ledgers for autonomous agentic operations.
-        </div>
+        <h2 class="sector-title">IMMUTABLE<br>LEDGERS</h2>
+        <p class="sector-desc">
+          Powered by Klyd Studio's SQLite memory harness. Every agent decision, policy evaluation, and syntax intercept is recorded into an auditable, structured relational ledger. Eliminates ephemeral context loss and enables exact execution replay.
+        </p>
       </div>
-      <div class="panel-footer">
-        <span>PERSISTENCE: <strong>SQLITE LEDGER</strong></span>
+      <div class="sector-footer-spec">
+        <span>STATE: <strong>SQLITE LEDGER</strong></span>
         <span class="status">● AUDITABLE</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ SECTION 02: REPOSITORY LEDGER ══════════ -->
-<section id="projects">
-  <div class="sec-banner">
-    <div class="sec-banner-left">
-      <div class="sec-tagline">02 // INVENTORY ARCHIVE</div>
-      <h2 class="sec-h2">PROJECT<br>LEDGER</h2>
-    </div>
-    <div class="sec-banner-right">
-      <p>Selected systems software and open-source infrastructure projects developed across WatchLLM, Klyd Studio, and Codify organizations.</p>
-    </div>
+<!-- ══════════════════════════════════════════════════════════════
+   CANVAS 03: THE EDITORIAL MONOREPO ARCHIVE
+   Inspired by "HIGH CONQUEROR" & "WHAT IF IT ALL WORKS OUT?"
+══════════════════════════════════════════════════════════════ -->
+<section id="canvas-03" class="poster-canvas-03">
+  <div class="archive-header">
+    <h2 class="archive-h2">
+      SELECTED WORKS //<br>
+      <span class="orange">MONOREPO ARCHIVE</span>
+    </h2>
+    <p class="archive-sub">
+      An archival index of high-concurrency systems software, runtime governance harnesses, and open-source infrastructure engineered across WatchLLM, Klyd Studio, and Codify.
+    </p>
   </div>
 
-  <table class="ledger-table" role="list">
-    <tbody>
-      <a href="https://watchllm.dev" target="_blank" class="ledger-row" role="listitem">
-        <div class="ledger-cell ledger-idx">01</div>
-        <div class="ledger-cell ledger-year">2026</div>
-        <div class="ledger-cell">
-          <span class="ledger-name">WatchLLM</span>
-          <span class="ledger-org">watchllm · Core Monorepo</span>
+  <div class="archive-list" role="list">
+    <!-- ROW 01 -->
+    <a href="https://watchllm.dev" target="_blank" class="archive-row" role="listitem">
+      <div class="row-cell row-num">01</div>
+      <div class="row-cell">
+        <div class="row-title-block">
+          <span class="row-name">WATCHLLM</span>
+          <span class="row-org">watchllm · Core Monorepo · 2026</span>
         </div>
-        <div class="ledger-cell ledger-desc">
-          Runtime governance framework for autonomous agents.<br>AST Interceptor · Policy WASM · Replay Telemetry
-        </div>
-        <div class="ledger-cell"><span class="badge active">ACTIVE</span></div>
-      </a>
-
-      <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="ledger-row" role="listitem">
-        <div class="ledger-cell ledger-idx">02</div>
-        <div class="ledger-cell ledger-year">2026</div>
-        <div class="ledger-cell">
-          <span class="ledger-name">klyd-harness</span>
-          <span class="ledger-org">klyd-studio · Open Source</span>
-        </div>
-        <div class="ledger-cell ledger-desc">
-          Architectural memory layer & SQLite decision ledger for agentic context tracking and auditability.
-        </div>
-        <div class="ledger-cell"><span class="badge active">ACTIVE</span></div>
-      </a>
-
-      <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="ledger-row" role="listitem">
-        <div class="ledger-cell ledger-idx">03</div>
-        <div class="ledger-cell ledger-year">2026</div>
-        <div class="ledger-cell">
-          <span class="ledger-name">Codify</span>
-          <span class="ledger-org">Codify-PSBB · Open Source</span>
-        </div>
-        <div class="ledger-cell ledger-desc">
-          Competitive programming & code evaluation engine platform core.
-        </div>
-        <div class="ledger-cell"><span class="badge active">ACTIVE</span></div>
-      </a>
-
-      <div class="ledger-row" role="listitem">
-        <div class="ledger-cell ledger-idx">04</div>
-        <div class="ledger-cell ledger-year">2025</div>
-        <div class="ledger-cell">
-          <span class="ledger-name">ScriptBoost</span>
-          <span class="ledger-org">kaadipranav · Public Archive</span>
-        </div>
-        <div class="ledger-cell ledger-desc">
-          Automated scripting and system execution utilities.
-        </div>
-        <div class="ledger-cell"><span class="badge archived">ARCHIVED</span></div>
       </div>
-
-      <div class="ledger-row" role="listitem">
-        <div class="ledger-cell ledger-idx">05</div>
-        <div class="ledger-cell ledger-year">2025</div>
-        <div class="ledger-cell">
-          <span class="ledger-name">Ghostwriter</span>
-          <span class="ledger-org">kaadipranav · Public Archive</span>
-        </div>
-        <div class="ledger-cell ledger-desc">
-          Content parsing and text processing utility prototype.
-        </div>
-        <div class="ledger-cell"><span class="badge archived">ARCHIVED</span></div>
+      <div class="row-cell row-desc">
+        Deterministic runtime governance framework for autonomous software agents.<br>
+        <strong>Tree-sitter AST Interceptor · Zero-GC WASM Sandbox · Replay Telemetry</strong>
       </div>
-
-      <div class="ledger-row" role="listitem">
-        <div class="ledger-cell ledger-idx">06</div>
-        <div class="ledger-cell ledger-year">2025</div>
-        <div class="ledger-cell">
-          <span class="ledger-name">EduVerse</span>
-          <span class="ledger-org">kaadipranav · Public Archive</span>
-        </div>
-        <div class="ledger-cell ledger-desc">
-          Educational software platform architecture prototype.
-        </div>
-        <div class="ledger-cell"><span class="badge archived">ARCHIVED</span></div>
+      <div class="row-cell">
+        <span class="row-badge badge-core">[ ACTIVE // CORE ]</span>
       </div>
+    </a>
 
-      <a href="https://github.com/kaadipranav" target="_blank" class="ledger-row" role="listitem">
-        <div class="ledger-cell ledger-idx">07</div>
-        <div class="ledger-cell ledger-year">2025</div>
-        <div class="ledger-cell">
-          <span class="ledger-name">BOILERPLATE</span>
-          <span class="ledger-org">kaadipranav · Template</span>
+    <!-- ROW 02 -->
+    <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="archive-row" role="listitem">
+      <div class="row-cell row-num">02</div>
+      <div class="row-cell">
+        <div class="row-title-block">
+          <span class="row-name">KLYD-HARNESS</span>
+          <span class="row-org">klyd-studio · Open Source · 2026</span>
         </div>
-        <div class="ledger-cell ledger-desc">
-          Opinionated starter template for modular systems software.
-        </div>
-        <div class="ledger-cell"><span class="badge public">TEMPLATE</span></div>
-      </a>
-    </tbody>
-  </table>
-</section>
-
-<!-- ══════════ SECTION 03: TOOLCHAIN MATRIX ══════════ -->
-<section id="toolchain">
-  <div class="sec-banner">
-    <div class="sec-banner-left">
-      <div class="sec-tagline">03 // TOOLCHAIN MATRIX</div>
-      <h2 class="sec-h2">TECH<br>STACK</h2>
-    </div>
-    <div class="sec-banner-right">
-      <p>High-performance technologies utilized across the WatchLLM monorepo, runtime sandboxes, and developer tooling.</p>
-    </div>
-  </div>
-
-  <div class="toolchain-grid">
-    <div class="tool-card">
-      <div>
-        <div class="tool-name" style="color:#3B82F6">PYTHON</div>
-        <div class="tool-use" style="margin-top:12px;">Tree-sitter AST analysis / Core governance engine / Syntax evaluation</div>
       </div>
-      <div class="tool-bar"><div class="tool-bar-fill" style="width:90%; background:#3B82F6"></div></div>
+      <div class="row-cell row-desc">
+        Architectural memory layer and SQLite decision ledger for agentic context tracking.<br>
+        <strong>Relational State Store · Replayable Execution Records · Audit Trail</strong>
+      </div>
+      <div class="row-cell">
+        <span class="row-badge badge-active">[ ACTIVE // OPEN ]</span>
+      </div>
+    </a>
+
+    <!-- ROW 03 -->
+    <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="archive-row" role="listitem">
+      <div class="row-cell row-num">03</div>
+      <div class="row-cell">
+        <div class="row-title-block">
+          <span class="row-name">CODIFY ENGINE</span>
+          <span class="row-org">Codify-PSBB · Open Source · 2026</span>
+        </div>
+      </div>
+      <div class="row-cell row-desc">
+        High-concurrency code evaluation and competitive programming platform core.<br>
+        <strong>Sandboxed Execution · Automated Test Harness · Scalable Ingestion</strong>
+      </div>
+      <div class="row-cell">
+        <span class="row-badge badge-active">[ ACTIVE // CORE ]</span>
+      </div>
+    </a>
+
+    <!-- ROW 04 -->
+    <div class="archive-row" role="listitem">
+      <div class="row-cell row-num">04</div>
+      <div class="row-cell">
+        <div class="row-title-block">
+          <span class="row-name">SCRIPTBOOST & GHOSTWRITER</span>
+          <span class="row-org">kaadipranav · Public Archive · 2025</span>
+        </div>
+      </div>
+      <div class="row-cell row-desc">
+        Automated scripting utilities and high-speed text parsing engines.<br>
+        <strong>System Automation · Token Stream Ingestion · Foundational Prototypes</strong>
+      </div>
+      <div class="row-cell">
+        <span class="row-badge badge-archive">[ ARCHIVED // 2025 ]</span>
+      </div>
     </div>
 
-    <div class="tool-card">
-      <div>
-        <div class="tool-name" style="color:var(--accent)">RUST</div>
-        <div class="tool-use" style="margin-top:12px;">Zero-GC WASM policy target / Low-overhead sandbox / Memory safety</div>
+    <!-- ROW 05 -->
+    <a href="https://github.com/kaadipranav" target="_blank" class="archive-row" role="listitem">
+      <div class="row-cell row-num">05</div>
+      <div class="row-cell">
+        <div class="row-title-block">
+          <span class="row-name">SYSTEMS BOILERPLATE</span>
+          <span class="row-org">kaadipranav · Template · 2025</span>
+        </div>
       </div>
-      <div class="tool-bar"><div class="tool-bar-fill" style="width:80%; background:var(--accent)"></div></div>
-    </div>
-
-    <div class="tool-card">
-      <div>
-        <div class="tool-name" style="color:var(--cyan)">TS</div>
-        <div class="tool-use" style="margin-top:12px;">VS Code extension / Replay UI dashboard / Developer tooling</div>
+      <div class="row-cell row-desc">
+        Opinionated starter architecture and tooling harness for modular systems software.<br>
+        <strong>Clean Architecture · Strict Linting · Automated CI/CD Pipelines</strong>
       </div>
-      <div class="tool-bar"><div class="tool-bar-fill" style="width:85%; background:var(--cyan)"></div></div>
-    </div>
-
-    <div class="tool-card">
-      <div>
-        <div class="tool-name" style="color:var(--volt)">WASM</div>
-        <div class="tool-use" style="margin-top:12px;">Air-gapped policy execution sandbox / Cross-platform portability</div>
+      <div class="row-cell">
+        <span class="row-badge badge-active">[ TEMPLATE // OPEN ]</span>
       </div>
-      <div class="tool-bar"><div class="tool-bar-fill" style="width:75%; background:var(--volt)"></div></div>
-    </div>
-
-    <div class="tool-card">
-      <div>
-        <div class="tool-name" style="color:var(--white)">SQLITE</div>
-        <div class="tool-use" style="margin-top:12px;">Architectural memory ledger (klyd) / Replayable state tracking</div>
-      </div>
-      <div class="tool-bar"><div class="tool-bar-fill" style="width:70%; background:var(--white)"></div></div>
-    </div>
+    </a>
   </div>
 </section>
 
-<!-- ══════════ SECTION 04: CONTACT POSTER ══════════ -->
-<section id="contact">
-  <div class="contact-grid">
-    <div class="contact-left">
-      <div class="sec-tagline">04 // INITIATE COMMUNICATION</div>
-      <div class="contact-mega">
-        BUILD<br>
-        <span class="highlight">DETERMINISTIC</span><br>
-        SYSTEMS.
-      </div>
-      <p class="contact-sub">
-        Building autonomous agent infrastructure, runtime governance, or low-latency interceptors? Interested in static safety research? Let's connect.
-      </p>
-
-      <div class="link-suite">
-        <a href="https://github.com/kaadipranav" target="_blank" class="suite-row">
-          <span class="suite-row-platform">GITHUB</span>
-          <span class="suite-row-handle">kaadipranav</span>
-          <span class="suite-row-arrow">→</span>
-        </a>
-        <a href="https://twitter.com/kaad_zz" target="_blank" class="suite-row">
-          <span class="suite-row-platform">TWITTER/X</span>
-          <span class="suite-row-handle">@kaad_zz</span>
-          <span class="suite-row-arrow">→</span>
-        </a>
-        <a href="https://watchllm.dev" target="_blank" class="suite-row">
-          <span class="suite-row-platform">WATCHLLM</span>
-          <span class="suite-row-handle">watchllm.dev</span>
-          <span class="suite-row-arrow">→</span>
-        </a>
-        <a href="mailto:kaadz@protonmail.com" class="suite-row">
-          <span class="suite-row-platform">EMAIL</span>
-          <span class="suite-row-handle">kaadz@protonmail.com</span>
-          <span class="suite-row-arrow">→</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="contact-right">
-      <div class="contact-poster-art">
-        <div class="art-title">
-          INFRASTRUCTURE<br>IS THE<br>PRODUCT.
-        </div>
-      </div>
-
-      <div class="contact-meta-box">
-        <div class="meta-line">
-          <span>DEVELOPER</span>
-          <span>KAADIPRANAV</span>
-        </div>
-        <div class="meta-line">
-          <span>LOCATION</span>
-          <span>INDIA</span>
-        </div>
-        <div class="meta-line">
-          <span>SYSTEM STATUS</span>
-          <span class="green">● ACTIVE DEVELOPMENT</span>
-        </div>
-        <div class="meta-line">
-          <span>PRIMARY FOCUS</span>
-          <span>WATCHLLM</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ FOOTER ══════════ -->
-<footer>
-  <div class="footer-box">
+<!-- ══════════════════════════════════════════════════════════════
+   CANVAS 04: THE TERMINAL INITIATION POSTER
+   Inspired by "LOGIN TO KUNMING", "STUDIO INNATE", & "TAKE IT EASY"
+══════════════════════════════════════════════════════════════ -->
+<section id="canvas-04" class="poster-canvas-04">
+  <div class="initiate-left">
     <div>
-      <div class="footer-logo">KAADZ</div>
-      <div class="footer-sub">KAADIPRANAV // FOUNDER & SYSTEMS ENGINEER</div>
+      <div class="initiate-tag">/// INITIATE DIRECT COMMUNICATION ///</div>
+      <h2 class="initiate-mega">
+        BUILD<br>
+        <span class="orange">DETERMINISTIC</span><br>
+        SYSTEMS.
+      </h2>
+      <p style="font-family:var(--font-mono); font-size:14px; line-height:1.7; color:var(--text-dim); max-width:500px;">
+        Engineering autonomous agent infrastructure, runtime governance, or low-latency compiler interceptors? Interested in static AST safety research? Request access or connect below.
+      </p>
     </div>
-    <div class="footer-copy">© 2026 KAADIPRANAV. ALL RIGHTS RESERVED.<br>BUILT WITH DETERMINISTIC RUNTIME GOVERNANCE.</div>
+
+    <!-- INTERACTIVE POSTER TICKETS -->
+    <div class="ticket-stack">
+      <a href="https://github.com/kaadipranav" target="_blank" class="ticket-link">
+        <span><span class="ticket-platform">01 // GITHUB</span> — kaadipranav</span>
+        <span class="ticket-arrow">↗</span>
+      </a>
+      <a href="https://twitter.com/kaad_zz" target="_blank" class="ticket-link">
+        <span><span class="ticket-platform">02 // TWITTER / X</span> — @kaad_zz</span>
+        <span class="ticket-arrow">↗</span>
+      </a>
+      <a href="https://watchllm.dev" target="_blank" class="ticket-link">
+        <span><span class="ticket-platform">03 // WATCHLLM</span> — watchllm.dev</span>
+        <span class="ticket-arrow">↗</span>
+      </a>
+      <a href="mailto:kaadz@protonmail.com" class="ticket-link">
+        <span><span class="ticket-platform">04 // DIRECT EMAIL</span> — kaadz@protonmail.com</span>
+        <span class="ticket-arrow">→</span>
+      </a>
+    </div>
   </div>
 
-  <div class="footer-box">
-    <div class="footer-quote">
-      "DETERMINISTIC RUNTIMES<br>FOR <span class="accent">PROBABILISTIC</span> AGENTS."
+  <div class="initiate-right">
+    <div class="crosshair tl"></div><div class="crosshair tr"></div>
+    <div class="crosshair bl"></div><div class="crosshair br"></div>
+
+    <div class="initiate-right-art">
+      <span class="white">INFRASTRUCTURE</span>
+      IS THE PRODUCT.
     </div>
+
+    <div>
+      <div style="font-family:var(--font-mono); font-size:11px; font-weight:800; letter-spacing:0.2em; margin-bottom:16px; color:#000;">
+        [ ARCHITECTURAL SPECIFICATION MANDATE ]
+      </div>
+      <div class="stamp-seal-final">
+        [ VERIFIED DETERMINISTIC ]<br>
+        KAADIPRANAV // CHENNAI, INDIA // 2026
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ARCHIVE STAMP ══════════ -->
+<footer>
+  <div>
+    <span>KAADZ // CATALOG SPEC WLLM-05</span> — <strong>BUILT WITH DETERMINISTIC RUNTIME GOVERNANCE</strong>
+  </div>
+  <div>
+    "DETERMINISTIC RUNTIMES FOR PROBABILISTIC AGENTS." © 2026 KAADIPRANAV. ALL RIGHTS RESERVED.
   </div>
 </footer>
 
 <script>
-  // Intersection Observer for crisp reveal animations
+  // High-performance intersection observer for crisp graphic reveals
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -1018,10 +901,10 @@
     });
   }, { threshold: 0.08 });
 
-  document.querySelectorAll('.blueprint-panel, .ledger-row, .tool-card, .suite-row').forEach(el => {
+  document.querySelectorAll('.sector-panel, .archive-row, .ticket-link').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(16px)';
-    el.style.transition = 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
     obs.observe(el);
   });
 </script>
