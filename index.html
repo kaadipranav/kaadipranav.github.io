@@ -3,690 +3,424 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KAADZ — Deterministic Runtime Governance</title>
-  <meta name="description" content="Kaadz — Founder of WatchLLM. Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Agents are probabilistic. Infrastructure cannot be." />
-  <meta property="og:title" content="KAADZ — Deterministic Runtime Governance" />
-  <meta property="og:description" content="Founder of WatchLLM. Runtime governance for autonomous coding agents. Zero ML inference in the enforcement loop." />
+  <title>KAADZ // STATEMENT</title>
+  <meta name="description" content="Kaadz — Founder of WatchLLM. Agents are probabilistic. Infrastructure cannot be." />
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;700;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:        #060608;
-      --panel:     #0f0f13;
-      --border:    #1f1f28;
-      --border-hi: #323242;
+      --bg:     #020202;
+      --fg:     #F4F4F4;
+      --red:    #FF2200;
+      --volt:   #CCFF00;
+      --blue:   #1133FF;
       
-      --text:      #f0f0f5;
-      --text-dim:  #8a8a9a;
-      --text-mute: #545464;
-      
-      --accent:    #FF3B00;
-      --volt:      #DFFF00;
-      --blue:      #1138FF;
-      --white:     #FFFFFF;
-      
-      --font-mega: 'Anton', 'Bebas Neue', sans-serif;
-      --font-disp: 'Bebas Neue', sans-serif;
-      --font-body: 'Space Grotesk', sans-serif;
+      --font-mega: 'Anton', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+      --font-body: 'Space Grotesk', sans-serif;
     }
 
-    html { scroll-behavior: smooth; background: var(--bg); }
+    html { scroll-behavior: smooth; background: var(--bg); font-size: 16px; }
     body {
       font-family: var(--font-body);
       background: var(--bg);
-      color: var(--text);
+      color: var(--fg);
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-      selection-background: var(--accent);
-      selection-color: var(--white);
     }
 
-    ::selection { background: var(--accent); color: var(--white); }
+    ::selection { background: var(--fg); color: var(--bg); }
 
-    /* ───── SUBTLE ARCHIVAL NOISE ───── */
+    /* FILM GRAIN / PRINT TEXTURE */
     body::after {
       content: '';
       position: fixed; inset: 0; z-index: 9999;
-      pointer-events: none; opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--border); }
-    ::-webkit-scrollbar-thumb { background: var(--accent); }
-
-    /* ───── MINIMALIST ARCHITECTURAL CROSSHAIRS ───── */
-    .crosshair {
-      position: absolute; width: 10px; height: 10px; pointer-events: none; z-index: 10;
-    }
-    .crosshair::before { content: ''; position: absolute; top: 4px; left: 0; width: 10px; height: 1px; background: var(--text-mute); }
-    .crosshair::after  { content: ''; position: absolute; top: 0; left: 4px; width: 1px; height: 10px; background: var(--text-mute); }
-    
-    .tl { top: -5px; left: -5px; }
-    .tr { top: -5px; right: -5px; }
-    .bl { bottom: -5px; left: -5px; }
-    .br { bottom: -5px; right: -5px; }
-
-    /* ───── CLEAN TOP HEADER ───── */
-    header {
-      position: sticky; top: 0; z-index: 500;
-      background: rgba(6, 6, 8, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      height: 60px;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 48px;
-    }
-    .logo {
-      font-family: var(--font-mega); font-size: 26px; letter-spacing: 0.06em;
-      color: var(--white); text-decoration: none;
-    }
-    .nav-links { display: flex; gap: 32px; height: 100%; align-items: center; }
-    .nav-link {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--text-dim); text-decoration: none;
-      transition: color 0.15s;
-    }
-    .nav-link:hover { color: var(--white); }
-    .nav-cta {
-      background: var(--white); color: #000; padding: 8px 16px;
-      font-weight: 700; transition: all 0.15s;
-    }
-    .nav-cta:hover { background: var(--accent); color: var(--white); }
-
-    /* ───── HERO STATEMENT POSTER (ZERO CLUTTER, PURE TYPOGRAPHY) ───── */
-    .hero {
-      min-height: calc(100vh - 60px);
-      display: grid; grid-template-columns: 1.35fr 0.65fr;
-      border-bottom: 2px solid var(--border-hi);
-    }
-
-    .hero-main {
-      padding: 80px 64px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      border-right: 1px solid var(--border);
+    /* ════════════════════════════════════════════════════════════
+       POSTER 01: THE HERO (Inspired by INTEGRATION)
+    ════════════════════════════════════════════════════════════ */
+    .poster-01 {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 2vw;
       position: relative;
     }
 
-    .hero-tagline {
-      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
-      display: flex; align-items: center; gap: 12px; margin-bottom: 40px;
-    }
-    .hero-tagline::before { content: ''; width: 20px; height: 2px; background: var(--accent); }
-
-    /* MONUMENTAL POSTER TYPOGRAPHY */
-    .hero-h1 {
+    .mega-lockup {
       font-family: var(--font-mega);
-      font-size: clamp(68px, 8.5vw, 136px);
-      font-weight: 400;
-      line-height: 0.88;
-      letter-spacing: 0.01em;
+      font-size: clamp(80px, 16vw, 300px);
+      line-height: 0.72;
       text-transform: uppercase;
-      color: var(--white);
-      margin-bottom: 48px;
+      letter-spacing: -0.02em;
+      display: flex; flex-direction: column;
+      mix-blend-mode: difference;
+      z-index: 10;
     }
-    .hero-h1 .solid { color: var(--white); }
-    .hero-h1 .highlight-box {
-      background: var(--accent); color: var(--white);
-      padding: 0 16px; display: inline-block;
-      box-shadow: 8px 8px 0px rgba(255,255,255,0.12);
-    }
-    .hero-h1 .outline {
-      color: transparent;
-      -webkit-text-stroke: 2px var(--white);
-    }
-    .hero-h1 .volt { color: var(--volt); }
 
-    .hero-bio-row {
-      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px;
-      padding-top: 48px; border-top: 1px solid var(--border);
-      align-items: flex-end;
+    .mega-line {
+      display: flex; flex-wrap: wrap; align-items: flex-end; gap: 2vw;
+      white-space: nowrap;
     }
-    .hero-bio {
-      font-family: var(--font-mono); font-size: 14px; line-height: 1.7;
+    
+    .mega-line.stretch { justify-content: space-between; }
+    
+    .text-stroke {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--fg);
+    }
+    
+    .text-red { color: var(--red); }
+    .text-volt { color: var(--volt); }
+
+    .bio-insert {
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1.2vw, 16px);
+      line-height: 1.4;
+      white-space: normal;
+      width: 250px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding-bottom: 1vw;
       color: var(--text-dim);
     }
-    .hero-bio strong { color: var(--white); font-weight: 700; }
+    .bio-insert strong { color: var(--fg); font-weight: 800; background: var(--blue); padding: 2px 4px; }
 
-    .hero-actions {
-      display: flex; gap: 16px; flex-wrap: wrap;
+    /* ABSOLUTE DECORATORS */
+    .abs-name {
+      position: absolute; top: 2vw; left: 2vw;
+      font-family: var(--font-mono); font-size: 14px; font-weight: 800;
+      letter-spacing: 0.1em; z-index: 20; mix-blend-mode: difference;
     }
-    .btn-main {
-      background: var(--accent); color: var(--white);
-      padding: 16px 28px; font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none;
-      transition: all 0.15s; display: inline-flex; align-items: center; gap: 10px;
+    .abs-scroll {
+      position: absolute; bottom: 2vw; right: 2vw;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
+      letter-spacing: 0.2em; z-index: 20; text-transform: uppercase;
+      writing-mode: vertical-rl; transform: rotate(180deg);
     }
-    .btn-main:hover { background: #ff5522; transform: translateY(-2px); }
+
+    /* ════════════════════════════════════════════════════════════
+       POSTER 02: THE AXIOMS (Inspired by OBSERVE)
+    ════════════════════════════════════════════════════════════ */
+    .poster-02 {
+      min-height: 100vh;
+      background: var(--red);
+      color: var(--bg);
+      padding: 8vw 4vw;
+      position: relative;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .axiom-bg-text {
+      position: absolute; top: -5vw; left: -2vw;
+      font-family: var(--font-mega);
+      font-size: 38vw; line-height: 0.7;
+      color: rgba(0,0,0,0.1); pointer-events: none;
+      white-space: nowrap; z-index: 0;
+    }
+
+    .axiom-grid {
+      display: grid; grid-template-columns: 1fr; gap: 8vw;
+      position: relative; z-index: 10;
+    }
+
+    .axiom-block {
+      display: grid; grid-template-columns: auto 1fr; gap: 4vw; align-items: start;
+    }
+
+    .axiom-num {
+      font-family: var(--font-mega);
+      font-size: clamp(120px, 18vw, 240px);
+      line-height: 0.75; letter-spacing: -0.04em;
+    }
+
+    .axiom-content { padding-top: 2vw; max-width: 600px; }
     
-    .btn-sub {
-      background: transparent; color: var(--white); border: 1px solid var(--border-hi);
-      padding: 16px 28px; font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none;
-      transition: all 0.15s;
-    }
-    .btn-sub:hover { background: var(--panel); border-color: var(--white); }
-
-    /* RIGHT HERO PANEL: CLEAN ARCHITECTURAL PROFILE */
-    .hero-side {
-      background: var(--panel);
-      display: flex; flex-direction: column; justify-content: space-between;
-      padding: 80px 56px; position: relative; overflow: hidden;
-    }
-    .side-title {
-      font-family: var(--font-mega); font-size: clamp(52px, 6vw, 88px);
-      line-height: 0.88; color: var(--white); text-transform: uppercase;
-    }
-    .side-title .blue { color: #3B72FF; }
-
-    .side-specs {
-      display: flex; flex-direction: column; gap: 20px;
-      padding-top: 40px; border-top: 1px solid var(--border);
-    }
-    .spec-item {
-      display: flex; flex-direction: column; gap: 4px;
-    }
-    .spec-lbl {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.15em; color: var(--text-mute); text-transform: uppercase;
-    }
-    .spec-val {
-      font-family: var(--font-body); font-size: 18px; font-weight: 700;
-      color: var(--white);
-    }
-    .spec-val.volt { color: var(--volt); }
-
-    /* ───── SECTION 01: GOVERNANCE PRINCIPLES ───── */
-    section { border-bottom: 2px solid var(--border-hi); position: relative; }
-    
-    .sec-header {
-      padding: 64px; border-bottom: 1px solid var(--border);
-      display: grid; grid-template-columns: 1fr 1fr; align-items: flex-end;
-      background: var(--panel);
-    }
-    .sec-tag {
-      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
-      margin-bottom: 16px;
-    }
-    .sec-h2 {
-      font-family: var(--font-mega); font-size: clamp(52px, 6vw, 84px);
-      line-height: 0.9; text-transform: uppercase; color: var(--white);
-    }
-    .sec-desc {
-      font-family: var(--font-mono); font-size: 14px; line-height: 1.7; color: var(--text-dim);
-      max-width: 480px; justify-self: end;
+    .axiom-title {
+      font-family: var(--font-mega);
+      font-size: clamp(40px, 6vw, 80px);
+      line-height: 0.9; text-transform: uppercase;
+      margin-bottom: 1.5vw;
     }
 
-    /* ARCHITECTURAL CARDS */
-    .principles-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
+    .axiom-desc {
+      font-family: var(--font-mono);
+      font-size: clamp(14px, 1.5vw, 20px);
+      line-height: 1.6; font-weight: 700;
     }
-    .principle-card {
-      padding: 64px 48px; border-right: 1px solid var(--border);
-      background: var(--bg); display: flex; flex-direction: column; justify-content: space-between;
-      min-height: 400px; position: relative; transition: background 0.2s;
-    }
-    .principle-card:last-child { border-right: none; }
-    .principle-card:hover { background: var(--panel); }
+    .axiom-desc span { background: var(--bg); color: var(--fg); padding: 2px 6px; }
 
-    .card-num {
-      font-family: var(--font-mega); font-size: 72px; line-height: 0.8;
-      color: var(--border-hi); margin-bottom: 40px; transition: color 0.2s;
-    }
-    .principle-card:hover .card-num { color: var(--accent); }
-
-    .card-title {
-      font-family: var(--font-disp); font-size: 38px; letter-spacing: 0.04em;
-      color: var(--white); margin-bottom: 20px; line-height: 1;
-    }
-    .card-body {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: var(--text-dim);
-    }
-    .card-body strong { color: var(--white); }
-
-    /* ───── SECTION 02: SELECTED WORKS / LEDGER ───── */
-    .ledger-list { display: flex; flex-direction: column; }
-    
-    .ledger-row {
-      display: grid; grid-template-columns: 80px 2fr 2.5fr 140px;
-      align-items: center; border-bottom: 1px solid var(--border);
-      text-decoration: none; color: inherit; background: var(--bg);
-      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .ledger-row:last-child { border-bottom: none; }
-    .ledger-row:hover {
-      background: var(--accent); color: var(--white);
-      transform: scale(1.002); z-index: 10;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    /* ════════════════════════════════════════════════════════════
+       POSTER 03: THE ARCHIVE (Inspired by BORING & WHAT IF)
+    ════════════════════════════════════════════════════════════ */
+    .poster-03 {
+      min-height: 100vh;
+      background: var(--fg);
+      color: var(--bg);
+      padding: 8vw 2vw;
+      position: relative;
     }
 
-    .ledger-cell {
-      padding: 36px 32px; border-right: 1px solid var(--border);
-      font-family: var(--font-mono); font-size: 13px;
+    .archive-title {
+      font-family: var(--font-mega);
+      font-size: 8vw; line-height: 0.8;
+      text-transform: uppercase; margin-bottom: 4vw;
+      text-align: center;
     }
-    .ledger-row:hover .ledger-cell { border-color: rgba(255,255,255,0.2); }
-    .ledger-cell:last-child { border-right: none; }
 
-    .ledger-idx {
-      font-family: var(--font-disp); font-size: 32px; text-align: center; color: var(--text-mute);
+    .archive-list {
+      display: flex; flex-direction: column; width: 100%;
     }
-    .ledger-row:hover .ledger-idx { color: var(--white); }
 
-    .ledger-name {
-      font-family: var(--font-disp); font-size: 36px; letter-spacing: 0.04em;
-      color: var(--white); display: block; line-height: 1;
-    }
-    .ledger-meta {
-      font-size: 11px; color: var(--text-dim); margin-top: 6px; font-weight: 700; text-transform: uppercase;
-    }
-    .ledger-row:hover .ledger-meta { color: rgba(255,255,255,0.9); }
-
-    .ledger-desc { color: var(--text-dim); line-height: 1.6; }
-    .ledger-row:hover .ledger-desc { color: var(--white); }
-
-    .badge {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 16px;
-      display: inline-block; text-align: center; width: 100%; border: 1px solid;
-    }
-    .badge-active { background: rgba(223, 255, 0, 0.08); color: var(--volt); border-color: var(--volt); }
-    .badge-open   { background: rgba(255, 255, 255, 0.05); color: var(--white); border-color: var(--border-hi); }
-    .badge-archive { background: transparent; color: var(--text-mute); border-color: var(--border); }
-    
-    .ledger-row:hover .badge { background: var(--white); color: var(--accent); border-color: var(--white); }
-
-    /* ───── SECTION 03: INITIATE / CONNECT POSTER ───── */
-    .connect-grid {
-      display: grid; grid-template-columns: 1.2fr 0.8fr;
-    }
-    .connect-left {
-      padding: 80px 64px; border-right: 1px solid var(--border); background: var(--bg);
-      display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .connect-h2 {
-      font-family: var(--font-mega); font-size: clamp(56px, 7vw, 100px);
-      line-height: 0.88; color: var(--white); text-transform: uppercase; margin-bottom: 32px;
-    }
-    .connect-h2 .orange { color: var(--accent); }
-    
-    .link-list {
-      display: flex; flex-direction: column; border: 1px solid var(--border); margin-top: 48px;
-    }
-    .link-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 24px 32px; border-bottom: 1px solid var(--border);
-      text-decoration: none; color: var(--text); background: var(--panel);
-      transition: all 0.15s; font-family: var(--font-mono); font-size: 14px; font-weight: 700;
-    }
-    .link-row:last-child { border-bottom: none; }
-    .link-row:hover { background: var(--white); color: #000; transform: translateX(8px); }
-    .link-platform { color: var(--accent); letter-spacing: 0.15em; }
-    .link-row:hover .link-platform { color: #000; }
-
-    .connect-right {
-      background: var(--volt); color: #000;
-      padding: 80px 56px; display: flex; flex-direction: column; justify-content: space-between;
+    .archive-item {
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 2vw;
+      border-top: 4px solid var(--bg);
+      padding: 2vw 0;
+      text-decoration: none; color: inherit;
       position: relative; overflow: hidden;
+      transition: color 0.2s;
     }
-    .connect-art {
-      font-family: var(--font-mega); font-size: clamp(48px, 6vw, 84px);
-      line-height: 0.88; text-transform: uppercase; color: #000;
+    .archive-item:last-child { border-bottom: 4px solid var(--bg); }
+
+    /* The massive hover block */
+    .archive-item::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--blue); transform: scaleY(0);
+      transform-origin: bottom; transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+      z-index: 0;
+    }
+    .archive-item:hover::before { transform: scaleY(1); transform-origin: top; }
+    .archive-item:hover { color: var(--fg); }
+
+    .arc-idx {
+      font-family: var(--font-mono); font-size: 2vw; font-weight: 800;
+      position: relative; z-index: 10;
+    }
+    
+    .arc-name {
+      font-family: var(--font-mega); font-size: clamp(48px, 9vw, 160px);
+      line-height: 0.8; text-transform: uppercase;
+      position: relative; z-index: 10;
     }
 
-    /* ───── FOOTER ───── */
-    footer {
-      padding: 48px 64px; background: var(--bg); border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+    .arc-meta {
+      font-family: var(--font-mono); font-size: 1vw; font-weight: 800;
+      text-transform: uppercase; text-align: right;
+      position: relative; z-index: 10;
+      max-width: 300px; line-height: 1.4;
     }
-    footer strong { color: var(--white); }
+    .arc-meta strong { display: block; font-size: 1.4vw; margin-bottom: 0.5vw; }
 
-    /* ───── RESPONSIVE ───── */
-    @media (max-width: 1024px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-side { display: none; }
-      .hero-main { padding: 64px 32px; }
-      .sec-header { grid-template-columns: 1fr; gap: 20px; padding: 48px 32px; }
-      .sec-desc { justify-self: start; }
-      .principles-grid { grid-template-columns: 1fr; }
-      .principle-card { border-right: none; border-bottom: 1px solid var(--border); padding: 48px 32px; min-height: auto; }
-      .ledger-row { grid-template-columns: 60px 1fr auto; }
-      .ledger-cell:nth-child(3) { display: none; }
-      .connect-grid { grid-template-columns: 1fr; }
-      .connect-left { border-right: none; padding: 64px 32px; }
-      .connect-right { padding: 64px 32px; }
-      footer { flex-direction: column; gap: 16px; text-align: center; padding: 40px 32px; }
-      header { padding: 0 24px; }
+    /* ════════════════════════════════════════════════════════════
+       POSTER 04: THE INITIATION (Inspired by TAKE IT EASY)
+    ════════════════════════════════════════════════════════════ */
+    .poster-04 {
+      min-height: 100vh;
+      background: var(--volt);
+      color: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; padding: 4vw;
+      overflow: hidden;
     }
 
-    @media (max-width: 640px) {
-      .hero-h1 { font-size: 56px; }
-      .hero-bio-row { grid-template-columns: 1fr; }
-      .ledger-row { grid-template-columns: 1fr auto; }
-      .ledger-cell:first-child { display: none; }
-      .nav-links { display: none; }
+    .initiate-stack {
+      display: flex; flex-direction: column;
+      font-family: var(--font-mega);
+      font-size: clamp(80px, 15vw, 240px);
+      line-height: 0.75; text-transform: uppercase;
+      text-align: center; z-index: 10;
+    }
+
+    .initiate-stack .white-box {
+      background: var(--fg); color: var(--bg); padding: 0 2vw;
+      transform: skewX(-5deg); display: inline-block;
+    }
+
+    /* Floating Links */
+    .float-link {
+      position: absolute;
+      background: var(--bg); color: var(--fg);
+      font-family: var(--font-mono); font-size: 16px; font-weight: 800;
+      padding: 16px 24px; text-decoration: none; text-transform: uppercase;
+      transition: transform 0.2s, background 0.2s;
+      z-index: 20; border: 2px solid var(--bg);
+      box-shadow: 12px 12px 0px rgba(0,0,0,0.15);
+    }
+    .float-link:hover {
+      background: var(--red); transform: translate(-4px, -4px);
+      box-shadow: 16px 16px 0px rgba(0,0,0,0.25);
+    }
+    
+    .link-1 { top: 10%; left: 10%; transform: rotate(-4deg); }
+    .link-2 { top: 20%; right: 10%; transform: rotate(3deg); }
+    .link-3 { bottom: 20%; left: 15%; transform: rotate(2deg); }
+    .link-4 { bottom: 15%; right: 15%; transform: rotate(-3deg); }
+    
+    .float-link:hover.link-1, .float-link:hover.link-2, .float-link:hover.link-3, .float-link:hover.link-4 {
+      transform: scale(1.05) rotate(0deg);
+    }
+
+    .footer-stamp {
+      position: absolute; bottom: 2vw; left: 0; right: 0; text-align: center;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.2em; z-index: 10;
+    }
+
+    /* ───── RESPONSIVE TWEAKS ───── */
+    @media (max-width: 900px) {
+      .mega-line { flex-direction: column; align-items: flex-start; gap: 0; }
+      .bio-insert { width: 100%; padding: 4vw 0; }
+      .axiom-block { grid-template-columns: 1fr; gap: 2vw; }
+      .axiom-num { font-size: 30vw; }
+      .archive-item { grid-template-columns: 1fr; padding: 6vw 0; gap: 4vw; }
+      .arc-idx { display: none; }
+      .arc-meta { text-align: left; font-size: 14px; max-width: 100%; }
+      .arc-meta strong { font-size: 16px; }
+      .initiate-stack { font-size: 20vw; }
+      .float-link { position: relative; inset: auto !important; transform: none !important; margin: 2vw 0; display: inline-block; width: 100%; text-align: center; box-shadow: 4px 4px 0px rgba(0,0,0,0.15); }
+      .poster-04 { flex-direction: column; justify-content: space-around; padding: 12vw 4vw; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════ CLEAN TOP HEADER ══════════ -->
-<header>
-  <a href="#" class="logo">KAADZ</a>
-  <div class="nav-links">
-    <a href="#principles" class="nav-link">PRINCIPLES</a>
-    <a href="#works"      class="nav-link">SELECTED WORKS</a>
-    <a href="#connect"    class="nav-link nav-cta">CONNECT →</a>
-  </div>
-</header>
+<!-- POSTER 01: THE HERO -->
+<section class="poster-01">
+  <div class="abs-name">KAADIPRANAV // WATCHLLM</div>
+  <div class="abs-scroll">SCROLL TO OBSERVE</div>
 
-<!-- ══════════ HERO STATEMENT POSTER (ZERO CLUTTER, PURE TYPOGRAPHY) ══════════ -->
-<section class="hero">
-  <div class="hero-main">
-    <div class="crosshair tl"></div><div class="crosshair tr"></div>
-    <div class="crosshair bl"></div><div class="crosshair br"></div>
-
-    <div>
-      <div class="hero-tagline">DETERMINISTIC RUNTIME GOVERNANCE</div>
-      
-      <!-- BOLD STATEMENT TYPOGRAPHY WITH ZERO FAKE JARGON / CLUTTER -->
-      <h1 class="hero-h1">
-        <span class="solid">AGENTS ARE</span><br>
-        <span class="highlight-box">PROBABILISTIC.</span><br>
-        <span class="outline">INFRASTRUCTURE</span><br>
-        <span class="volt">CANNOT BE.</span>
-      </h1>
+  <div class="mega-lockup">
+    <div class="mega-line">
+      <span>AGENTS</span>
+      <span>ARE</span>
+    </div>
+    
+    <div class="mega-line stretch">
+      <span class="text-stroke">PROB</span>
+      <span class="text-red">ABIL</span>
+      <span>ISTIC.</span>
     </div>
 
-    <div class="hero-bio-row">
-      <p class="hero-bio">
-        <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance, static AST interceptors, and air-gapped security paths for autonomous coding agents. Zero ML inference in the enforcement loop.
-      </p>
-
-      <div class="hero-actions">
-        <a href="https://watchllm.dev" target="_blank" class="btn-main">WATCHLLM →</a>
-        <a href="#works" class="btn-sub">LEDGER ↓</a>
+    <div class="mega-line">
+      <div class="bio-insert">
+        <strong>FOUNDER OF WATCHLLM.</strong><br>
+        Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
       </div>
-    </div>
-  </div>
-
-  <div class="hero-side">
-    <div>
-      <div class="side-title">
-        WATCH<br><span class="blue">LLM</span><br>STACK.
-      </div>
-      <p style="font-family:var(--font-mono); font-size:13px; color:var(--text-dim); margin-top:16px; line-height:1.6;">
-        Structural rules are verified at the syntax boundary before code mutations are committed to disk.
-      </p>
+      <span class="text-stroke">INFRASTRUCTURE</span>
     </div>
 
-    <div class="side-specs">
-      <div class="spec-item">
-        <span class="spec-lbl">CORE ENGINE</span>
-        <span class="spec-val">Tree-sitter Static AST</span>
-      </div>
-      <div class="spec-item">
-        <span class="spec-lbl">POLICY SANDBOX</span>
-        <span class="spec-val volt">Zero-GC WASM in Rust</span>
-      </div>
-      <div class="spec-item">
-        <span class="spec-lbl">ARCHITECTURAL MEMORY</span>
-        <span class="spec-val">SQLite Ledger (Klyd)</span>
-      </div>
-      <div class="spec-item">
-        <span class="spec-lbl">EXECUTION LATENCY</span>
-        <span class="spec-val">&lt; 1ms Sub-routine</span>
-      </div>
+    <div class="mega-line">
+      <span class="text-volt">CANNOT</span>
+      <span>BE.</span>
     </div>
   </div>
 </section>
 
-<!-- ══════════ SECTION 01: GOVERNANCE PRINCIPLES ══════════ -->
-<section id="principles">
-  <div class="sec-header">
-    <div>
-      <div class="sec-tag">ARCHITECTURAL PRIMITIVES</div>
-      <h2 class="sec-h2">GOVERNANCE<br>PILLARS</h2>
-    </div>
-    <p class="sec-desc">
-      Probabilistic guardrails are merely suggestions. The WatchLLM governance architecture enforces structural rules without LLM inference overhead in the execution critical path.
-    </p>
-  </div>
+<!-- POSTER 02: THE AXIOMS -->
+<section class="poster-02">
+  <div class="axiom-bg-text">DETERMINISTIC PRIMITIVES</div>
 
-  <div class="principles-grid">
-    <div class="principle-card">
-      <div class="crosshair tl"></div>
-      <div>
-        <div class="card-num">01</div>
-        <h3 class="card-title">STATIC AST INTERCEPTION</h3>
-        <p class="card-body">
-          WatchLLM parses agent-generated code into strict Tree-sitter Abstract Syntax Trees. <strong>Zero ML hallucination</strong> in the verification loop. Identical syntax inputs yield strictly identical policy evaluations every time, without exception.
+  <div class="axiom-grid">
+    <div class="axiom-block">
+      <div class="axiom-num">01</div>
+      <div class="axiom-content">
+        <h2 class="axiom-title">STATIC AST<br>INTERCEPTION</h2>
+        <p class="axiom-desc">
+          Probabilistic guardrails are suggestions. WatchLLM parses agent-generated code into strict Tree-sitter Abstract Syntax Trees. <span>Zero ML hallucination</span> in the verification loop. Identical syntax yields strictly identical evaluations every time.
         </p>
       </div>
     </div>
 
-    <div class="principle-card">
-      <div class="crosshair tr"></div>
-      <div>
-        <div class="card-num">02</div>
-        <h3 class="card-title">ZERO-GC WASM RUNTIME</h3>
-        <p class="card-body">
-          Enforcement policies compile down to ultra-lightweight, zero-garbage-collection WebAssembly sandboxes written in Rust. Executing with <strong>sub-millisecond latency</strong> directly inside developer IDEs and automated CI/CD pipelines.
+    <div class="axiom-block">
+      <div class="axiom-num">02</div>
+      <div class="axiom-content">
+        <h2 class="axiom-title">ZERO-GC WASM<br>RUNTIME</h2>
+        <p class="axiom-desc">
+          Enforcement policies compile down to ultra-lightweight, zero-garbage-collection WebAssembly sandboxes written in Rust. Executing with <span>sub-millisecond latency</span> directly inside developer IDEs and automated CI/CD pipelines.
         </p>
       </div>
     </div>
 
-    <div class="principle-card">
-      <div>
-        <div class="card-num">03</div>
-        <h3 class="card-title">ARCHITECTURAL MEMORY</h3>
-        <p class="card-body">
-          Powered by Klyd Studio's SQLite memory harness. Every agent decision, policy evaluation, and syntax intercept is recorded into an <strong>auditable relational ledger</strong>, eliminating ephemeral context loss and enabling exact execution replay.
+    <div class="axiom-block">
+      <div class="axiom-num">03</div>
+      <div class="axiom-content">
+        <h2 class="axiom-title">ARCHITECTURAL<br>MEMORY</h2>
+        <p class="axiom-desc">
+          Powered by Klyd Studio's SQLite memory harness. Every agent decision, policy evaluation, and syntax intercept is recorded into an <span>auditable relational ledger</span>, eliminating ephemeral context loss and enabling exact execution replay.
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ SECTION 02: SELECTED WORKS / LEDGER ══════════ -->
-<section id="works">
-  <div class="sec-header">
-    <div>
-      <div class="sec-tag">MONOREPO ARCHIVE</div>
-      <h2 class="sec-h2">SELECTED<br>WORKS</h2>
-    </div>
-    <p class="sec-desc">
-      Systems software, runtime governance harnesses, and open-source infrastructure engineered across WatchLLM, Klyd Studio, and Codify organizations.
-    </p>
-  </div>
+<!-- POSTER 03: THE ARCHIVE -->
+<section class="poster-03">
+  <h2 class="archive-title">SELECTED WORKS // ARCHIVE</h2>
 
-  <div class="ledger-list" role="list">
-    <!-- ROW 01 -->
-    <a href="https://watchllm.dev" target="_blank" class="ledger-row" role="listitem">
-      <div class="ledger-cell ledger-idx">01</div>
-      <div class="ledger-cell">
-        <span class="ledger-name">WATCHLLM</span>
-        <span class="ledger-meta">watchllm · Core Monorepo</span>
-      </div>
-      <div class="ledger-cell ledger-desc">
-        Deterministic runtime governance framework for autonomous software agents.<br>
-        Tree-sitter AST Interceptor · Zero-GC WASM Sandbox · Replay Telemetry
-      </div>
-      <div class="ledger-cell">
-        <span class="badge badge-active">ACTIVE CORE</span>
+  <div class="archive-list">
+    <a href="https://watchllm.dev" target="_blank" class="archive-item">
+      <div class="arc-idx">01</div>
+      <div class="arc-name">WATCHLLM</div>
+      <div class="arc-meta">
+        <strong>[ CORE MONOREPO ]</strong>
+        Deterministic runtime governance framework. AST Interceptor · Zero-GC WASM Sandbox.
       </div>
     </a>
 
-    <!-- ROW 02 -->
-    <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="ledger-row" role="listitem">
-      <div class="ledger-cell ledger-idx">02</div>
-      <div class="ledger-cell">
-        <span class="ledger-name">KLYD-HARNESS</span>
-        <span class="ledger-meta">klyd-studio · Open Source</span>
-      </div>
-      <div class="ledger-cell ledger-desc">
-        Architectural memory layer and SQLite decision ledger for agentic context tracking.<br>
-        Relational State Store · Replayable Execution Records · Audit Trail
-      </div>
-      <div class="ledger-cell">
-        <span class="badge badge-open">OPEN SOURCE</span>
+    <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="archive-item">
+      <div class="arc-idx">02</div>
+      <div class="arc-name">KLYD-HARNESS</div>
+      <div class="arc-meta">
+        <strong>[ OPEN SOURCE ]</strong>
+        Architectural memory layer & SQLite decision ledger for agentic context tracking.
       </div>
     </a>
 
-    <!-- ROW 03 -->
-    <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="ledger-row" role="listitem">
-      <div class="ledger-cell ledger-idx">03</div>
-      <div class="ledger-cell">
-        <span class="ledger-name">CODIFY ENGINE</span>
-        <span class="ledger-meta">Codify-PSBB · Open Source</span>
-      </div>
-      <div class="ledger-cell ledger-desc">
-        High-concurrency code evaluation and competitive programming platform core.<br>
-        Sandboxed Execution · Automated Test Harness · Scalable Ingestion
-      </div>
-      <div class="ledger-cell">
-        <span class="badge badge-open">OPEN SOURCE</span>
+    <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="archive-item">
+      <div class="arc-idx">03</div>
+      <div class="arc-name">CODIFY</div>
+      <div class="arc-meta">
+        <strong>[ OPEN SOURCE ]</strong>
+        High-concurrency code evaluation and competitive programming platform core.
       </div>
     </a>
 
-    <!-- ROW 04 -->
-    <div class="ledger-row" role="listitem">
-      <div class="ledger-cell ledger-idx">04</div>
-      <div class="ledger-cell">
-        <span class="ledger-name">SCRIPTBOOST</span>
-        <span class="ledger-meta">kaadipranav · Public Archive</span>
-      </div>
-      <div class="ledger-cell ledger-desc">
-        Automated scripting utilities and system execution harnesses for local environments.
-      </div>
-      <div class="ledger-cell">
-        <span class="badge badge-archive">ARCHIVED</span>
-      </div>
-    </div>
-
-    <!-- ROW 05 -->
-    <div class="ledger-row" role="listitem">
-      <div class="ledger-cell ledger-idx">05</div>
-      <div class="ledger-cell">
-        <span class="ledger-name">GHOSTWRITER</span>
-        <span class="ledger-meta">kaadipranav · Public Archive</span>
-      </div>
-      <div class="ledger-cell ledger-desc">
-        High-speed text processing and syntax evaluation prototype engine.
-      </div>
-      <div class="ledger-cell">
-        <span class="badge badge-archive">ARCHIVED</span>
-      </div>
-    </div>
-
-    <!-- ROW 06 -->
-    <a href="https://github.com/kaadipranav" target="_blank" class="ledger-row" role="listitem">
-      <div class="ledger-cell ledger-idx">06</div>
-      <div class="ledger-cell">
-        <span class="ledger-name">SYSTEMS BOILERPLATE</span>
-        <span class="ledger-meta">kaadipranav · Template</span>
-      </div>
-      <div class="ledger-cell ledger-desc">
-        Opinionated starter architecture and tooling harness for modular systems software.
-      </div>
-      <div class="ledger-cell">
-        <span class="badge badge-open">TEMPLATE</span>
+    <a href="https://github.com/kaadipranav" target="_blank" class="archive-item">
+      <div class="arc-idx">04</div>
+      <div class="arc-name">SCRIPTBOOST</div>
+      <div class="arc-meta">
+        <strong>[ PUBLIC ARCHIVE ]</strong>
+        Automated scripting utilities and system execution harnesses.
       </div>
     </a>
   </div>
 </section>
 
-<!-- ══════════ SECTION 03: INITIATE / CONNECT POSTER ══════════ -->
-<section id="connect" class="connect-grid">
-  <div class="connect-left">
-    <div>
-      <div class="sec-tag">INITIATE COMMUNICATION</div>
-      <h2 class="connect-h2">
-        BUILD<br>
-        <span class="orange">DETERMINISTIC</span><br>
-        SYSTEMS.
-      </h2>
-      <p style="font-family:var(--font-mono); font-size:14px; line-height:1.7; color:var(--text-dim); max-width:480px;">
-        Engineering autonomous agent infrastructure, runtime governance, or low-latency compiler interceptors? Interested in static AST safety research? Let's connect.
-      </p>
-    </div>
-
-    <div class="link-list">
-      <a href="https://github.com/kaadipranav" target="_blank" class="link-row">
-        <span><span class="link-platform">GITHUB</span> — kaadipranav</span>
-        <span>↗</span>
-      </a>
-      <a href="https://twitter.com/kaad_zz" target="_blank" class="link-row">
-        <span><span class="link-platform">TWITTER / X</span> — @kaad_zz</span>
-        <span>↗</span>
-      </a>
-      <a href="https://linkedin.com/in/kaadz" target="_blank" class="link-row">
-        <span><span class="link-platform">LINKEDIN</span> — kaadz</span>
-        <span>↗</span>
-      </a>
-      <a href="https://watchllm.dev" target="_blank" class="link-row">
-        <span><span class="link-platform">WATCHLLM</span> — watchllm.dev</span>
-        <span>↗</span>
-      </a>
-      <a href="mailto:kaadz@protonmail.com" class="link-row">
-        <span><span class="link-platform">EMAIL</span> — kaadz@protonmail.com</span>
-        <span>→</span>
-      </a>
-    </div>
+<!-- POSTER 04: THE INITIATION -->
+<section class="poster-04">
+  <div class="initiate-stack">
+    <span>INFRA</span>
+    <span>STRUC</span>
+    <span>TURE IS</span>
+    <span class="white-box">THE PRODUCT.</span>
   </div>
 
-  <div class="connect-right">
-    <div class="crosshair tl"></div><div class="crosshair tr"></div>
-    <div class="crosshair bl"></div><div class="crosshair br"></div>
+  <a href="https://github.com/kaadipranav" target="_blank" class="float-link link-1">GITHUB // KAADIPRANAV ↗</a>
+  <a href="https://twitter.com/kaad_zz" target="_blank" class="float-link link-2">TWITTER // @KAAD_ZZ ↗</a>
+  <a href="https://linkedin.com/in/kaadz" target="_blank" class="float-link link-3">LINKEDIN // KAADZ ↗</a>
+  <a href="mailto:kaadz@protonmail.com" class="float-link link-4">EMAIL // PROTONMAIL →</a>
 
-    <div class="connect-art">
-      INFRASTRUCTURE<br>IS THE<br>PRODUCT.
-    </div>
-
-    <div style="font-family:var(--font-mono); font-size:12px; font-weight:700; letter-spacing:0.15em; border-top:2px solid #000; padding-top:24px;">
-      KAADIPRANAV // CHENNAI, INDIA // 2026
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ FOOTER ══════════ -->
-<footer>
-  <div>
-    <strong>KAADZ</strong> — FOUNDER OF WATCHLLM & SYSTEMS ENGINEER
-  </div>
-  <div>
+  <div class="footer-stamp">
     "DETERMINISTIC RUNTIMES FOR PROBABILISTIC AGENTS." © 2026 KAADIPRANAV.
   </div>
-</footer>
-
-<script>
-  // Smooth reveal animations for clean presentation
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.08 });
-
-  document.querySelectorAll('.principle-card, .ledger-row, .link-row').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-    obs.observe(el);
-  });
-</script>
+</section>
 
 </body>
 </html>
