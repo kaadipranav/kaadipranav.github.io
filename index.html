@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KAADZ // STATEMENT</title>
+  <title>KAADZ — Deterministic Runtime Governance</title>
   <meta name="description" content="Kaadz — Founder of WatchLLM. Agents are probabilistic. Infrastructure cannot be." />
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,42 +52,48 @@
     ════════════════════════════════════════════════════════════ */
     .poster-01 {
       min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 0 4vw;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 4vw;
       position: relative;
     }
 
     .abs-name {
-      position: absolute; top: 4vw; left: 4vw; right: 4vw;
       display: flex; justify-content: space-between;
       font-family: var(--font-mono); font-size: 14px; font-weight: 800;
-      letter-spacing: 0.15em; text-transform: uppercase; z-index: 20;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 4vw; z-index: 20;
     }
 
     .mega-lockup {
       font-family: var(--font-mega);
       text-transform: uppercase;
       display: flex; flex-direction: column;
-      z-index: 10; margin-top: 4vw;
+      z-index: 10;
     }
     
-    .mega-line { white-space: nowrap; }
+    .mega-line { 
+      white-space: nowrap; 
+      font-size: clamp(50px, 10.5vw, 200px); 
+      line-height: 0.85; 
+      letter-spacing: 0.02em; 
+    }
     
-    /* Fluid typography tuned to span exactly the width */
-    .line-1 { font-size: 16vw; line-height: 0.8; letter-spacing: -0.01em; color: var(--fg); }
-    .line-2 { font-size: 11.25vw; line-height: 0.8; letter-spacing: 0.01em; color: transparent; -webkit-text-stroke: 3px var(--fg); }
-    .line-3 { font-size: 10.65vw; line-height: 0.85; letter-spacing: 0.01em; color: var(--red); }
-    .line-4 { font-size: 14.2vw; line-height: 0.8; letter-spacing: 0.025em; color: var(--volt); }
+    .line-1 { color: var(--fg); }
+    .line-2 { color: transparent; -webkit-text-stroke: 3px var(--fg); }
+    .line-3 { color: var(--red); }
+    .line-4 { color: var(--volt); }
 
-    /* The Bio Box overlaps perfectly */
+    .bio-footer {
+      display: flex; justify-content: flex-end;
+      margin-top: 4vw; z-index: 30;
+    }
+
     .bio-box {
-      position: absolute; bottom: 4vw; left: 4vw;
       background: var(--fg); color: var(--bg);
-      padding: 2vw; width: 340px;
+      padding: 2vw; width: 400px; max-width: 100%;
       font-family: var(--font-mono); font-size: 13px; font-weight: 800;
       letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.5;
-      box-shadow: 12px 12px 0px var(--blue);
-      z-index: 30;
+      box-shadow: -12px 12px 0px var(--blue);
     }
     .bio-box strong { font-size: 18px; margin-bottom: 8px; display: block; color: var(--red); }
 
@@ -290,9 +296,11 @@
     <div class="mega-line line-4">CANNOT BE.</div>
   </div>
 
-  <div class="bio-box">
-    <strong>WATCHLLM MONOREPO</strong>
-    Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
+  <div class="bio-footer">
+    <div class="bio-box">
+      <strong>WATCHLLM MONOREPO</strong>
+      Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
+    </div>
   </div>
 </section>
 
