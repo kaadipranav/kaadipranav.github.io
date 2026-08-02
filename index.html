@@ -47,64 +47,49 @@
     /* ════════════════════════════════════════════════════════════
        POSTER 01: THE HERO (Inspired by INTEGRATION)
     ════════════════════════════════════════════════════════════ */
+    /* ════════════════════════════════════════════════════════════
+       POSTER 01: THE HERO (Perfectly Aligned Poster Typography)
+    ════════════════════════════════════════════════════════════ */
     .poster-01 {
       min-height: 100vh;
       display: flex; flex-direction: column; justify-content: center;
-      padding: 2vw;
+      padding: 0 4vw;
       position: relative;
+    }
+
+    .abs-name {
+      position: absolute; top: 4vw; left: 4vw; right: 4vw;
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 14px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase; z-index: 20;
     }
 
     .mega-lockup {
       font-family: var(--font-mega);
-      font-size: clamp(80px, 16vw, 300px);
-      line-height: 0.72;
       text-transform: uppercase;
-      letter-spacing: -0.02em;
       display: flex; flex-direction: column;
-      mix-blend-mode: difference;
-      z-index: 10;
-    }
-
-    .mega-line {
-      display: flex; flex-wrap: wrap; align-items: flex-end; gap: 2vw;
-      white-space: nowrap;
+      z-index: 10; margin-top: 4vw;
     }
     
-    .mega-line.stretch { justify-content: space-between; }
+    .mega-line { white-space: nowrap; }
     
-    .text-stroke {
-      color: transparent;
-      -webkit-text-stroke: 2px var(--fg);
-    }
-    
-    .text-red { color: var(--red); }
-    .text-volt { color: var(--volt); }
+    /* Fluid typography tuned to span exactly the width */
+    .line-1 { font-size: 16vw; line-height: 0.8; letter-spacing: -0.01em; color: var(--fg); }
+    .line-2 { font-size: 11.25vw; line-height: 0.8; letter-spacing: 0.01em; color: transparent; -webkit-text-stroke: 3px var(--fg); }
+    .line-3 { font-size: 10.65vw; line-height: 0.85; letter-spacing: 0.01em; color: var(--red); }
+    .line-4 { font-size: 14.2vw; line-height: 0.8; letter-spacing: 0.025em; color: var(--volt); }
 
-    .bio-insert {
-      font-family: var(--font-mono);
-      font-size: clamp(10px, 1.2vw, 16px);
-      line-height: 1.4;
-      white-space: normal;
-      width: 250px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding-bottom: 1vw;
-      color: var(--text-dim);
+    /* The Bio Box overlaps perfectly */
+    .bio-box {
+      position: absolute; bottom: 4vw; left: 4vw;
+      background: var(--fg); color: var(--bg);
+      padding: 2vw; width: 340px;
+      font-family: var(--font-mono); font-size: 13px; font-weight: 800;
+      letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.5;
+      box-shadow: 12px 12px 0px var(--blue);
+      z-index: 30;
     }
-    .bio-insert strong { color: var(--fg); font-weight: 800; background: var(--blue); padding: 2px 4px; }
-
-    /* ABSOLUTE DECORATORS */
-    .abs-name {
-      position: absolute; top: 2vw; left: 2vw;
-      font-family: var(--font-mono); font-size: 14px; font-weight: 800;
-      letter-spacing: 0.1em; z-index: 20; mix-blend-mode: difference;
-    }
-    .abs-scroll {
-      position: absolute; bottom: 2vw; right: 2vw;
-      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
-      letter-spacing: 0.2em; z-index: 20; text-transform: uppercase;
-      writing-mode: vertical-rl; transform: rotate(180deg);
-    }
+    .bio-box strong { font-size: 18px; margin-bottom: 8px; display: block; color: var(--red); }
 
     /* ════════════════════════════════════════════════════════════
        POSTER 02: THE AXIOMS (Inspired by OBSERVE)
@@ -293,33 +278,21 @@
 
 <!-- POSTER 01: THE HERO -->
 <section class="poster-01">
-  <div class="abs-name">KAADIPRANAV // WATCHLLM</div>
-  <div class="abs-scroll">SCROLL TO OBSERVE</div>
+  <div class="abs-name">
+    <span>KAADIPRANAV // WATCHLLM</span>
+    <span>[ FOUNDER & SYSTEMS ENGINEER ]</span>
+  </div>
 
   <div class="mega-lockup">
-    <div class="mega-line">
-      <span>AGENTS</span>
-      <span>ARE</span>
-    </div>
-    
-    <div class="mega-line stretch">
-      <span class="text-stroke">PROB</span>
-      <span class="text-red">ABIL</span>
-      <span>ISTIC.</span>
-    </div>
+    <div class="mega-line line-1">AGENTS ARE</div>
+    <div class="mega-line line-2">PROBABILISTIC.</div>
+    <div class="mega-line line-3">INFRASTRUCTURE</div>
+    <div class="mega-line line-4">CANNOT BE.</div>
+  </div>
 
-    <div class="mega-line">
-      <div class="bio-insert">
-        <strong>FOUNDER OF WATCHLLM.</strong><br>
-        Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
-      </div>
-      <span class="text-stroke">INFRASTRUCTURE</span>
-    </div>
-
-    <div class="mega-line">
-      <span class="text-volt">CANNOT</span>
-      <span>BE.</span>
-    </div>
+  <div class="bio-box">
+    <strong>WATCHLLM MONOREPO</strong>
+    Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
   </div>
 </section>
 
