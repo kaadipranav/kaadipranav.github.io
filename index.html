@@ -14,14 +14,13 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:     #020202;
+      --bg:     #050505;
       --fg:     #F0F0F0;
       --red:    #FF2200;
       --volt:   #CCFF00;
-      --blue:   #1133FF;
-      --orange: #FF6600;
+      --blue:   #0033FF;
       
-      --font-mega: 'Anton', sans-serif;
+      --font-display: 'Anton', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       --font-body: 'Space Grotesk', sans-serif;
     }
@@ -29,629 +28,326 @@
     html { scroll-behavior: smooth; background: var(--bg); }
     body {
       font-family: var(--font-body);
-      background: var(--bg);
-      color: var(--fg);
+      background: var(--bg); color: var(--fg);
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
+    ::selection { background: var(--red); color: #fff; }
 
-    ::selection { background: var(--red); color: var(--fg); }
-
-    /* Film grain */
+    /* Subtle print grain */
     body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 9999;
-      pointer-events: none; opacity: 0.04;
+      content: ''; position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: 0.035;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* ════════════════════════════════════════════════════
-       POSTER 01: HERO
-       Dense, compartmentalized, edge-to-edge
-    ════════════════════════════════════════════════════ */
-    .poster-hero {
+    /* ═══════════════════════════════════════════
+       SECTION 01 — HERO
+       Pure typography. Nothing else.
+    ═══════════════════════════════════════════ */
+    .hero {
       min-height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      border-bottom: 4px solid var(--fg);
-    }
-
-    /* Top data strip */
-    .hero-strip {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 3vw;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-    }
-    .hero-strip span { display: inline-flex; align-items: center; gap: 8px; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--volt); display: inline-block; }
-
-    /* Main hero body */
-    .hero-body {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .hero-type {
       padding: 3vw;
-      display: flex; flex-direction: column; justify-content: center;
-      border-right: 1px solid rgba(255,255,255,0.15);
-      overflow: hidden;
-    }
-
-    .mega-line {
-      font-family: var(--font-mega);
-      text-transform: uppercase;
-      white-space: nowrap;
-      line-height: 0.82;
-      letter-spacing: -0.01em;
-    }
-
-    /* JavaScript will set precise font sizes to fill the container width */
-    .line-1 { color: var(--fg); }
-    .line-2 { color: transparent; -webkit-text-stroke: 2.5px var(--fg); }
-    .line-3 { color: var(--red); }
-    .line-4 { color: var(--volt); }
-
-    /* Right sidebar panel */
-    .hero-sidebar {
       display: flex; flex-direction: column;
-      background: var(--bg);
+      justify-content: space-between;
     }
 
-    .sidebar-block {
-      padding: 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      flex: 1;
-    }
-    .sidebar-block:last-child { border-bottom: none; }
-
-    .sidebar-label {
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: rgba(255,255,255,0.35); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .sidebar-label::before { content: ''; width: 12px; height: 1px; background: var(--red); }
-
-    .sidebar-value {
-      font-family: var(--font-mega); font-size: 28px;
-      text-transform: uppercase; line-height: 1;
-      margin-bottom: 16px;
-    }
-
-    .sidebar-text {
+    /* Tiny identifier line at top */
+    .hero-id {
+      display: flex; justify-content: space-between;
       font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      line-height: 1.6; color: rgba(255,255,255,0.6);
-      text-transform: uppercase; letter-spacing: 0.05em;
-    }
-
-    .sidebar-cta {
-      display: block; padding: 20px 24px;
-      background: var(--red); color: var(--fg);
-      font-family: var(--font-mono); font-size: 13px; font-weight: 800;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      text-decoration: none; text-align: center;
-      transition: background 0.15s;
-    }
-    .sidebar-cta:hover { background: var(--orange); }
-
-    /* Bottom info strip */
-    .hero-bottom {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-    }
-    .hero-stat {
-      padding: 16px 3vw;
-      border-right: 1px solid rgba(255,255,255,0.15);
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
       letter-spacing: 0.15em; text-transform: uppercase;
       color: rgba(255,255,255,0.4);
     }
-    .hero-stat:last-child { border-right: none; }
-    .hero-stat strong {
-      display: block; font-size: 16px; color: var(--fg);
-      margin-top: 4px; letter-spacing: 0.05em;
+
+    /* The statement — this is the entire design */
+    .hero-type {
+      flex: 1;
+      display: flex; flex-direction: column;
+      justify-content: center;
     }
 
-    /* ════════════════════════════════════════════════════
-       POSTER 02: AXIOMS
-       Split-panel color block with dense grid
-    ════════════════════════════════════════════════════ */
-    .poster-axioms {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 100vh;
-      border-bottom: 4px solid var(--fg);
+    .hero-line {
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      white-space: nowrap;
+      line-height: 0.85;
+      letter-spacing: -0.01em;
+      /* JS will set font-size per line to fill width */
     }
+    .hl-1 { color: var(--fg); }
+    .hl-2 { color: transparent; -webkit-text-stroke: 2.5px var(--fg); }
+    .hl-3 { color: var(--red); }
+    .hl-4 { color: var(--volt); }
 
-    .axiom-left {
-      background: var(--red);
-      color: var(--bg);
-      padding: 4vw;
-      display: flex; flex-direction: column; justify-content: space-between;
+    /* Small bio line at bottom */
+    .hero-foot {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      gap: 3vw; flex-wrap: wrap;
+    }
+    .hero-bio {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+      line-height: 1.65; color: rgba(255,255,255,0.5);
+      text-transform: uppercase; letter-spacing: 0.04em;
+      max-width: 520px;
+    }
+    .hero-bio strong { color: var(--fg); }
+    .hero-cta {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--bg); background: var(--fg);
+      padding: 16px 32px; text-decoration: none;
+      transition: all 0.15s;
+    }
+    .hero-cta:hover { background: var(--red); color: #fff; }
+
+    /* ═══════════════════════════════════════════
+       SECTION 02 — WHAT WE BUILD
+       Red canvas. Big word. Simple explanation.
+    ═══════════════════════════════════════════ */
+    .about {
+      background: var(--red); color: var(--bg);
+      padding: 6vw 3vw;
       position: relative; overflow: hidden;
     }
 
-    .axiom-left-bg {
-      position: absolute; bottom: -8vw; right: -4vw;
-      font-family: var(--font-mega);
-      font-size: 40vw; line-height: 0.7;
-      color: rgba(0,0,0,0.08); pointer-events: none;
+    .about-big {
+      font-family: var(--font-display);
+      font-size: clamp(80px, 18vw, 320px);
+      line-height: 0.78; text-transform: uppercase;
+      margin-bottom: 4vw;
     }
 
-    .axiom-left-head {
-      position: relative; z-index: 2;
-    }
-    .axiom-left-tag {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 800;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      margin-bottom: 2vw; opacity: 0.6;
-    }
-    .axiom-left-title {
-      font-family: var(--font-mega);
-      font-size: clamp(60px, 10vw, 140px);
-      line-height: 0.82; text-transform: uppercase;
+    .about-body {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4vw;
+      max-width: 1100px;
     }
 
-    .axiom-left-footer {
-      position: relative; z-index: 2;
-      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.15em;
-      border-top: 3px solid var(--bg); padding-top: 2vw;
+    .about-col {
+      font-family: var(--font-mono); font-size: 14px; font-weight: 700;
+      line-height: 1.7; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .about-col em {
+      font-style: normal;
+      background: var(--bg); color: var(--fg);
+      padding: 2px 6px;
     }
 
-    .axiom-right {
-      display: flex; flex-direction: column;
-    }
-
-    .axiom-card {
-      flex: 1; padding: 3vw;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      display: grid; grid-template-columns: auto 1fr; gap: 2vw;
-      align-items: start;
-      transition: background 0.2s;
-    }
-    .axiom-card:last-child { border-bottom: none; }
-    .axiom-card:hover { background: rgba(255,255,255,0.03); }
-
-    .axiom-num {
-      font-family: var(--font-mega);
-      font-size: clamp(56px, 8vw, 100px);
-      line-height: 0.75; color: rgba(255,255,255,0.1);
-      transition: color 0.2s;
-    }
-    .axiom-card:hover .axiom-num { color: var(--red); }
-
-    .axiom-info { padding-top: 0.5vw; }
-    .axiom-name {
-      font-family: var(--font-mega);
-      font-size: clamp(24px, 3vw, 44px);
-      line-height: 0.9; text-transform: uppercase;
-      margin-bottom: 1vw;
-    }
-    .axiom-desc {
-      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      line-height: 1.7; color: rgba(255,255,255,0.5);
-      text-transform: uppercase; letter-spacing: 0.04em;
-    }
-    .axiom-desc em {
-      font-style: normal; background: var(--fg); color: var(--bg);
-      padding: 1px 5px;
-    }
-
-    /* ════════════════════════════════════════════════════
-       POSTER 03: ARCHIVE
-       White canvas, brutalist list, massive type
-    ════════════════════════════════════════════════════ */
-    .poster-archive {
+    /* ═══════════════════════════════════════════
+       SECTION 03 — WORKS
+       White canvas. Oversized list.
+    ═══════════════════════════════════════════ */
+    .works {
       background: var(--fg); color: var(--bg);
-      border-bottom: 4px solid var(--bg);
     }
 
-    .archive-header {
-      display: grid; grid-template-columns: 1fr auto;
-      align-items: flex-end;
+    .works-head {
       padding: 4vw 3vw 2vw;
       border-bottom: 3px solid var(--bg);
     }
-    .archive-h2 {
-      font-family: var(--font-mega);
-      font-size: clamp(48px, 8vw, 120px);
+    .works-title {
+      font-family: var(--font-display);
+      font-size: clamp(56px, 10vw, 160px);
       line-height: 0.82; text-transform: uppercase;
     }
-    .archive-tag {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 800;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      padding-bottom: 0.8vw;
-    }
 
-    .archive-list { display: flex; flex-direction: column; }
-
-    .archive-row {
-      display: grid; grid-template-columns: 80px 1fr auto;
-      align-items: center;
-      border-bottom: 2px solid var(--bg);
+    .work-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 2.5vw 3vw;
+      border-bottom: 3px solid var(--bg);
       text-decoration: none; color: inherit;
       position: relative; overflow: hidden;
-      transition: color 0.25s;
+      transition: color 0.3s;
     }
-    .archive-row::before {
+    .work-row::before {
       content: ''; position: absolute; inset: 0;
       background: var(--blue); transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 0;
     }
-    .archive-row:hover::before { transform: scaleX(1); }
-    .archive-row:hover { color: var(--fg); }
+    .work-row:hover::before { transform: scaleX(1); }
+    .work-row:hover { color: var(--fg); }
 
-    .arc-cell {
-      padding: 2.5vw 3vw;
+    .work-name {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 7vw, 100px);
+      line-height: 0.85; text-transform: uppercase;
       position: relative; z-index: 1;
     }
-    .arc-cell:not(:last-child) { border-right: 2px solid var(--bg); }
-    .archive-row:hover .arc-cell:not(:last-child) { border-color: rgba(255,255,255,0.2); }
-
-    .arc-i {
-      font-family: var(--font-mono); font-size: 14px; font-weight: 800;
-      text-align: center;
-    }
-    .arc-n {
-      font-family: var(--font-mega);
-      font-size: clamp(36px, 5vw, 72px);
-      line-height: 0.85; text-transform: uppercase;
-    }
-    .arc-d {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      text-align: right; max-width: 280px; line-height: 1.5;
+    .work-desc {
+      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      text-align: right; max-width: 320px; line-height: 1.5;
+      position: relative; z-index: 1;
     }
 
-    /* ════════════════════════════════════════════════════
-       POSTER 04: CONNECT
-       Split: volt panel + dark links
-    ════════════════════════════════════════════════════ */
-    .poster-connect {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      min-height: 100vh;
-    }
-
-    .connect-left {
+    /* ═══════════════════════════════════════════
+       SECTION 04 — CONNECT
+       Volt canvas. Big type. Links below.
+    ═══════════════════════════════════════════ */
+    .connect {
       background: var(--volt); color: var(--bg);
-      padding: 4vw;
-      display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; overflow: hidden;
+      padding: 6vw 3vw;
     }
 
-    .connect-tag {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 800;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      margin-bottom: 2vw;
-    }
-
-    .connect-title {
-      font-family: var(--font-mega);
-      font-size: clamp(60px, 12vw, 200px);
+    .connect-statement {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 14vw, 240px);
       line-height: 0.78; text-transform: uppercase;
+      margin-bottom: 6vw;
     }
 
-    .connect-footer {
-      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.15em;
-      border-top: 3px solid var(--bg); padding-top: 2vw;
+    .connect-links {
+      display: flex; flex-wrap: wrap; gap: 12px;
     }
-
-    .connect-right {
-      background: var(--bg);
-      display: flex; flex-direction: column;
-    }
-
     .connect-link {
-      flex: 1; display: flex; justify-content: space-between; align-items: center;
-      padding: 0 3vw;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      background: var(--bg); color: var(--fg);
       font-family: var(--font-mono); font-size: 14px; font-weight: 800;
       letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; color: var(--fg);
+      padding: 18px 28px; text-decoration: none;
       transition: all 0.15s;
     }
-    .connect-link:last-child { border-bottom: none; }
     .connect-link:hover {
-      background: var(--fg); color: var(--bg);
-      padding-left: 4vw;
-    }
-    .connect-link .arrow { font-size: 24px; transition: transform 0.15s; }
-    .connect-link:hover .arrow { transform: translateX(8px); }
-
-    .connect-link .platform {
-      color: var(--red); transition: color 0.15s;
-    }
-    .connect-link:hover .platform { color: var(--bg); }
-
-    /* ════════════════════════════════════════════════════
-       FOOTER
-    ════════════════════════════════════════════════════ */
-    footer {
-      padding: 16px 3vw;
-      border-top: 1px solid rgba(255,255,255,0.15);
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
+      background: var(--red); color: #fff;
+      transform: translateY(-3px);
     }
 
-    /* ═══════ RESPONSIVE ═══════ */
-    @media (max-width: 900px) {
-      .hero-body { grid-template-columns: 1fr; }
-      .hero-sidebar { display: none; }
-      .hero-bottom { grid-template-columns: 1fr 1fr; }
-      .hero-stat { border-bottom: 1px solid rgba(255,255,255,0.15); }
-      .poster-axioms { grid-template-columns: 1fr; }
-      .axiom-left { min-height: 50vh; }
-      .axiom-card { grid-template-columns: 1fr; gap: 1vw; }
-      .axiom-num { font-size: 20vw; }
-      .archive-row { grid-template-columns: 1fr; }
-      .arc-cell:first-child { display: none; }
-      .arc-d { text-align: left; max-width: 100%; }
-      .arc-cell:not(:last-child) { border-right: none; border-bottom: 2px solid var(--bg); }
-      .archive-row:hover .arc-cell:not(:last-child) { border-color: rgba(255,255,255,0.2); }
-      .poster-connect { grid-template-columns: 1fr; }
-      .connect-left { min-height: 50vh; }
-      .connect-link { padding: 24px 3vw; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
+    .connect-foot {
+      margin-top: 6vw; padding-top: 2vw;
+      border-top: 3px solid var(--bg);
+      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
     }
 
-    @media (max-width: 520px) {
-      .hero-bottom { grid-template-columns: 1fr; }
-      .hero-strip { flex-direction: column; gap: 4px; text-align: center; }
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .hero-id { flex-direction: column; gap: 4px; }
+      .hero-foot { flex-direction: column; }
+      .about-body { grid-template-columns: 1fr; }
+      .work-row { flex-direction: column; align-items: flex-start; gap: 1vw; }
+      .work-desc { text-align: left; max-width: 100%; }
+      .connect-links { flex-direction: column; }
+      .connect-link { text-align: center; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════ POSTER 01: HERO ══════ -->
-<section class="poster-hero">
-  <div class="hero-strip">
-    <span><span class="dot"></span> KAADIPRANAV // WATCHLLM.DEV</span>
-    <span>FOUNDER & SYSTEMS ENGINEER</span>
-    <span>CHENNAI, INDIA — 2026</span>
+<!-- ══════ 01 — HERO ══════ -->
+<section class="hero">
+  <div class="hero-id">
+    <span>KAADIPRANAV</span>
+    <span>WATCHLLM.DEV</span>
   </div>
 
-  <div class="hero-body">
-    <div class="hero-type" id="heroType">
-      <div class="mega-line line-1" data-text="AGENTS ARE">AGENTS ARE</div>
-      <div class="mega-line line-2" data-text="PROBABILISTIC.">PROBABILISTIC.</div>
-      <div class="mega-line line-3" data-text="INFRASTRUCTURE">INFRASTRUCTURE</div>
-      <div class="mega-line line-4" data-text="CANNOT BE.">CANNOT BE.</div>
-    </div>
-
-    <div class="hero-sidebar">
-      <div class="sidebar-block">
-        <div class="sidebar-label">CORE ENGINE</div>
-        <div class="sidebar-value">TREE-SITTER<br>STATIC AST</div>
-        <div class="sidebar-text">
-          Structural rules are verified at the syntax boundary before code mutations are committed to disk.
-        </div>
-      </div>
-      <div class="sidebar-block">
-        <div class="sidebar-label">POLICY SANDBOX</div>
-        <div class="sidebar-value" style="color:var(--volt)">ZERO-GC<br>WASM // RUST</div>
-        <div class="sidebar-text">
-          Sub-millisecond enforcement. Zero garbage collection. Air-gapped from the inference loop.
-        </div>
-      </div>
-      <div class="sidebar-block">
-        <div class="sidebar-label">MEMORY LAYER</div>
-        <div class="sidebar-value">KLYD STUDIO<br>SQLITE LEDGER</div>
-        <div class="sidebar-text">
-          Every decision recorded. Every evaluation replayable. Zero ephemeral context loss.
-        </div>
-      </div>
-      <a href="https://watchllm.dev" target="_blank" class="sidebar-cta">
-        WATCHLLM.DEV →
-      </a>
-    </div>
+  <div class="hero-type" id="heroType">
+    <div class="hero-line hl-1">AGENTS ARE</div>
+    <div class="hero-line hl-2">PROBABILISTIC.</div>
+    <div class="hero-line hl-3">INFRASTRUCTURE</div>
+    <div class="hero-line hl-4">CANNOT BE.</div>
   </div>
 
-  <div class="hero-bottom">
-    <div class="hero-stat">
-      LANGUAGE<strong>RUST / TS</strong>
-    </div>
-    <div class="hero-stat">
-      LATENCY<strong>&lt; 1MS</strong>
-    </div>
-    <div class="hero-stat">
-      INFERENCE<strong>ZERO ML</strong>
-    </div>
-    <div class="hero-stat">
-      STATUS<strong><span class="dot"></span> ACTIVE</strong>
-    </div>
+  <div class="hero-foot">
+    <p class="hero-bio">
+      <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
+    </p>
+    <a href="https://watchllm.dev" target="_blank" class="hero-cta">WATCHLLM.DEV →</a>
   </div>
 </section>
 
-<!-- ══════ POSTER 02: AXIOMS ══════ -->
-<section class="poster-axioms">
-  <div class="axiom-left">
-    <div class="axiom-left-bg">01</div>
-    <div class="axiom-left-head">
-      <div class="axiom-left-tag">GOVERNANCE PRIMITIVES</div>
-      <h2 class="axiom-left-title">
-        DETER<br>MIN<br>ISTIC.
-      </h2>
-    </div>
-    <div class="axiom-left-footer">
-      "PROBABILISTIC GUARDRAILS ARE MERELY SUGGESTIONS."<br>
-      — WATCHLLM AXIOM 01
-    </div>
-  </div>
+<!-- ══════ 02 — ABOUT ══════ -->
+<section class="about">
+  <h2 class="about-big">WATCH<br>LLM.</h2>
 
-  <div class="axiom-right">
-    <div class="axiom-card">
-      <div class="axiom-num">01</div>
-      <div class="axiom-info">
-        <h3 class="axiom-name">STATIC AST<br>INTERCEPTION</h3>
-        <p class="axiom-desc">
-          Parses agent-generated code into strict tree-sitter abstract syntax trees. <em>Zero ML hallucination</em> in the verification loop. Identical syntax yields identical evaluations.
-        </p>
-      </div>
-    </div>
-    <div class="axiom-card">
-      <div class="axiom-num">02</div>
-      <div class="axiom-info">
-        <h3 class="axiom-name">ZERO-GC WASM<br>RUNTIME</h3>
-        <p class="axiom-desc">
-          Enforcement policies compile to ultra-lightweight WebAssembly sandboxes in Rust. <em>Sub-millisecond latency</em> inside IDEs and CI/CD pipelines.
-        </p>
-      </div>
-    </div>
-    <div class="axiom-card">
-      <div class="axiom-num">03</div>
-      <div class="axiom-info">
-        <h3 class="axiom-name">ARCHITECTURAL<br>MEMORY</h3>
-        <p class="axiom-desc">
-          Klyd Studio's SQLite harness. Every decision, evaluation, and intercept recorded into an <em>auditable relational ledger</em>. Zero ephemeral context loss.
-        </p>
-      </div>
-    </div>
+  <div class="about-body">
+    <p class="about-col">
+      WatchLLM parses agent-generated code into strict Tree-sitter Abstract Syntax Trees. <em>Zero ML hallucination</em> in the verification loop. Identical syntax yields identical evaluations, every single time, without exception.
+    </p>
+    <p class="about-col">
+      Enforcement policies compile to ultra-lightweight, zero-garbage-collection WebAssembly sandboxes in Rust. <em>Sub-millisecond latency.</em> Every decision recorded into an auditable SQLite ledger via Klyd Studio. Zero ephemeral context loss.
+    </p>
   </div>
 </section>
 
-<!-- ══════ POSTER 03: ARCHIVE ══════ -->
-<section class="poster-archive">
-  <div class="archive-header">
-    <h2 class="archive-h2">SELECTED<br>WORKS</h2>
-    <div class="archive-tag">MONOREPO ARCHIVE // 2024–2026</div>
+<!-- ══════ 03 — WORKS ══════ -->
+<section class="works">
+  <div class="works-head">
+    <h2 class="works-title">SELECTED<br>WORKS</h2>
   </div>
 
-  <div class="archive-list">
-    <a href="https://watchllm.dev" target="_blank" class="archive-row">
-      <div class="arc-cell arc-i">01</div>
-      <div class="arc-cell arc-n">WATCHLLM</div>
-      <div class="arc-cell arc-d">
-        DETERMINISTIC RUNTIME GOVERNANCE FRAMEWORK.<br>
-        AST INTERCEPTOR · WASM SANDBOX · REPLAY TELEMETRY
-      </div>
-    </a>
-    <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="archive-row">
-      <div class="arc-cell arc-i">02</div>
-      <div class="arc-cell arc-n">KLYD-HARNESS</div>
-      <div class="arc-cell arc-d">
-        ARCHITECTURAL MEMORY LAYER.<br>
-        SQLITE DECISION LEDGER · REPLAYABLE RECORDS
-      </div>
-    </a>
-    <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="archive-row">
-      <div class="arc-cell arc-i">03</div>
-      <div class="arc-cell arc-n">CODIFY ENGINE</div>
-      <div class="arc-cell arc-d">
-        CODE EVALUATION PLATFORM CORE.<br>
-        SANDBOXED EXECUTION · AUTOMATED TEST HARNESS
-      </div>
-    </a>
-    <a href="https://github.com/kaadipranav" target="_blank" class="archive-row">
-      <div class="arc-cell arc-i">04</div>
-      <div class="arc-cell arc-n">SCRIPTBOOST</div>
-      <div class="arc-cell arc-d">
-        SCRIPTING UTILITIES.<br>
-        SYSTEM EXECUTION HARNESSES
-      </div>
-    </a>
-  </div>
+  <a href="https://watchllm.dev" target="_blank" class="work-row">
+    <div class="work-name">WATCHLLM</div>
+    <div class="work-desc">DETERMINISTIC RUNTIME GOVERNANCE. AST INTERCEPTOR · WASM SANDBOX · REPLAY TELEMETRY.</div>
+  </a>
+  <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="work-row">
+    <div class="work-name">KLYD-HARNESS</div>
+    <div class="work-desc">ARCHITECTURAL MEMORY LAYER. SQLITE DECISION LEDGER · REPLAYABLE EXECUTION RECORDS.</div>
+  </a>
+  <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="work-row">
+    <div class="work-name">CODIFY ENGINE</div>
+    <div class="work-desc">CODE EVALUATION PLATFORM. SANDBOXED EXECUTION · AUTOMATED TEST HARNESS.</div>
+  </a>
+  <a href="https://github.com/kaadipranav" target="_blank" class="work-row">
+    <div class="work-name">SCRIPTBOOST</div>
+    <div class="work-desc">SCRIPTING UTILITIES. SYSTEM EXECUTION HARNESSES.</div>
+  </a>
 </section>
 
-<!-- ══════ POSTER 04: CONNECT ══════ -->
-<section class="poster-connect">
-  <div class="connect-left">
-    <div>
-      <div class="connect-tag">INITIATE COMMUNICATION</div>
-      <h2 class="connect-title">INFRA<br>STRUC<br>TURE IS<br>THE<br>PRODUCT.</h2>
-    </div>
-    <div class="connect-footer">
-      KAADIPRANAV // CHENNAI, INDIA // 2026
-    </div>
+<!-- ══════ 04 — CONNECT ══════ -->
+<section class="connect">
+  <h2 class="connect-statement">INFRASTRUCTURE<br>IS THE<br>PRODUCT.</h2>
+
+  <div class="connect-links">
+    <a href="https://github.com/kaadipranav" target="_blank" class="connect-link">GITHUB ↗</a>
+    <a href="https://twitter.com/kaad_zz" target="_blank" class="connect-link">TWITTER / X ↗</a>
+    <a href="https://linkedin.com/in/kaadz" target="_blank" class="connect-link">LINKEDIN ↗</a>
+    <a href="https://watchllm.dev" target="_blank" class="connect-link">WATCHLLM.DEV ↗</a>
+    <a href="mailto:kaadz@protonmail.com" class="connect-link">EMAIL →</a>
   </div>
 
-  <div class="connect-right">
-    <a href="https://github.com/kaadipranav" target="_blank" class="connect-link">
-      <span><span class="platform">GITHUB</span> — KAADIPRANAV</span>
-      <span class="arrow">↗</span>
-    </a>
-    <a href="https://twitter.com/kaad_zz" target="_blank" class="connect-link">
-      <span><span class="platform">TWITTER / X</span> — @KAAD_ZZ</span>
-      <span class="arrow">↗</span>
-    </a>
-    <a href="https://linkedin.com/in/kaadz" target="_blank" class="connect-link">
-      <span><span class="platform">LINKEDIN</span> — KAADZ</span>
-      <span class="arrow">↗</span>
-    </a>
-    <a href="https://watchllm.dev" target="_blank" class="connect-link">
-      <span><span class="platform">WATCHLLM</span> — WATCHLLM.DEV</span>
-      <span class="arrow">↗</span>
-    </a>
-    <a href="mailto:kaadz@protonmail.com" class="connect-link">
-      <span><span class="platform">EMAIL</span> — KAADZ@PROTONMAIL.COM</span>
-      <span class="arrow">→</span>
-    </a>
+  <div class="connect-foot">
+    KAADIPRANAV // CHENNAI, INDIA // 2026
   </div>
 </section>
-
-<!-- ══════ FOOTER ══════ -->
-<footer>
-  <span>KAADZ — FOUNDER OF WATCHLLM</span>
-  <span>"DETERMINISTIC RUNTIMES FOR PROBABILISTIC AGENTS." © 2026</span>
-</footer>
 
 <script>
-  // Dynamically size each mega-line to fill the container width exactly
-  function sizeType() {
-    const container = document.getElementById('heroType');
-    if (!container) return;
-    const w = container.clientWidth;
-    const lines = container.querySelectorAll('.mega-line');
-    
-    lines.forEach(line => {
-      // Binary search for the perfect font size
-      let lo = 10, hi = 600, best = 10;
-      line.style.fontSize = hi + 'px';
-      
-      // Quick check: if even the smallest won't overflow, skip
+  // Fit each hero line to fill the container width exactly
+  function fitType() {
+    const box = document.getElementById('heroType');
+    if (!box) return;
+    const w = box.clientWidth;
+    box.querySelectorAll('.hero-line').forEach(line => {
+      let lo = 10, hi = 800, best = 10;
       while (hi - lo > 0.5) {
         const mid = (lo + hi) / 2;
         line.style.fontSize = mid + 'px';
-        if (line.scrollWidth <= w) {
-          best = mid;
-          lo = mid;
-        } else {
-          hi = mid;
-        }
+        if (line.scrollWidth <= w) { best = mid; lo = mid; }
+        else { hi = mid; }
       }
       line.style.fontSize = best + 'px';
     });
   }
+  fitType();
+  window.addEventListener('resize', fitType);
 
-  sizeType();
-  window.addEventListener('resize', sizeType);
-
-  // Scroll-triggered reveals
-  const obs = new IntersectionObserver((entries) => {
+  // Fade-in on scroll
+  const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.style.opacity = '1';
         e.target.style.transform = 'translateY(0)';
-        obs.unobserve(e.target);
+        io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.05 });
-
-  document.querySelectorAll('.axiom-card, .archive-row, .connect-link').forEach(el => {
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.work-row, .about-col').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(16px)';
+    el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    obs.observe(el);
+    io.observe(el);
   });
 </script>
 
