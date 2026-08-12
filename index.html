@@ -15,10 +15,11 @@
 
     :root {
       --bg:     #050505;
-      --fg:     #F0F0F0;
+      --fg:     #F4F4F4;
       --red:    #FF2200;
       --volt:   #CCFF00;
       --blue:   #0033FF;
+      --grid:   rgba(255,255,255,0.06);
       
       --font-display: 'Anton', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
@@ -32,13 +33,13 @@
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-    ::selection { background: var(--red); color: #fff; }
+    ::selection { background: var(--volt); color: var(--bg); }
 
     /* ═══════════════════════════════════════════
        CUSTOM SCROLLBAR & CURSOR
     ═══════════════════════════════════════════ */
     ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid rgba(255,255,255,0.05); }
+    ::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--grid); }
     ::-webkit-scrollbar-thumb { background: var(--red); }
     ::-webkit-scrollbar-thumb:hover { background: var(--volt); }
 
@@ -48,296 +49,280 @@
     }
     
     /* Acid Red Solid Block for links */
-    a, a *, button, button *, .hero-cta, .connect-link, .work-row {
+    a, a *, button, button *, .work-row {
       cursor: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='16' height='16' fill='%23FF2200'/%3E%3C/svg%3E") 8 8, pointer !important;
     }
 
     /* Subtle print grain */
     body::after {
       content: ''; position: fixed; inset: 0; z-index: 9999;
-      pointer-events: none; opacity: 0.035;
+      pointer-events: none; opacity: 0.03;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
     /* ═══════════════════════════════════════════
-       SECTION 01 — HERO
-       Pure typography. Nothing else.
+       THE MONOLITH: BACKGROUND ARCHITECTURE
     ═══════════════════════════════════════════ */
-    .hero {
-      min-height: 100vh;
-      padding: 3vw;
-      display: flex; flex-direction: column;
-      justify-content: space-between;
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
     }
 
-    /* Tiny identifier line at top */
-    .hero-id {
-      display: flex; justify-content: space-between;
-      font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
+    /* The Relentless Grid */
+    .grid-layer {
+      position: absolute; inset: 0; z-index: 1;
     }
+    .gl-v { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--grid); }
+    .gl-h { position: absolute; left: 0; right: 0; height: 1px; background: var(--grid); }
 
-    /* The statement — this is the entire design */
-    .hero-type {
-      flex: 1;
-      display: flex; flex-direction: column;
-      justify-content: center;
+    /* The Massive Sticky Type */
+    .type-layer {
+      position: absolute; inset: 4vw; z-index: 2;
+      display: flex; flex-direction: column; justify-content: space-between;
     }
-
-    .hero-line {
+    .tl-row {
       font-family: var(--font-display);
-      text-transform: uppercase;
-      white-space: nowrap;
-      line-height: 0.85;
-      letter-spacing: -0.01em;
-      /* JS will set font-size per line to fill width */
+      text-transform: uppercase; white-space: nowrap;
+      line-height: 0.8; letter-spacing: -0.01em;
     }
-    .hl-1 { color: var(--fg); }
-    .hl-2 { color: transparent; -webkit-text-stroke: 2.5px var(--fg); }
-    .hl-3 { color: var(--red); }
-    .hl-4 { color: var(--volt); }
+    .c-white { color: rgba(255,255,255,0.85); }
+    .c-stroke { color: transparent; -webkit-text-stroke: 3px rgba(255,255,255,0.4); }
+    .c-red { color: var(--red); }
+    .c-volt { color: var(--volt); }
 
-    /* Small bio line at bottom */
-    .hero-foot {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      gap: 3vw; flex-wrap: wrap;
+    /* ═══════════════════════════════════════════
+       THE CONTENT LAYER
+    ═══════════════════════════════════════════ */
+    .content-layer {
+      position: relative; z-index: 10;
+      width: 100%;
     }
-    .hero-bio {
-      font-family: var(--font-mono); font-size: 13px; font-weight: 700;
-      line-height: 1.65; color: rgba(255,255,255,0.5);
-      text-transform: uppercase; letter-spacing: 0.04em;
-      max-width: 520px;
+    
+    /* Pushes content down so the user sees the massive text on load */
+    .hero-spacer { height: 80vh; }
+
+    .flow-container {
+      display: flex; flex-direction: column; gap: 15vh;
+      padding: 0 4vw 15vh 4vw;
     }
-    .hero-bio strong { color: var(--fg); }
-    .hero-cta {
+
+    /* Structural Architectural Blocks */
+    .c-block {
+      padding: 4vw; width: 85%; max-width: 1200px;
+      box-shadow: 16px 16px 0px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .block-dark { background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); color: var(--fg); border: 2px solid rgba(255,255,255,0.1); margin-left: 0; }
+    .block-red { background: var(--red); color: var(--bg); border: 2px solid var(--red); align-self: flex-end; margin-right: 0; box-shadow: -16px 16px 0px rgba(0,0,0,0.8); }
+    .block-white { background: var(--fg); color: var(--bg); border: 2px solid var(--fg); margin-left: 0; box-shadow: 16px 16px 0px rgba(0,0,0,0.8); }
+    .block-volt { background: var(--volt); color: var(--bg); border: 2px solid var(--volt); align-self: flex-end; margin-right: 0; box-shadow: -16px 16px 0px rgba(0,0,0,0.8); }
+
+    .b-label {
       font-family: var(--font-mono); font-size: 13px; font-weight: 800;
+      letter-spacing: 0.15em; border-bottom: 2px solid currentColor;
+      padding-bottom: 1vw; margin-bottom: 3vw; display: inline-block;
+    }
+
+    /* Bio specific */
+    .bio-text {
+      font-family: var(--font-mono); font-size: clamp(14px, 2vw, 24px);
+      line-height: 1.7; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; max-width: 800px;
+    }
+    .bio-text strong { color: var(--red); }
+    .b-link {
+      display: inline-block; margin-top: 3vw;
+      font-family: var(--font-mono); font-size: 14px; font-weight: 800;
       letter-spacing: 0.15em; text-transform: uppercase;
       color: var(--bg); background: var(--fg);
-      padding: 16px 32px; text-decoration: none;
-      transition: all 0.15s;
+      padding: 16px 32px; text-decoration: none; transition: background 0.2s;
     }
-    .hero-cta:hover { background: var(--red); color: #fff; }
+    .b-link:hover { background: var(--red); color: var(--fg); }
 
-    /* ═══════════════════════════════════════════
-       SECTION 02 — WHAT WE BUILD
-       Red canvas. Big word. Simple explanation.
-    ═══════════════════════════════════════════ */
-    .about {
-      background: var(--red); color: var(--bg);
-      padding: 6vw 3vw;
-      position: relative; overflow: hidden;
+    /* Axiom specific */
+    .axiom-head {
+      font-family: var(--font-display); font-size: clamp(60px, 12vw, 180px);
+      line-height: 0.8; text-transform: uppercase; margin-bottom: 4vw;
     }
+    .axiom-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 4vw;
+    }
+    .ax-item { border-top: 2px solid currentColor; padding-top: 2vw; }
+    .ax-num { font-family: var(--font-display); font-size: 40px; margin-bottom: 1vw; }
+    .ax-desc {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+      line-height: 1.6; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .ax-desc em { font-style: normal; background: var(--bg); color: var(--red); padding: 2px 6px; }
 
-    .about-big {
-      font-family: var(--font-display);
-      font-size: clamp(80px, 18vw, 320px);
-      line-height: 0.78; text-transform: uppercase;
-      margin-bottom: 4vw;
-    }
-
-    .about-body {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 4vw;
-      max-width: 1100px;
-    }
-
-    .about-col {
-      font-family: var(--font-mono); font-size: 14px; font-weight: 700;
-      line-height: 1.7; text-transform: uppercase; letter-spacing: 0.03em;
-    }
-    .about-col em {
-      font-style: normal;
-      background: var(--bg); color: var(--fg);
-      padding: 2px 6px;
-    }
-
-    /* ═══════════════════════════════════════════
-       SECTION 03 — WORKS
-       White canvas. Oversized list.
-    ═══════════════════════════════════════════ */
-    .works {
-      background: var(--fg); color: var(--bg);
-    }
-
+    /* Works specific */
     .works-head {
-      padding: 4vw 3vw 2vw;
-      border-bottom: 3px solid var(--bg);
+      font-family: var(--font-display); font-size: clamp(50px, 10vw, 150px);
+      line-height: 0.8; text-transform: uppercase; margin-bottom: 4vw;
     }
-    .works-title {
-      font-family: var(--font-display);
-      font-size: clamp(56px, 10vw, 160px);
-      line-height: 0.82; text-transform: uppercase;
-    }
-
     .work-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 2.5vw 3vw;
-      border-bottom: 3px solid var(--bg);
-      text-decoration: none; color: inherit;
-      position: relative; overflow: hidden;
-      transition: color 0.3s;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2vw 0; border-bottom: 2px solid currentColor;
+      text-decoration: none; color: inherit; transition: padding 0.2s;
     }
-    .work-row::before {
-      content: ''; position: absolute; inset: 0;
-      background: var(--blue); transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 0;
-    }
-    .work-row:hover::before { transform: scaleX(1); }
-    .work-row:hover { color: var(--fg); }
-
-    .work-name {
-      font-family: var(--font-display);
-      font-size: clamp(40px, 7vw, 100px);
-      line-height: 0.85; text-transform: uppercase;
-      position: relative; z-index: 1;
-    }
-    .work-desc {
+    .work-row:last-child { border-bottom: none; }
+    .work-row:hover { padding-left: 2vw; padding-right: 2vw; background: var(--blue); color: var(--fg); border-color: transparent; }
+    
+    .w-name { font-family: var(--font-display); font-size: clamp(32px, 6vw, 80px); line-height: 0.9; text-transform: uppercase; }
+    .w-desc {
       font-family: var(--font-mono); font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.08em;
+      text-transform: uppercase; letter-spacing: 0.05em;
       text-align: right; max-width: 320px; line-height: 1.5;
-      position: relative; z-index: 1;
     }
 
-    /* ═══════════════════════════════════════════
-       SECTION 04 — CONNECT
-       Volt canvas. Big type. Links below.
-    ═══════════════════════════════════════════ */
-    .connect {
-      background: var(--volt); color: var(--bg);
-      padding: 6vw 3vw;
+    /* Connect specific */
+    .conn-head {
+      font-family: var(--font-display); font-size: clamp(50px, 11vw, 160px);
+      line-height: 0.8; text-transform: uppercase; margin-bottom: 4vw;
     }
-
-    .connect-statement {
-      font-family: var(--font-display);
-      font-size: clamp(64px, 14vw, 240px);
-      line-height: 0.78; text-transform: uppercase;
-      margin-bottom: 6vw;
-    }
-
-    .connect-links {
-      display: flex; flex-wrap: wrap; gap: 12px;
-    }
-    .connect-link {
+    .conn-links { display: flex; flex-wrap: wrap; gap: 1vw; }
+    .c-link {
       background: var(--bg); color: var(--fg);
       font-family: var(--font-mono); font-size: 14px; font-weight: 800;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 18px 28px; text-decoration: none;
-      transition: all 0.15s;
+      letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none;
+      padding: 20px 32px; transition: transform 0.2s, background 0.2s;
     }
-    .connect-link:hover {
-      background: var(--red); color: #fff;
-      transform: translateY(-3px);
-    }
-
-    .connect-foot {
-      margin-top: 6vw; padding-top: 2vw;
-      border-top: 3px solid var(--bg);
-      font-family: var(--font-mono); font-size: 12px; font-weight: 800;
-      letter-spacing: 0.15em; text-transform: uppercase;
-    }
+    .c-link:hover { transform: translateY(-4px); background: var(--red); color: var(--fg); box-shadow: 8px 8px 0px rgba(0,0,0,1); }
 
     /* ═══════════════════════════════════════════
        RESPONSIVE
     ═══════════════════════════════════════════ */
-    @media (max-width: 768px) {
-      .hero-id { flex-direction: column; gap: 4px; }
-      .hero-foot { flex-direction: column; }
-      .about-body { grid-template-columns: 1fr; }
-      .work-row { flex-direction: column; align-items: flex-start; gap: 1vw; }
-      .work-desc { text-align: left; max-width: 100%; }
-      .connect-links { flex-direction: column; }
-      .connect-link { text-align: center; }
+    @media (max-width: 900px) {
+      .c-block { width: 100%; padding: 6vw; margin-left: 0; margin-right: 0; align-self: center; box-shadow: 8px 8px 0px rgba(0,0,0,1); }
+      .work-row { flex-direction: column; align-items: flex-start; gap: 2vw; }
+      .w-desc { text-align: left; max-width: 100%; }
+      .conn-links { flex-direction: column; width: 100%; }
+      .c-link { text-align: center; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════ 01 — HERO ══════ -->
-<section class="hero">
-  <div class="hero-id">
-    <span>KAADIPRANAV</span>
-    <span>WATCHLLM.DEV</span>
+<!-- THE MONOLITH CANVAS -->
+<div class="bg-layer">
+  <div class="grid-layer">
+    <!-- Vertical structural lines -->
+    <div class="gl-v" style="left: 4vw;"></div>
+    <div class="gl-v" style="left: 20vw;"></div>
+    <div class="gl-v" style="left: 50vw;"></div>
+    <div class="gl-v" style="left: 80vw;"></div>
+    <div class="gl-v" style="right: 4vw;"></div>
+    
+    <!-- Horizontal structural lines -->
+    <div class="gl-h" style="top: 4vw;"></div>
+    <div class="gl-h" style="top: 25vh;"></div>
+    <div class="gl-h" style="top: 50vh;"></div>
+    <div class="gl-h" style="top: 75vh;"></div>
+    <div class="gl-h" style="bottom: 4vw;"></div>
   </div>
 
-  <div class="hero-type" id="heroType">
-    <div class="hero-line hl-1">AGENTS ARE</div>
-    <div class="hero-line hl-2">PROBABILISTIC.</div>
-    <div class="hero-line hl-3">INFRASTRUCTURE</div>
-    <div class="hero-line hl-4">CANNOT BE.</div>
+  <div class="type-layer" id="bgType">
+    <div class="tl-row c-white">AGENTS ARE</div>
+    <div class="tl-row c-stroke">PROBABILISTIC.</div>
+    <div class="tl-row c-red">INFRASTRUCTURE</div>
+    <div class="tl-row c-volt">CANNOT BE.</div>
   </div>
+</div>
 
-  <div class="hero-foot">
-    <p class="hero-bio">
-      <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
-    </p>
-    <a href="https://watchllm.dev" target="_blank" class="hero-cta">WATCHLLM.DEV →</a>
+<!-- THE CONTENT OVERLAY -->
+<div class="content-layer">
+  
+  <div class="hero-spacer"></div>
+
+  <div class="flow-container">
+    
+    <!-- 01 IDENTITY -->
+    <div class="c-block block-dark reveal">
+      <div class="b-label">01 // IDENTITY</div>
+      <div class="bio-text">
+        <strong>Founder of WatchLLM.</strong> Engineering deterministic runtime governance and static AST interceptors for autonomous coding agents. Zero ML inference in the enforcement loop.
+      </div>
+      <a href="https://watchllm.dev" target="_blank" class="b-link">WATCHLLM.DEV ↗</a>
+    </div>
+
+    <!-- 02 AXIOMS -->
+    <div class="c-block block-red reveal">
+      <div class="b-label">02 // AXIOMS</div>
+      <h2 class="axiom-head">GOVERNANCE<br>PRIMITIVES.</h2>
+      
+      <div class="axiom-grid">
+        <div class="ax-item">
+          <div class="ax-num">01</div>
+          <div class="ax-desc">
+            <strong>STATIC AST INTERCEPTION</strong><br><br>
+            Parses agent-generated code into strict syntax trees. <em>Zero ML hallucination</em> in the verification loop. Identical syntax yields identical evaluation.
+          </div>
+        </div>
+        <div class="ax-item">
+          <div class="ax-num">02</div>
+          <div class="ax-desc">
+            <strong>ZERO-GC WASM RUNTIME</strong><br><br>
+            Policies compile to ultra-lightweight WebAssembly sandboxes in Rust. <em>Sub-millisecond latency.</em> Air-gapped from the LLM.
+          </div>
+        </div>
+        <div class="ax-item">
+          <div class="ax-num">03</div>
+          <div class="ax-desc">
+            <strong>ARCHITECTURAL MEMORY</strong><br><br>
+            Every decision and policy evaluation recorded into an <em>auditable SQLite ledger</em> via Klyd Studio. Zero ephemeral context loss.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 ARCHIVE -->
+    <div class="c-block block-white reveal">
+      <div class="b-label">03 // ARCHIVE</div>
+      <h2 class="works-head">SELECTED WORKS.</h2>
+      
+      <div class="works-list">
+        <a href="https://watchllm.dev" target="_blank" class="work-row">
+          <div class="w-name">WATCHLLM</div>
+          <div class="w-desc">DETERMINISTIC RUNTIME GOVERNANCE.<br>AST INTERCEPTOR · WASM SANDBOX</div>
+        </a>
+        <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="work-row">
+          <div class="w-name">KLYD-HARNESS</div>
+          <div class="w-desc">ARCHITECTURAL MEMORY LAYER.<br>SQLITE DECISION LEDGER</div>
+        </a>
+        <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="work-row">
+          <div class="w-name">CODIFY ENGINE</div>
+          <div class="w-desc">CODE EVALUATION PLATFORM.<br>SANDBOXED EXECUTION SYSTEM</div>
+        </a>
+        <a href="https://github.com/kaadipranav" target="_blank" class="work-row">
+          <div class="w-name">SCRIPTBOOST</div>
+          <div class="w-desc">SCRIPTING UTILITIES.<br>SYSTEM EXECUTION HARNESSES</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 04 INITIATE -->
+    <div class="c-block block-volt reveal">
+      <div class="b-label">04 // INITIATE</div>
+      <h2 class="conn-head">INFRASTRUCTURE<br>IS THE PRODUCT.</h2>
+      
+      <div class="conn-links">
+        <a href="https://github.com/kaadipranav" target="_blank" class="c-link">GITHUB ↗</a>
+        <a href="https://twitter.com/kaad_zz" target="_blank" class="c-link">TWITTER / X ↗</a>
+        <a href="https://linkedin.com/in/kaadz" target="_blank" class="c-link">LINKEDIN ↗</a>
+        <a href="mailto:kaadz@protonmail.com" class="c-link">EMAIL →</a>
+      </div>
+    </div>
+
   </div>
-</section>
-
-<!-- ══════ 02 — ABOUT ══════ -->
-<section class="about">
-  <h2 class="about-big">WATCH<br>LLM.</h2>
-
-  <div class="about-body">
-    <p class="about-col">
-      WatchLLM parses agent-generated code into strict Tree-sitter Abstract Syntax Trees. <em>Zero ML hallucination</em> in the verification loop. Identical syntax yields identical evaluations, every single time, without exception.
-    </p>
-    <p class="about-col">
-      Enforcement policies compile to ultra-lightweight, zero-garbage-collection WebAssembly sandboxes in Rust. <em>Sub-millisecond latency.</em> Every decision recorded into an auditable SQLite ledger via Klyd Studio. Zero ephemeral context loss.
-    </p>
-  </div>
-</section>
-
-<!-- ══════ 03 — WORKS ══════ -->
-<section class="works">
-  <div class="works-head">
-    <h2 class="works-title">SELECTED<br>WORKS</h2>
-  </div>
-
-  <a href="https://watchllm.dev" target="_blank" class="work-row">
-    <div class="work-name">WATCHLLM</div>
-    <div class="work-desc">DETERMINISTIC RUNTIME GOVERNANCE. AST INTERCEPTOR · WASM SANDBOX · REPLAY TELEMETRY.</div>
-  </a>
-  <a href="https://github.com/klyd-studio/klyd-harness" target="_blank" class="work-row">
-    <div class="work-name">KLYD-HARNESS</div>
-    <div class="work-desc">ARCHITECTURAL MEMORY LAYER. SQLITE DECISION LEDGER · REPLAYABLE EXECUTION RECORDS.</div>
-  </a>
-  <a href="https://github.com/Codify-PSBB/CODIFY-WEBAPP-CORE" target="_blank" class="work-row">
-    <div class="work-name">CODIFY ENGINE</div>
-    <div class="work-desc">CODE EVALUATION PLATFORM. SANDBOXED EXECUTION · AUTOMATED TEST HARNESS.</div>
-  </a>
-  <a href="https://github.com/kaadipranav" target="_blank" class="work-row">
-    <div class="work-name">SCRIPTBOOST</div>
-    <div class="work-desc">SCRIPTING UTILITIES. SYSTEM EXECUTION HARNESSES.</div>
-  </a>
-</section>
-
-<!-- ══════ 04 — CONNECT ══════ -->
-<section class="connect">
-  <h2 class="connect-statement">INFRASTRUCTURE<br>IS THE<br>PRODUCT.</h2>
-
-  <div class="connect-links">
-    <a href="https://github.com/kaadipranav" target="_blank" class="connect-link">GITHUB ↗</a>
-    <a href="https://twitter.com/kaad_zz" target="_blank" class="connect-link">TWITTER / X ↗</a>
-    <a href="https://linkedin.com/in/kaadz" target="_blank" class="connect-link">LINKEDIN ↗</a>
-    <a href="https://watchllm.dev" target="_blank" class="connect-link">WATCHLLM.DEV ↗</a>
-    <a href="mailto:kaadz@protonmail.com" class="connect-link">EMAIL →</a>
-  </div>
-
-  <div class="connect-foot">
-    KAADIPRANAV // CHENNAI, INDIA // 2026
-  </div>
-</section>
+</div>
 
 <script>
-  // Fit each hero line to fill the container width exactly
-  function fitType() {
-    const box = document.getElementById('heroType');
+  // Dynamically fit the background text to perfectly span the viewport width
+  function fitBgType() {
+    const box = document.getElementById('bgType');
     if (!box) return;
     const w = box.clientWidth;
-    box.querySelectorAll('.hero-line').forEach(line => {
+    box.querySelectorAll('.tl-row').forEach(line => {
       let lo = 10, hi = 800, best = 10;
       while (hi - lo > 0.5) {
         const mid = (lo + hi) / 2;
@@ -348,10 +333,10 @@
       line.style.fontSize = best + 'px';
     });
   }
-  fitType();
-  window.addEventListener('resize', fitType);
+  fitBgType();
+  window.addEventListener('resize', fitBgType);
 
-  // Fade-in on scroll
+  // Scroll reveal for structural blocks
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -361,10 +346,11 @@
       }
     });
   }, { threshold: 0.1 });
-  document.querySelectorAll('.work-row, .about-col').forEach(el => {
+
+  document.querySelectorAll('.reveal').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    el.style.transform = 'translateY(40px)';
+    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
     io.observe(el);
   });
 </script>
